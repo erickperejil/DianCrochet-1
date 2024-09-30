@@ -25,3 +25,13 @@ body {
     text-wrap: balance;
   }
 }
+
+.imagenfondo{
+  border: 2px solid red;
+}
+
+
+.textoRegistro{
+  font-family: var(--lekton);
+    line-height: 116%;
+}

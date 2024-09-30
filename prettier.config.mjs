@@ -1,3 +1,6 @@
-module.exports = {
-    plugins: ["prettier-plugin-tailwindcss"]
-}
+// prettier.config.mjs
+const config = {
+  plugins: ["prettier-plugin-tailwindcss"],
+};
+
+export default config;
