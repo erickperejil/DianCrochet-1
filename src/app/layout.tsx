@@ -17,6 +17,12 @@ const lekton = localFont({
   variable: "--lekton",
   weight: "bold",
 });
+const koulen = localFont({
+  src: "../public/fonts/Koulen-Regular.ttf",
+  variable: "--koulen",
+  weight: "400",
+});
+
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -31,7 +37,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${lekton.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${lekton.variable} ${koulen.variable} antialiased`}
       >
         {children}
       </body>

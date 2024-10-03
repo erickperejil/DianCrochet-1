@@ -15,6 +15,7 @@ const config: Config = {
     },
     fontFamily: {
       lekton: ['var(--lekton)'],
+      koulen: ['var(--koulen)'],
     },
   },
   plugins: [],
