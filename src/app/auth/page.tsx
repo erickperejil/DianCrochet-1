@@ -6,7 +6,7 @@ export default function Login() {
     <main className="flex h-screen w-full flex-col bg-slate-50 overflow-hidden">
       <nav className="h-[8%] w-full bg-slate-200 z-20"></nav>
       <section className="imagen relative flex h-[92%] w-full items-center justify-center">
-        <form className="relative z-10 h-[78.4%] w-[25.7%] rounded-3xl bg-white opacity-90 shadow-md">
+        <form className="relative z-10 h-[78.4%] w-[25.7%] rounded-3xl bg-white opacity-90 shadow-2xl">
           <div className="absolute top-[5.3%] flex h-[12.5%] w-full items-center justify-center">
             <h1 className="w-[88.1%] font-koulen text-3xl text-gray-800">
               INICIAR SESION
@@ -64,7 +64,7 @@ export default function Login() {
           alt="Background Image"
           width={110} 
           height={67} 
-          className="absolute bottom-[67px] right-[356px] scale-x-[-1] mix-blend-multiply rounded-tl-full opacity-90"
+          className="absolute top-0 left-7 mix-blend-multiply opacity-90"
         />
 
         <Image
@@ -72,7 +72,15 @@ export default function Login() {
           alt="Background Image"
           width={100} 
           height={100} 
-          className="absolute bottom-44 right-[410px] scale-x-[-1] mix-blend-multiply"
+          className="absolute bottom-48 right-[410px] scale-x-[-1] mix-blend-multiply"
+        />
+
+        <Image
+          src="/img/girasol.svg" 
+          alt="Background Image"
+          width={100} 
+          height={100} 
+          className="absolute top-20 right-[300px] scale-x-[-1] mix-blend-multiply"
         />
 
 
