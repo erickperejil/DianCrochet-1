@@ -40,7 +40,7 @@ export default function Login() {
               </h1>
             </button>
           </div>
-          <div className="absolute left-[25%] top-[82%] flex h-[6.1%] w-[52%] flex-col items-center">
+          <div className="absolute top-[82%] flex h-[6.1%] w-[100%] flex-col items-center">
             <h1 className="font-lekton text-base text-[#535353]">
               ¿No tienes una cuenta?{" "}
             </h1>
@@ -64,7 +64,7 @@ export default function Login() {
           alt="Background Image"
           width={110} 
           height={67} 
-          className="absolute bottom-[67px] right-[356px] scale-x-[-1] mix-blend-multiply rounded-tl-full"
+          className="absolute bottom-[67px] right-[356px] scale-x-[-1] mix-blend-multiply rounded-tl-full opacity-90"
         />
 
         <Image
