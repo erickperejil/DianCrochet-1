@@ -24,7 +24,7 @@ export default function ForgotPswForm() {
       <div className="absolute top-[69.34%] flex h-[10.19%] w-full justify-center">
         <button className="absolute flex h-full w-[56.61%] items-center justify-center rounded-3xl bg-[#C68EFE] pt-[1%]">
           <h1 className="w-[88.1%] font-koulen text-2xl text-white">
-            ENVIAR
+            ENVIAR HOLA
           </h1>
         </button>
       </div>
