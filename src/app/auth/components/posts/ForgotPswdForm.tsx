@@ -8,8 +8,8 @@ export default function ForgotPswForm() {
           RESTABLECER CLAVE
         </h1>
       </div>
-      <div className="absolute top-[23.3%] flex h-[10.6%] w-full ml-7">
-        <h5 className="w-[70.1%] font-lekton text-l text-gray-600 font-normal">
+      <div className="absolute top-[23.3%] flex h-[10.6%] w-full pl-7 pr-7">
+        <h5 className="w-full font-lekton text-l text-gray-600 font-normal">
           Ingresa tu correo y te enviaremos un código de verificacion
         </h5>
       </div>
