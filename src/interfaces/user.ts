@@ -6,5 +6,10 @@ export interface RegisterData {
     usuario: string;
     correo: string;
     contrasena: string;
-  }
+}
+
+export interface loginData {
+  correo: string;
+  contrasena: string;
+}
   

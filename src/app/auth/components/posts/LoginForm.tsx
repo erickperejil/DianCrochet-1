@@ -1,11 +1,48 @@
+'use client'
+import { loginData } from "@interfaces/user";
+import { login } from "@services/UserAuth/user";
+import React, { ChangeEvent, FormEvent, useState } from "react";
 
-import React from "react";
 // import login from '@services/UserAuth/login';
 
 export default function LoginForm(){
+  const [formData, setFormData] = useState<loginData>({
+    correo: "",
+    contrasena: "",
+  });
+
+  // Maneja los cambios en los inputs
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  //Envío del formulario
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // console.log('Datos enviados:', formData);
+    // Aqui se hace la transaccion beebboop
+
+    try {
+      // Realiza una petición POST con los datos del formulario
+      const response = await login(formData)
+      if (response.status) {
+        console.log("Login exitoso:", response);
+        //beep boop, aqui se implementa el cambio cuando se hace login
+      } else {
+      }
+    } catch (error) {
+      console.error("Error en la petición:", error);
+    }
+  };
+
+  
 
   return (
-    <form className="relative z-10 h-[78.4%] w-[25.7%] rounded-3xl bg-white opacity-90 shadow-2xl">
+    <form onSubmit={handleSubmit} className="relative z-10 h-[78.4%] w-[25.7%] rounded-3xl bg-white opacity-90 shadow-2xl">
       <div className="absolute top-[5.3%] flex h-[12.5%] w-full items-center justify-center">
         <h1 className="w-[88.1%] font-koulen text-3xl text-gray-800">
           INICIAR SESION
@@ -17,6 +54,10 @@ export default function LoginForm(){
           className="absolute h-full w-[88.1%] rounded-xl border border-gray-200 bg-white pl-3 pr-3 font-lekton text-gray-800 shadow-lg placeholder:font-lekton placeholder:text-gray-400 focus:outline-none"
           placeholder="correo"
           type="text"
+          name="correo"
+          value={formData.correo}
+          onChange={handleChange}
+          required
         />
       </div>
       <div className="absolute top-[39.5%] flex h-[10.6%] w-full justify-center">
@@ -25,6 +66,11 @@ export default function LoginForm(){
           className="absolute h-full w-[88.1%] rounded-xl border border-gray-200 bg-white pl-3 pr-3 font-lekton text-xl tracking-tighter text-gray-900 shadow-lg placeholder:font-lekton placeholder:text-base placeholder:tracking-normal placeholder:text-gray-400 focus:outline-none"
           placeholder="contraseña"
           type="password"
+          name="contrasena"
+          value={formData.contrasena}
+          onChange={handleChange}
+          required
+          autoComplete="off"
         />
       </div>
       <div className="absolute top-[53.57%] flex h-[3%] w-full justify-center">
@@ -33,7 +79,7 @@ export default function LoginForm(){
         </h1>
       </div>
       <div className="absolute top-[69.34%] flex h-[10.19%] w-full justify-center">
-        <button className="absolute flex h-full w-[56.61%] items-center justify-center rounded-3xl bg-[#C68EFE] pt-[1%]">
+        <button type="submit" className="absolute flex h-full w-[56.61%] items-center justify-center rounded-3xl bg-[#C68EFE] pt-[1%]">
           <h1 className="w-[88.1%] font-koulen text-2xl text-white">
             INICIAR SESION
           </h1>
