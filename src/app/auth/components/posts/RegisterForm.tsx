@@ -1,21 +1,71 @@
 "use client";
-import React, { FormEvent, useState } from "react";
-// import login from '@services/UserAuth/login';
+import React, { ChangeEvent, FormEvent, useState } from "react";
+import { register } from "@services/UserAuth/user";
+import { RegisterData } from "@interfaces/user";
+import EmailAuthForm from "./EmailCodeForm";
+
 
 export function RegisterForm() {
   const [showForm, setShowForm] = useState(false);
+  const [showEmailVerification, setShowEmailVerification] = useState(true);
+  const [formData, setFormData] = useState<RegisterData>({
+    nombre: "",
+    usuario: "",
+    apellido: "",
+    genero: "",
+    fechaNacimiento: "",
+    correo: "",
+    contrasena: "",
+  });
 
   const formHandler = () => {
     setShowForm(!showForm);
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log('Formulario no enviado');
+    console.log(formData);
+    try {
+    const response = await register(formData);
+    if (response.status) {
+      console.log('Registro exitoso:', response);
+      setShowEmailVerification(!showEmailVerification);
+  };
+    } else {
+      
+    }
+    } catch (error) {
+      console.log(error)
+
+  }
+    
+
+    if(false){
+      setShowEmailVerification(false)
+    }
+  };
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
   return (
-    <form onSubmit={handleSubmit} className="z-10 h-[80.4%] w-[25.7%]">
+    <div className="z-20 h-[80.4%] w-[25.7%]">
+      {showEmailVerification ? (
+        
+      <form onSubmit={handleSubmit} className="z-10 h-full w-full">
       <section
         className={`relative h-full w-full rounded-3xl bg-white opacity-90 shadow-2xl ${
           showForm ? "hidden" : ""
@@ -34,14 +84,17 @@ export function RegisterForm() {
         </label>
         <div className="absolute top-[23.3%] flex h-[7.6%] w-full justify-center">
           <input
-            id="nameInput"
+            id="nombre"
             className="absolute h-full w-[88.1%] rounded-xl border border-gray-200 bg-white pl-3 pr-3 font-lekton text-gray-800 shadow-lg placeholder:font-lekton placeholder:text-gray-400 focus:outline-none"
             placeholder=""
+            value={formData.nombre}
+            onChange={handleChange}
             type="text"
-            name="name"
+            name="nombre"
+            autoComplete="off"
           />
         </div>
-
+  
         <label
           className="absolute top-[34.4%] h-[4.9%] w-full pl-[6%] font-lekton text-gray-500"
           htmlFor="apellido"
@@ -54,11 +107,14 @@ export function RegisterForm() {
             id="apellidoInput"
             className="absolute h-full w-[88.1%] rounded-xl border border-gray-200 bg-white pl-3 pr-3 font-lekton text-gray-800 shadow-lg placeholder:font-lekton placeholder:text-gray-400 focus:outline-none"
             placeholder=""
+            value={formData.apellido}
+            onChange={handleChange}
             type="text"
             name="apellido"
+            autoComplete="off"
           />
         </div>
-
+  
         <label
           className="absolute top-[50.4%] h-[4.9%] w-full pl-[6%] font-lekton text-gray-500"
           htmlFor="birth"
@@ -70,24 +126,27 @@ export function RegisterForm() {
             id="birthdateInput"
             className="absolute h-full w-[44.1%] rounded-xl border border-gray-200 bg-white pl-3 pr-3 font-lekton text-gray-800 shadow-lg placeholder:font-lekton placeholder:text-gray-400 focus:outline-none"
             placeholder=""
+            onChange={handleChange}
             type="date"
-            name="birth"
+            name="fechaNacimiento"
+            value={formData.fechaNacimiento}
           />
         </div>
-
+  
         <label
           className="absolute top-[66.4%] h-[4.9%] w-full pl-[6%] font-lekton text-gray-500"
           htmlFor="genero"
         >
           Genero
         </label>
-
+  
         <div className="relative top-[71.3%] flex h-[7.6%] w-full rounded-md pl-[6%] shadow-sm">
           <input
             id="genero"
             name="genero"
             type="text"
             placeholder=""
+            onChange={handleChange}
             className="absolute h-full w-[44.1%] rounded-xl border border-gray-200 bg-white pl-3 pr-3 font-lekton text-gray-800 shadow-lg placeholder:font-lekton placeholder:text-gray-400"
           />
           <div className="absolute inset-y-0 flex w-[44.1%] flex-row-reverse items-center justify-around">
@@ -96,7 +155,8 @@ export function RegisterForm() {
             </label>
             <select
               id="currency"
-              name="currency"
+              name="genero"
+              onChange={handleSelectChange}
               className="h-full w-full rounded-xl border-0 bg-transparent py-0 pl-2 pr-7 font-lekton text-gray-700 focus:ring-2 focus:ring-inset focus:ring-blue-500"
             >
               <option
@@ -106,19 +166,19 @@ export function RegisterForm() {
                 selected
                 hidden
               ></option>
-              <option value="masculino" className="font-lekton">
+              <option value="Masculino" className="font-lekton">
                 Masculino
               </option>
-              <option value="femenino" className="font-lekton">
+              <option value="Femenino" className="font-lekton">
                 Femenino
               </option>
-              <option value="otro" className="font-lekton">
+              <option value="Otro" className="font-lekton">
                 Otro
               </option>
             </select>
           </div>
         </div>
-
+  
         <div className="absolute bottom-2 flex h-[10.19%] w-full justify-center">
           <div
             onClick={formHandler}
@@ -129,7 +189,7 @@ export function RegisterForm() {
             </h1>
           </div>
         </div>
-
+  
         <div className="absolute bottom-14 flex h-[6.1%] w-[100%] flex-col items-start pl-[6%]">
           <h1 className="font-lekton text-sm text-[#535353]">
             ¿Ya tienes una cuenta?{" "}
@@ -139,7 +199,7 @@ export function RegisterForm() {
           </h1>
         </div>
       </section>
-
+  
       <section
         className={`relative h-full w-full rounded-3xl bg-white opacity-90 shadow-2xl ${
           showForm ? "" : "hidden"
@@ -150,7 +210,7 @@ export function RegisterForm() {
             CREAR CUENTA
           </h1>
         </div>
-
+  
         <label
           className="absolute top-[18.4%] h-[4.9%] w-full pl-[6%] font-lekton text-gray-500"
           htmlFor="user"
@@ -159,14 +219,17 @@ export function RegisterForm() {
         </label>
         <div className="absolute top-[23.3%] flex h-[7.6%] w-full justify-center">
           <input
-            id="user"
+            id="usuario"
             className="absolute h-full w-[88.1%] rounded-xl border border-gray-200 bg-white pl-3 pr-3 font-lekton text-gray-800 shadow-lg placeholder:font-lekton placeholder:text-gray-400 focus:outline-none"
             placeholder="josue1234"
             type="text"
-            name="user"
+            name="usuario"
+            value={formData.usuario}
+            onChange={handleChange}
+            autoComplete="off"
           />
         </div>
-
+  
         <label
           className="absolute top-[34.4%] h-[4.9%] w-full pl-[6%] font-lekton text-gray-500"
           htmlFor="correo"
@@ -178,11 +241,13 @@ export function RegisterForm() {
             id="correo"
             className="absolute h-full w-[88.1%] rounded-xl border border-gray-200 bg-white pl-3 pr-3 font-lekton text-gray-800 shadow-lg placeholder:font-lekton placeholder:text-gray-400 focus:outline-none"
             placeholder="example@mail.com"
+            value={formData.correo}
+            onChange={handleChange}
             type="email"
             name="correo"
           />
         </div>
-
+  
         <label
           className="absolute top-[50.4%] h-[4.9%] w-full pl-[6%] font-lekton text-gray-500"
           htmlFor="contrasena"
@@ -195,10 +260,13 @@ export function RegisterForm() {
             className="absolute h-full w-[88.1%] rounded-xl border border-gray-200 bg-white pl-3 pr-3 font-lekton text-gray-800 shadow-lg placeholder:font-lekton placeholder:text-gray-400 focus:outline-none"
             placeholder=""
             type="password"
+            value={formData.contrasena}
+            onChange={handleChange}
             name="contrasena"
+            autoComplete="off"
           />
         </div>
-
+  
         <label
           className="absolute top-[66.4%] h-[4.9%] w-full pl-[6%] font-lekton text-gray-500"
           htmlFor="genero"
@@ -212,17 +280,21 @@ export function RegisterForm() {
             placeholder=""
             type="password"
             name="contrasena2"
+            autoComplete="off"
           />
         </div>
-
+  
         <div className="absolute bottom-2 flex h-[10.19%] w-full justify-center">
-          <button className="absolute right-2 flex h-full w-1/2 items-center justify-center rounded-3xl bg-[#C68EFE] pt-[1%]">
+          <button
+            type="submit"
+            className="absolute right-2 z-20 flex h-full w-1/2 items-center justify-center rounded-3xl bg-[#C68EFE] pt-[1%]"
+          >
             <h1 className="w-[88.1%] font-koulen text-2xl text-white">
               SIGUIENTE
             </h1>
           </button>
         </div>
-
+  
         <div className="absolute bottom-5 flex h-[6.1%] w-[100%] flex-col items-start pl-[6%]">
           <h1
             onClick={formHandler}
@@ -232,6 +304,10 @@ export function RegisterForm() {
           </h1>
         </div>
       </section>
-    </form>
+        </form>
+      ) : (
+        <EmailAuthForm title="Crear Cuenta" />
+      )}
+    </div>
   );
 }
