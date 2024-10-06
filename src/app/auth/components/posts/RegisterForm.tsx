@@ -3,6 +3,9 @@ import React, { ChangeEvent, FormEvent, useState } from "react";
 import { register } from "@services/UserAuth/user";
 import { RegisterData } from "@interfaces/user";
 import CodeRegister from "./CodeRegister";
+import PhoneNumberInput from "../inputs/PhoneNumberInput";
+
+
 
 export function RegisterForm() {
   const [showForm, setShowForm] = useState(false);
@@ -19,6 +22,11 @@ export function RegisterForm() {
 
   const formHandler = () => {
     setShowForm(!showForm);
+  };
+
+  const handlePhoneNumberChange = (phone: { numero: string }) => {
+    // Actualiza el estado con el número de teléfono
+    setFormData((prevData) => ({ ...prevData, phoneNumber: phone.numero }));
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -66,12 +74,12 @@ export function RegisterForm() {
             }`}
           >
             <div className="absolute top-[5.3%] flex h-[12.5%] w-full items-center justify-center">
-              <h1 className="w-[88.1%] font-koulen text-3xl text-gray-800">
+              <h1 className="select-none w-[88.1%] font-koulen text-3xl text-gray-800">
                 CREAR CUENTA
               </h1>
             </div>
             <label
-              className="absolute top-[18.4%] h-[4.9%] w-full pl-[6%] font-lekton text-gray-500"
+              className="select-none absolute top-[18.4%] h-[4.9%] w-full pl-[6%] font-lekton text-gray-500"
               htmlFor="correo"
             >
               Nombre
@@ -91,7 +99,7 @@ export function RegisterForm() {
             </div>
 
             <label
-              className="absolute top-[34.4%] h-[4.9%] w-full pl-[6%] font-lekton text-gray-500"
+              className="select-none absolute top-[34.4%] h-[4.9%] w-full pl-[6%] font-lekton text-gray-500"
               htmlFor="apellido"
             >
               {" "}
@@ -111,7 +119,7 @@ export function RegisterForm() {
             </div>
 
             <label
-              className="absolute top-[50.4%] h-[4.9%] w-full pl-[6%] font-lekton text-gray-500"
+              className="select-none absolute top-[50.4%] h-[4.9%] w-full pl-[6%] font-lekton text-gray-500"
               htmlFor="birth"
             >
               Fecha de nacimiento
@@ -129,7 +137,7 @@ export function RegisterForm() {
             </div>
 
             <label
-              className="absolute top-[66.4%] h-[4.9%] w-full pl-[6%] font-lekton text-gray-500"
+              className="select-none absolute top-[66.4%] h-[4.9%] w-full pl-[6%] font-lekton text-gray-500"
               htmlFor="genero"
             >
               Genero
@@ -179,17 +187,17 @@ export function RegisterForm() {
                 onClick={formHandler}
                 className="absolute right-2 flex h-full w-1/2 items-center justify-center rounded-3xl bg-[#C68EFE] pt-[1%]"
               >
-                <h1 className="w-[88.1%] text-center font-koulen text-2xl text-white">
+                <h1 className="select-none w-[88.1%] text-center font-koulen text-2xl text-white">
                   SIGUIENTE
                 </h1>
               </div>
             </div>
 
             <div className="absolute bottom-14 flex h-[6.1%] w-[100%] flex-col items-start pl-[6%]">
-              <h1 className="font-lekton text-sm text-[#535353]">
+              <h1 className="select-none font-lekton text-sm text-[#535353]">
                 ¿Ya tienes una cuenta?{" "}
               </h1>
-              <h1 className="mt-[-2%] text-center font-lekton text-sm text-[#535353] underline decoration-slate-900">
+              <h1 className=" select-none mt-[-2%] text-center font-lekton text-sm text-[#535353] underline decoration-slate-900">
                 Inicia Sesion
               </h1>
             </div>
@@ -207,27 +215,17 @@ export function RegisterForm() {
             </div>
 
             <label
-              className="absolute top-[18.4%] h-[4.9%] w-full pl-[6%] font-lekton text-gray-500"
+              className="select-none absolute top-[18.4%] h-[4.9%] w-full pl-[6%] font-lekton text-gray-500"
               htmlFor="user"
             >
-              usuario
+              telefono
             </label>
             <div className="absolute top-[23.3%] flex h-[7.6%] w-full justify-center">
-              <input
-                id="telefono"
-                className="absolute h-full w-[88.1%] rounded-xl border border-gray-200 bg-white pl-3 pr-3 font-lekton text-gray-800 shadow-lg placeholder:font-lekton placeholder:text-gray-400 focus:outline-none"
-                placeholder="0000-0000"
-                type="text"
-                name="telefono"
-                value={formData.telefono}
-                onChange={handleChange}
-                autoComplete="off"
-                required
-              />
+            <PhoneNumberInput onPhoneNumberChange={handlePhoneNumberChange} />
             </div>
 
             <label
-              className="absolute top-[34.4%] h-[4.9%] w-full pl-[6%] font-lekton text-gray-500"
+              className="select-none absolute top-[34.4%] h-[4.9%] w-full pl-[6%] font-lekton text-gray-500"
               htmlFor="correo"
             >
               correo
@@ -241,11 +239,12 @@ export function RegisterForm() {
                 onChange={handleChange}
                 type="email"
                 name="correo"
+                required
               />
             </div>
 
             <label
-              className="absolute top-[50.4%] h-[4.9%] w-full pl-[6%] font-lekton text-gray-500"
+              className="select-none absolute top-[50.4%] h-[4.9%] w-full pl-[6%] font-lekton text-gray-500"
               htmlFor="contrasena"
             >
               Contraseña
@@ -260,11 +259,12 @@ export function RegisterForm() {
                 onChange={handleChange}
                 name="contrasena"
                 autoComplete="off"
+                required
               />
             </div>
 
             <label
-              className="absolute top-[66.4%] h-[4.9%] w-full pl-[6%] font-lekton text-gray-500"
+              className="select-none absolute top-[66.4%] h-[4.9%] w-full pl-[6%] font-lekton text-gray-500"
               htmlFor="genero"
             >
               Verifique su contraseña
@@ -277,6 +277,7 @@ export function RegisterForm() {
                 type="password"
                 name="contrasena2"
                 autoComplete="off"
+                required
               />
             </div>
 
@@ -307,3 +308,17 @@ export function RegisterForm() {
     </div>
   );
 }
+
+{/* <div className="absolute top-[23.3%] flex h-[7.6%] w-full justify-center">
+<input
+  id="telefono"
+  className="absolute h-full w-[88.1%] rounded-xl border border-gray-200 bg-white pl-3 pr-3 font-lekton text-gray-800 shadow-lg placeholder:font-lekton placeholder:text-gray-400 focus:outline-none"
+  placeholder="0000-0000"
+  type="text"
+  name="telefono"
+  value={FormData.telefono}
+  onChange={handleChange}
+  autoComplete="off"
+  required
+/>
+</div> */}

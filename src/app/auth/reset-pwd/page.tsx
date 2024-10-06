@@ -7,7 +7,7 @@ export default function ResetPsw(){
       <nav className="h-[8%] w-full bg-slate-200 z-20"></nav>
       <section className="imagen relative flex h-[92%] w-full items-center justify-center">
       < ResetPswdForm/>
-        <LoginBG/>
+      <LoginBG/>
       </section>
     </main>
     );

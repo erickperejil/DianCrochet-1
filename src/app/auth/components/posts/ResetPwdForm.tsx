@@ -12,17 +12,17 @@ export default function ResetPswForm() {
         </h5>
         <input
           id="pwdcontainer"
-          className="w-[88.1%] h-14 rounded-2xl border border-gray-200 bg-white pl-3 pr-3 font-lekton text-gray-800 shadow-lg placeholder:font-lekton placeholder:text-gray-400 focus:outline-none mb-4"
+          className="w-[88.1%] h-[10.6%] rounded-2xl border border-gray-200 bg-white pl-3 pr-3 font-lekton text-gray-800 shadow-lg placeholder:font-lekton placeholder:text-gray-400 focus:outline-none mb-4"
           placeholder="contraseña"
           type="password"
         />
         <input
           id="mailcontainer"
-          className="w-[88.1%] h-14 rounded-2xl border border-gray-200 bg-white pl-3 pr-3 font-lekton text-gray-800 shadow-lg placeholder:font-lekton placeholder:text-gray-400 focus:outline-none mb-6"
+          className="w-[88.1%] h-[10.6%] rounded-2xl border border-gray-200 bg-white pl-3 pr-3 font-lekton text-gray-800 shadow-lg placeholder:font-lekton placeholder:text-gray-400 focus:outline-none mb-6"
           placeholder="confirmar contraseña"
           type="password"
         />
-        <button className="w-[56.61%] h-14 rounded-3xl bg-[#C68EFE] flex items-center justify-center">
+        <button className="w-[56.61%] h-12 rounded-3xl bg-[#C68EFE] flex items-center justify-center">
           <h1 className="font-koulen text-2xl text-white">
             ENVIAR 
           </h1>
