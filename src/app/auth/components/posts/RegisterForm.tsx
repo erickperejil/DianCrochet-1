@@ -2,14 +2,14 @@
 import React, { ChangeEvent, FormEvent, useState } from "react";
 import { register } from "@services/UserAuth/user";
 import { RegisterData } from "@interfaces/user";
-import EmailAuthForm from "./EmailCodeForm";
+import CodeRegister from "./CodeRegister";
 
 export function RegisterForm() {
   const [showForm, setShowForm] = useState(false);
   const [showEmailVerification, setShowEmailVerification] = useState(true);
   const [formData, setFormData] = useState<RegisterData>({
     nombre: "",
-    usuario: "",
+    telefono: "",
     apellido: "",
     genero: "",
     fechaNacimiento: "",
@@ -161,13 +161,13 @@ export function RegisterForm() {
                     selected
                     hidden
                   ></option>
-                  <option value="Masculino" className="font-lekton">
+                  <option value="M" className="font-lekton">
                     Masculino
                   </option>
-                  <option value="Femenino" className="font-lekton">
+                  <option value="F" className="font-lekton">
                     Femenino
                   </option>
-                  <option value="Otro" className="font-lekton">
+                  <option value="O" className="font-lekton">
                     Otro
                   </option>
                 </select>
@@ -214,12 +214,12 @@ export function RegisterForm() {
             </label>
             <div className="absolute top-[23.3%] flex h-[7.6%] w-full justify-center">
               <input
-                id="usuario"
+                id="telefono"
                 className="absolute h-full w-[88.1%] rounded-xl border border-gray-200 bg-white pl-3 pr-3 font-lekton text-gray-800 shadow-lg placeholder:font-lekton placeholder:text-gray-400 focus:outline-none"
-                placeholder="josue1234"
+                placeholder="0000-0000"
                 type="text"
-                name="usuario"
-                value={formData.usuario}
+                name="telefono"
+                value={formData.telefono}
                 onChange={handleChange}
                 autoComplete="off"
                 required
@@ -302,7 +302,7 @@ export function RegisterForm() {
           </section>
         </form>
       ) : (
-        <EmailAuthForm title="Crear Cuenta" />
+        <CodeRegister mail={formData.correo} />
       )}
     </div>
   );

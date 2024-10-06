@@ -3,7 +3,7 @@ export interface RegisterData {
     apellido: string;
     fechaNacimiento: string;
     genero: string;
-    usuario: string;
+    telefono: string;
     correo: string;
     contrasena: string;
 }
@@ -11,5 +11,10 @@ export interface RegisterData {
 export interface loginData {
   correo: string;
   contrasena: string;
+}
+
+export interface verifyCode {
+  correo: string;
+  codigoVeri: string;
 }
   

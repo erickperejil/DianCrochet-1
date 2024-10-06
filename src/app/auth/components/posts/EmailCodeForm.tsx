@@ -7,7 +7,7 @@ interface AuthFormProps {
 
   export default function EmailAuthForm({ title }: AuthFormProps){
   return (
-    <form className="relative z-10 h-[55.4%] w-[25.7%] rounded-3xl bg-white opacity-90 shadow-2xl">
+    <form className="relative z-10 h-[55.4%] w-full rounded-3xl bg-white opacity-90 shadow-2xl">
       <div className="absolute top-[5.3%] flex h-[12.5%] w-full items-center justify-center">
         <h1 className="w-[88.1%] font-koulen text-3xl text-gray-800">
             {title}

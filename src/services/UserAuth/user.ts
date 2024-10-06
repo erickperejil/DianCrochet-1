@@ -1,38 +1,52 @@
-import { loginData, RegisterData } from "@interfaces/user";
+import { loginData, RegisterData, verifyCode } from "@interfaces/user";
 
-const API_URL = 'https://tu-backend.com/api'; 
-
+const API_URL = "http://localhost:4000/user";
 
 // Función para hacer el POST del login
 export const login = async (data: loginData) => {
   const response = await fetch(`${API_URL}/login`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify(data),
   });
 
   if (!response.ok) {
-    throw new Error('Error en el inicio de sesión');
+    throw new Error("Error en el inicio de sesión");
   }
 
-  return response.json(); 
+  return response.json();
 };
 
 export const register = async (data: RegisterData) => {
-  const response = await fetch(`${API_URL}/register`, {
-    method: 'POST',
+  const response = await fetch(`${API_URL}/new`, {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify(data),
   });
 
   if (!response.ok) {
-    throw new Error('Error al iniciar registro');
+    throw new Error("Error al iniciar registro");
   }
 
-  return response.json(); 
+  return response.json();
 };
 
+export const verifyEmailRegister = async (data: verifyCode) => {
+  const response = await fetch(`${API_URL}/ValidarCorreo`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    throw new Error("Error al verificar codigo");
+  }
+
+  return response.json();
+};
