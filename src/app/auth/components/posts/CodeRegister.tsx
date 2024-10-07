@@ -3,6 +3,7 @@ import { verifyCode } from "@interfaces/user";
 import { resendCode, verifyEmailRegister } from "@services/UserAuth/user";
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import Modal from "../modals/Modal";
+import LoadingPage from "../animation/LoadingPage";
 
 interface AuthFormProps {
   mail: string; // Prop para recibir el título del formulario
@@ -21,6 +22,7 @@ export default function PswCodeForm({ mail }: AuthFormProps) {
 
 
   const [timeLeft, setTimeLeft] = useState<number>(0);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (timeLeft > 0) {
@@ -34,6 +36,7 @@ export default function PswCodeForm({ mail }: AuthFormProps) {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     console.log(formData);
+    setLoading(true);
     try {
       const response = await verifyEmailRegister(formData)
       console.log(response)
@@ -45,8 +48,8 @@ export default function PswCodeForm({ mail }: AuthFormProps) {
         setModalMessage('')
         setModalType(1)
       } else if (response.user.codigo === 2) {
-        setModalTitle('Código Incorrecto')
-        setModalMessage('El código ingresado no es correcto. Por favor, inténtalo de nuevo.')
+        setModalTitle('Correo No Encontrado')
+        setModalMessage(response.user.mensaje)
         setModalType(2)
       } else if (response.user.codigo === 3) {
         setModalTitle('Correo No Encontrado')
@@ -62,9 +65,12 @@ export default function PswCodeForm({ mail }: AuthFormProps) {
     } catch (error) {
       console.log(error)
       setModalTitle('Error de Conexión')
-      setModalMessage('No se ha podido conectar al servidor. Por favor, verifica tu conexión e inténtalo de nuevo.')
+      setModalMessage('Hubo un error al conectar con el servidor. Por favor, verifica tu conexión e inténtalo de nuevo.')
       setModalType(4)
       handleModal()
+    }
+    finally {
+      setLoading(false); // Desactiva el estado de carga
     }
   };
 
@@ -82,12 +88,15 @@ export default function PswCodeForm({ mail }: AuthFormProps) {
   }
 
   const handleModalResend =() =>{
-    setShowModalResend(true)
+    setShowModalResend(!showModalResend)
     console.log('cambiando modal: ', showModalResend)
   }
 
   const handleResendCode = async () => {
     if (timeLeft === 0) {
+      if (showModalResend){
+        handleModalResend()       
+      }
       try {
         const response = await resendCode(formData.correo);
         if (response.user.codigo === 1) {
@@ -105,9 +114,16 @@ export default function PswCodeForm({ mail }: AuthFormProps) {
   
 
   return (
-    <form
+    <div className="relative z-20 h-[70%] w-full">
+        {loading && (
+        <div className="absolute z-50 flex h-full w-full items-center justify-center">
+          <LoadingPage />
+        </div>
+      )}
+
+<form
       onSubmit={handleSubmit}
-      className="relative z-10 h-[70%] w-full rounded-3xl bg-white opacity-90 shadow-2xl"
+      className="relative z-10 h-full w-full rounded-3xl bg-white opacity-90 shadow-2xl"
     >
       <div className="absolute top-[5.3%] flex h-[12.5%] w-full items-center justify-center">
         <h1 className="w-[88.1%] font-koulen text-3xl text-gray-800">
@@ -156,9 +172,15 @@ export default function PswCodeForm({ mail }: AuthFormProps) {
           Volver
         </a>
       </div>
-      {showModal ?(<Modal title={modalTitle} type={modalType} message={modalMessage} />):("")}
-      {showModalResend ?(<Modal title={modalTitle} type={modalType} message={modalMessage} />):("")}
+      {showModal ?(<Modal title={modalTitle} message={modalMessage} type={modalType} open={showModal} setOpen={setShowModal}
+        />):("")}
+      {showModalResend ?(<Modal title={modalTitle} type={modalType} message={modalMessage} open={showModalResend} setOpen={setShowModalResend} />):("")}
       
     </form>
+
+    </div>
+
+    
+
   );
 }

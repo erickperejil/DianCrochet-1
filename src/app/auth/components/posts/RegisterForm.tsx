@@ -4,8 +4,7 @@ import { register } from "@services/UserAuth/user";
 import { RegisterData } from "@interfaces/user";
 import CodeRegister from "./CodeRegister";
 import PhoneNumberInput from "../inputs/PhoneNumberInput";
-
-
+import LoadingPage from "../animation/LoadingPage";
 
 export function RegisterForm() {
   const [showForm, setShowForm] = useState(false);
@@ -20,6 +19,8 @@ export function RegisterForm() {
     contrasena: "",
   });
 
+  const [loading, setLoading] = useState(false);
+
   const formHandler = () => {
     setShowForm(!showForm);
   };
@@ -31,21 +32,19 @@ export function RegisterForm() {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(formData);
+    setLoading(true); // Inicia el estado de carga
     try {
       const response = await register(formData);
       console.log(response);
-      if (response.user.codigo ==1) {
+
+      if (response.user.codigo == 1) {
         console.log("Registro exitoso:", response);
         setShowEmailVerification(!showEmailVerification);
-      } else {
       }
     } catch (error) {
-      console.log(error);
-    }
-
-    if (false) {
-      setShowEmailVerification(false);
+      console.error("Error en el registro:", error);
+    } finally {
+      setLoading(false); // Desactiva el estado de carga
     }
   };
 
@@ -66,8 +65,14 @@ export function RegisterForm() {
   };
 
   return (
-    <div className="z-20 h-[80.4%] w-[25.7%]">
+    <div className="relative z-20 h-[80.4%] w-[25.7%] flex items-center justify-center">
+      {loading && (
+        <div className="absolute z-50 flex h-full w-full items-center justify-center">
+          <LoadingPage />
+        </div>
+      )}
       {showEmailVerification ? (
+        // Contenido que deseas mostrar cuando `loading` es false
         <form onSubmit={handleSubmit} className="z-10 h-full w-full">
           <section
             className={`relative h-full w-full rounded-3xl bg-white opacity-90 shadow-2xl ${
@@ -75,12 +80,12 @@ export function RegisterForm() {
             }`}
           >
             <div className="absolute top-[5.3%] flex h-[12.5%] w-full items-center justify-center">
-              <h1 className="select-none w-[88.1%] font-koulen text-3xl text-gray-800">
+              <h1 className="w-[88.1%] select-none font-koulen text-3xl text-gray-800">
                 CREAR CUENTA
               </h1>
             </div>
             <label
-              className="select-none absolute top-[18.4%] h-[4.9%] w-full pl-[6%] font-lekton text-gray-500"
+              className="absolute top-[18.4%] h-[4.9%] w-full select-none pl-[6%] font-lekton text-gray-500"
               htmlFor="correo"
             >
               Nombre
@@ -100,7 +105,7 @@ export function RegisterForm() {
             </div>
 
             <label
-              className="select-none absolute top-[34.4%] h-[4.9%] w-full pl-[6%] font-lekton text-gray-500"
+              className="absolute top-[34.4%] h-[4.9%] w-full select-none pl-[6%] font-lekton text-gray-500"
               htmlFor="apellido"
             >
               {" "}
@@ -120,7 +125,7 @@ export function RegisterForm() {
             </div>
 
             <label
-              className="select-none absolute top-[50.4%] h-[4.9%] w-full pl-[6%] font-lekton text-gray-500"
+              className="absolute top-[50.4%] h-[4.9%] w-full select-none pl-[6%] font-lekton text-gray-500"
               htmlFor="birth"
             >
               Fecha de nacimiento
@@ -138,7 +143,7 @@ export function RegisterForm() {
             </div>
 
             <label
-              className="select-none absolute top-[66.4%] h-[4.9%] w-full pl-[6%] font-lekton text-gray-500"
+              className="absolute top-[66.4%] h-[4.9%] w-full select-none pl-[6%] font-lekton text-gray-500"
               htmlFor="genero"
             >
               Genero
@@ -188,7 +193,7 @@ export function RegisterForm() {
                 onClick={formHandler}
                 className="absolute right-2 flex h-full w-1/2 items-center justify-center rounded-3xl bg-[#C68EFE] pt-[1%]"
               >
-                <h1 className="select-none w-[88.1%] text-center font-koulen text-2xl text-white">
+                <h1 className="w-[88.1%] select-none text-center font-koulen text-2xl text-white">
                   SIGUIENTE
                 </h1>
               </div>
@@ -198,7 +203,7 @@ export function RegisterForm() {
               <h1 className="select-none font-lekton text-sm text-[#535353]">
                 ¿Ya tienes una cuenta?{" "}
               </h1>
-              <h1 className=" select-none mt-[-2%] text-center font-lekton text-sm text-[#535353] underline decoration-slate-900">
+              <h1 className="mt-[-2%] select-none text-center font-lekton text-sm text-[#535353] underline decoration-slate-900">
                 Inicia Sesion
               </h1>
             </div>
@@ -216,17 +221,17 @@ export function RegisterForm() {
             </div>
 
             <label
-              className="select-none absolute top-[18.4%] h-[4.9%] w-full pl-[6%] font-lekton text-gray-500"
+              className="absolute top-[18.4%] h-[4.9%] w-full select-none pl-[6%] font-lekton text-gray-500"
               htmlFor="user"
             >
               telefono
             </label>
             <div className="absolute top-[23.3%] flex h-[7.6%] w-full justify-center">
-            <PhoneNumberInput onPhoneNumberChange={handlePhoneNumberChange} />
+              <PhoneNumberInput onPhoneNumberChange={handlePhoneNumberChange} />
             </div>
 
             <label
-              className="select-none absolute top-[34.4%] h-[4.9%] w-full pl-[6%] font-lekton text-gray-500"
+              className="absolute top-[34.4%] h-[4.9%] w-full select-none pl-[6%] font-lekton text-gray-500"
               htmlFor="correo"
             >
               correo
@@ -245,7 +250,7 @@ export function RegisterForm() {
             </div>
 
             <label
-              className="select-none absolute top-[50.4%] h-[4.9%] w-full pl-[6%] font-lekton text-gray-500"
+              className="absolute top-[50.4%] h-[4.9%] w-full select-none pl-[6%] font-lekton text-gray-500"
               htmlFor="contrasena"
             >
               Contraseña
@@ -265,7 +270,7 @@ export function RegisterForm() {
             </div>
 
             <label
-              className="select-none absolute top-[66.4%] h-[4.9%] w-full pl-[6%] font-lekton text-gray-500"
+              className="absolute top-[66.4%] h-[4.9%] w-full select-none pl-[6%] font-lekton text-gray-500"
               htmlFor="genero"
             >
               Verifique su contraseña
@@ -304,9 +309,9 @@ export function RegisterForm() {
           </section>
         </form>
       ) : (
+        // Componente que se renderiza cuando `showEmailVerification` es false
         <CodeRegister mail={formData.correo} />
       )}
     </div>
   );
 }
-

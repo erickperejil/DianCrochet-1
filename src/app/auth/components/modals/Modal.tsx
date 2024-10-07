@@ -1,17 +1,16 @@
 'use client'
-
-import { useState } from 'react'
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 import { ExclamationTriangleIcon, CheckCircleIcon } from '@heroicons/react/24/outline'
 
-interface AuthFormProps {
-    title: string;
-    type: number;
-    message: string;// Prop para recibir el título del formulario
+interface ModalProps {
+  title: string;
+  type: number;
+  message: string;
+  open: boolean; // Añadir `open` como prop
+  setOpen: (value: boolean) => void; // Añadir `setOpen` como prop
 }
 
-export default function Modal({ title, type, message }: AuthFormProps) {
-  const [open, setOpen] = useState(true)
+export default function Modal({ title, type, message, open, setOpen }: ModalProps) {
   const getIcon = (type: number) => {
     switch (type) {
       case 1: // Éxito
