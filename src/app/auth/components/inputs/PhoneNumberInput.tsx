@@ -14,7 +14,7 @@ export default function PhoneNumberInput({ onPhoneNumberChange }: PhoneNumberInp
   const [isOpen, setIsOpen] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState<Phone>({
     numero: "",
-  });
+});
 
   const options = [
     {
@@ -154,9 +154,10 @@ export default function PhoneNumberInput({ onPhoneNumberChange }: PhoneNumberInp
       ...prevNumber,
       [name]: formattedValue, // Valor formateado con el guion
     }));
+    const finalNumber = `${selected} ${formattedValue}`;
 
     // Llama a la función de callback para enviar el número al padre
-    onPhoneNumberChange({ numero: formattedValue });
+    onPhoneNumberChange({ numero: finalNumber });
   };
 
   return (

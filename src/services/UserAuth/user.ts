@@ -20,14 +20,14 @@ export const login = async (data: loginData) => {
 };
 
 export const register = async (data: RegisterData) => {
-  const response = await fetch(`${API_URL}/new`, {
+  const response = await fetch(`${API_URL}/CrearUsuario`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(data),
   });
-
+  console.log('registro completado')
   if (!response.ok) {
     throw new Error("Error al iniciar registro");
   }
@@ -36,7 +36,7 @@ export const register = async (data: RegisterData) => {
 };
 
 export const verifyEmailRegister = async (data: verifyCode) => {
-  const response = await fetch(`${API_URL}/ValidarCorreo`, {
+  const response = await fetch(`${API_URL}/ValidarRegistro`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -50,3 +50,20 @@ export const verifyEmailRegister = async (data: verifyCode) => {
 
   return response.json();
 };
+
+export const resendCode = async(correo: string) =>{
+  const response = await fetch(`${API_URL}/NuevoCodigo`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ correo }),
+  });
+  console.log("json: ",  JSON.stringify({ correo }))
+
+  if (!response.ok) {
+    throw new Error("Error al verificar codigo");
+  }
+
+  return response.json();
+}

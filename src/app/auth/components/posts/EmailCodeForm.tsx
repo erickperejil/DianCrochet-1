@@ -2,7 +2,7 @@ import React from "react";
 
 interface AuthFormProps {
     title: string; // Prop para recibir el título del formulario
-  }
+}
   
 
   export default function EmailAuthForm({ title }: AuthFormProps){

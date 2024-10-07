@@ -34,7 +34,8 @@ export function RegisterForm() {
     console.log(formData);
     try {
       const response = await register(formData);
-      if (response.status) {
+      console.log(response);
+      if (response.user.codigo ==1) {
         console.log("Registro exitoso:", response);
         setShowEmailVerification(!showEmailVerification);
       } else {
@@ -309,16 +310,3 @@ export function RegisterForm() {
   );
 }
 
-{/* <div className="absolute top-[23.3%] flex h-[7.6%] w-full justify-center">
-<input
-  id="telefono"
-  className="absolute h-full w-[88.1%] rounded-xl border border-gray-200 bg-white pl-3 pr-3 font-lekton text-gray-800 shadow-lg placeholder:font-lekton placeholder:text-gray-400 focus:outline-none"
-  placeholder="0000-0000"
-  type="text"
-  name="telefono"
-  value={FormData.telefono}
-  onChange={handleChange}
-  autoComplete="off"
-  required
-/>
-</div> */}

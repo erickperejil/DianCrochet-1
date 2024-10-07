@@ -18,3 +18,7 @@ export interface verifyCode {
   codigoVeri: string;
 }
   
+
+export interface mail {
+  correo: string;
+}
