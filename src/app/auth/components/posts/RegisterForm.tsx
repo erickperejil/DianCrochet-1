@@ -27,12 +27,13 @@ export function RegisterForm() {
 
   const handlePhoneNumberChange = (phone: { numero: string }) => {
     // Actualiza el estado con el número de teléfono
-    setFormData((prevData) => ({ ...prevData, phoneNumber: phone.numero }));
+    setFormData((prevData) => ({ ...prevData, telefono: phone.numero }));
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setLoading(true); // Inicia el estado de carga
+    setLoading(true);
+    console.log(formData) // Inicia el estado de carga
     try {
       const response = await register(formData);
       console.log(response);
@@ -222,7 +223,7 @@ export function RegisterForm() {
 
             <label
               className="absolute top-[18.4%] h-[4.9%] w-full select-none pl-[6%] font-lekton text-gray-500"
-              htmlFor="user"
+              htmlFor="telefono"
             >
               telefono
             </label>
