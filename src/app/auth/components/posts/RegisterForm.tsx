@@ -22,12 +22,20 @@ export function RegisterForm() {
   const [loading, setLoading] = useState(false);
 
   const formHandler = () => {
-    setShowForm(!showForm);
+      setShowForm(!showForm);
   };
+
+
 
   const handlePhoneNumberChange = (phone: { numero: string }) => {
     // Actualiza el estado con el número de teléfono
     setFormData((prevData) => ({ ...prevData, telefono: phone.numero }));
+  };
+
+  const handleSubmit1 = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    formHandler();// Inicia el estado de carga
+
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -74,9 +82,10 @@ export function RegisterForm() {
       )}
       {showEmailVerification ? (
         // Contenido que deseas mostrar cuando `loading` es false
-        <form onSubmit={handleSubmit} className="z-10 h-full w-full">
-          <section
-            className={`relative h-full w-full rounded-3xl bg-white opacity-90 shadow-2xl ${
+        <div  className="z-10 h-full w-full">
+          <form
+            onSubmit={handleSubmit1}
+            className={`z-10 relative h-full w-full rounded-3xl bg-white opacity-90 shadow-2xl ${
               showForm ? "hidden" : ""
             }`}
           >
@@ -122,6 +131,7 @@ export function RegisterForm() {
                 type="text"
                 name="apellido"
                 autoComplete="off"
+                required
               />
             </div>
 
@@ -168,12 +178,12 @@ export function RegisterForm() {
                   name="genero"
                   onChange={handleSelectChange}
                   className="h-full w-full rounded-xl border-0 bg-transparent py-0 pl-2 pr-7 font-lekton text-gray-700 focus:ring-2 focus:ring-inset focus:ring-blue-500"
+                  value={formData.genero} 
                 >
                   <option
                     value=""
                     className="font-lekton"
                     disabled
-                    selected
                     hidden
                   ></option>
                   <option value="M" className="font-lekton">
@@ -190,14 +200,14 @@ export function RegisterForm() {
             </div>
 
             <div className="absolute bottom-2 flex h-[10.19%] w-full justify-center">
-              <div
-                onClick={formHandler}
+              <button
+                type = "submit"
                 className="absolute right-2 flex h-full w-1/2 items-center justify-center rounded-3xl bg-[#C68EFE] pt-[1%]"
               >
                 <h1 className="w-[88.1%] select-none text-center font-koulen text-2xl text-white">
                   SIGUIENTE
                 </h1>
-              </div>
+              </button>
             </div>
 
             <div className="absolute bottom-14 flex h-[6.1%] w-[100%] flex-col items-start pl-[6%]">
@@ -208,10 +218,11 @@ export function RegisterForm() {
                 Inicia Sesion
               </h1>
             </div>
-          </section>
+          </form>
 
-          <section
-            className={`relative h-full w-full rounded-3xl bg-white opacity-90 shadow-2xl ${
+          <form
+            onSubmit={handleSubmit}
+            className={`z-10 relative h-full w-full rounded-3xl bg-white opacity-90 shadow-2xl ${
               showForm ? "" : "hidden"
             }`}
           >
@@ -307,8 +318,8 @@ export function RegisterForm() {
                 Volver
               </h1>
             </div>
-          </section>
-        </form>
+          </form>
+        </div>
       ) : (
         // Componente que se renderiza cuando `showEmailVerification` es false
         <CodeRegister mail={formData.correo} />
