@@ -20,6 +20,13 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.imagen{
+  /* background-image: url('/img/Background1.png'); */
+  background-size: cover;
+  background-color: #e4caff28
+}
+
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
@@ -32,6 +39,17 @@ body {
 
 
 .textoRegistro{
-  font-family: var(--lekton);
+  font-family: var(--koulen);
     line-height: 116%;
+}
+
+.sombra{
+  background: linear-gradient(
+    to bottom, 
+    #14255b00 0%,       
+    #17181b7e 76%,     
+    #17181B 100% 
+  );
+
+  
 }

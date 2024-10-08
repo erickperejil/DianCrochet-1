@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import forms from "@tailwindcss/forms";
 
 const config: Config = {
   content: [
@@ -15,8 +16,9 @@ const config: Config = {
     },
     fontFamily: {
       lekton: ['var(--lekton)'],
+      koulen: ['var(--koulen)'],
     },
   },
-  plugins: [],
+  plugins: [forms],
 };
 export default config;
