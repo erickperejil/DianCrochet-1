@@ -63,6 +63,9 @@ export function RegisterForm() {
     if(handlePasswordVerification()){
       setPasswordValidation(false);
     }
+    if(formData.fechaNacimiento === ""){
+      formData.fechaNacimiento = "1620-10-24"
+    }
     setLoading(true);
     console.log(formData) // Inicia el estado de carga
     try {
