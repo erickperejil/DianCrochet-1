@@ -67,3 +67,23 @@ export const resendCode = async(correo: string) =>{
 
   return response.json();
 }
+
+
+//Restablecer contraseña
+//enviar correo 
+
+export const resetPassword = async (correo: string) => {
+  const response = await fetch(`${API_URL}/correo/restablecer/contrasena`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ correo }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Error al restablecer la contraseña");
+  }
+
+  return response.json();
+};

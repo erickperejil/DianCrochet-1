@@ -22,3 +22,7 @@ export interface verifyCode {
 export interface mail {
   correo: string;
 }
+
+export interface forgotPassword {
+  correo: string;
+}
