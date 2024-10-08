@@ -7,9 +7,10 @@ import LoadingPage from "../animation/LoadingPage";
 
 interface AuthFormProps {
   mail: string; // Prop para recibir el título del formulario
+  setShowEmailVerification: (value: boolean) => void;
 }
 
-export default function CodeRegister({ mail }: AuthFormProps) {
+export default function CodeRegister({ mail, setShowEmailVerification }: AuthFormProps) {
   const [showModalResend, setShowModalResend] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState<verifyCode>({
@@ -32,13 +33,17 @@ export default function CodeRegister({ mail }: AuthFormProps) {
     }
   }, [timeLeft]);
 
+  const handleBack = () =>{
+    setShowEmailVerification(true)
+  }
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     console.log(formData);
     setLoading(true);
     try {
       const response = await verifyEmailRegister(formData);
-      console.log(response);
+      console.log('respuesta: ', response);
 
       // Condicionales para asignar valores al modal
       if (response.user.codigo === 1) {
@@ -46,20 +51,10 @@ export default function CodeRegister({ mail }: AuthFormProps) {
         setModalTitle("Registro Exitoso");
         setModalMessage("");
         setModalType(1);
-      } else if (response.user.codigo === 2) {
-        setModalTitle("Codigo incorrecto");
+      } else {
+        setModalTitle("Ocurrió un error");
         setModalMessage(response.user.mensaje);
         setModalType(2);
-      } else if (response.user.codigo === 3) {
-        setModalTitle("Correo No Encontrado");
-        setModalMessage("El correo ingresado no se encuentra registrado.");
-        setModalType(3);
-      } else {
-        setModalTitle("Error");
-        setModalMessage(
-          "Ha ocurrido un error inesperado. Por favor, inténtalo más tarde.",
-        );
-        setModalType(4);
       }
 
       handleModal(); // Muestra el modal
@@ -99,6 +94,7 @@ export default function CodeRegister({ mail }: AuthFormProps) {
       if (showModalResend) {
         handleModalResend();
       }
+      setLoading(true);
       try {
         const response = await resendCode(formData.correo);
         if (response.user.codigo === 1) {
@@ -110,6 +106,8 @@ export default function CodeRegister({ mail }: AuthFormProps) {
         handleModalResend();
       } catch (error) {
         console.log(error);
+      } finally{
+        setLoading(false);
       }
     }
   };
@@ -133,7 +131,7 @@ export default function CodeRegister({ mail }: AuthFormProps) {
         </div>
         <div className="absolute top-[23.3%] ml-7 flex h-[10.6%] w-full">
           <h5 className="text-l w-[70.1%] font-lekton font-normal text-gray-600">
-            Ingrese el codigo
+            Ingrese el codigo que enviamos a {mail}
           </h5>
         </div>
         <div className="absolute top-[35%] mt-6 flex h-[7.6%] w-full justify-center">
@@ -169,13 +167,10 @@ export default function CodeRegister({ mail }: AuthFormProps) {
             </h1>
           </button>
         </div>
-        <div className="absolute bottom-4 left-4">
-          <a
-            href="#"
-            className="text-l font-lekton text-gray-600 hover:underline"
-          >
+        <div onClick={handleBack} className="absolute bottom-4 left-4">
+          <h1 className="text-l font-lekton text-gray-600 hover:underline">
             Volver
-          </a>
+          </h1>
         </div>
         {showModal ? (
           <Modal

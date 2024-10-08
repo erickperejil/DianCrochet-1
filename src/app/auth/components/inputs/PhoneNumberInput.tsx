@@ -237,7 +237,6 @@ export default function PhoneNumberInput({ onPhoneNumberChange }: PhoneNumberInp
           pattern="(\d{4}-\d{4}|\d{8})"
           placeholder="1234-5678"
           autoComplete="off"
-          required
           name="numero"
           onChange={handleChange}
           value={phoneNumber.numero}

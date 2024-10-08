@@ -4,6 +4,7 @@ import { login } from "@services/UserAuth/user";
 import React, { ChangeEvent, FormEvent, useState } from "react";
 import LoadingPage from "../animation/LoadingPage";
 import CodeRegister from "./CodeRegister";
+import Link from "next/link";
 
 // import login from '@services/UserAuth/login';
 
@@ -15,6 +16,7 @@ export default function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [codigo, setCodigo] = useState(0);
   const [message, setMessage] = useState("")
+  const [showEmailVerification, setShowEmailVerification] = useState(true);
 
   // Maneja los cambios en los inputs
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -47,6 +49,7 @@ export default function LoginForm() {
       }
       else if (response.codigo == 4) {
         setCodigo(4);
+        setShowEmailVerification(false)
         //aqui hay que redirigir al codeRegister
       }
     } catch (error) {
@@ -57,17 +60,15 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="relative z-10 h-[78.4%] w-[25.7%] rounded-3xl opacity-90 ">
+    <div className="relative z-10 h-[78.4%] w-[25.7%] rounded-3xl">
       {loading && (
         <div className="absolute z-50 flex h-full w-full items-center justify-center">
           <LoadingPage />
         </div>
       )}
 
-      {(codigo==4)?(
-        <CodeRegister mail={formData.correo} />
-      ):
-      ( <form
+      {(showEmailVerification)?(
+        <form
         onSubmit={handleSubmit}
         className="relative z-10 h-full w-full rounded-3xl bg-white opacity-90 shadow-2xl"
       >
@@ -156,11 +157,16 @@ export default function LoginForm() {
           <h1 className="font-lekton text-base text-[#535353]">
             ¿No tienes una cuenta?{" "}
           </h1>
-          <h1 className="font-lekton text-base text-[#535353] underline decoration-slate-900">
-            Regístrate aquí
+          <h1 className="font-lekton text-base text-[#535353] underline decoration-slate-900 cursor-pointer">
+          <Link href="/auth/sign-up">Regístrate aquí</Link>
           </h1>
         </div>
-      </form>)}
+      </form>
+      ):
+      ( <CodeRegister 
+        mail={formData.correo} 
+        setShowEmailVerification={setShowEmailVerification}
+        />)}
 
     </div>
   );

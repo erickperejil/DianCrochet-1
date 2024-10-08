@@ -5,10 +5,13 @@ import { RegisterData } from "@interfaces/user";
 import CodeRegister from "./CodeRegister";
 import PhoneNumberInput from "../inputs/PhoneNumberInput";
 import LoadingPage from "../animation/LoadingPage";
+import Link from "next/link";
+import Modal from "../modals/Modal";
 
 export function RegisterForm() {
   const [showForm, setShowForm] = useState(false);
   const [showEmailVerification, setShowEmailVerification] = useState(true);
+  const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState<RegisterData>({
     nombre: "",
     telefono: "",
@@ -18,13 +21,26 @@ export function RegisterForm() {
     correo: "",
     contrasena: "",
   });
+  const [Password2, SetPassword2] = useState("");
+
+
+  const [modalTitle, setModalTitle] = useState("");
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalType, setModalType] = useState(0);
 
   const [loading, setLoading] = useState(false);
+
+  const[passwordvalidation, setPasswordValidation] = useState(false);
 
   const formHandler = () => {
       setShowForm(!showForm);
   };
 
+
+  const handlePasswordVerification = () =>{
+    console.log(formData.contrasena, "  =  ", Password2)
+    return formData.contrasena === Password2;
+  }
 
 
   const handlePhoneNumberChange = (phone: { numero: string }) => {
@@ -40,15 +56,29 @@ export function RegisterForm() {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!handlePasswordVerification()) {
+      setPasswordValidation(true);
+      return; // Detener el flujo si las contraseñas no coinciden
+    }
+    if(handlePasswordVerification()){
+      setPasswordValidation(false);
+    }
     setLoading(true);
     console.log(formData) // Inicia el estado de carga
     try {
       const response = await register(formData);
-      console.log(response);
+      console.log('respuesta: ', response);
+
 
       if (response.user.codigo == 1) {
         console.log("Registro exitoso:", response);
         setShowEmailVerification(!showEmailVerification);
+      }
+      else{
+        setShowModal(true);
+        setModalTitle("");
+        setModalMessage(response.user.mensaje);
+        setModalType(2);
       }
     } catch (error) {
       console.error("Error en el registro:", error);
@@ -63,6 +93,10 @@ export function RegisterForm() {
       ...prevData,
       [name]: value,
     }));
+    if(name === "contrasena2"){
+      SetPassword2(value)
+    }
+
   };
 
   const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -215,7 +249,7 @@ export function RegisterForm() {
                 ¿Ya tienes una cuenta?{" "}
               </h1>
               <h1 className="mt-[-2%] select-none text-center font-lekton text-sm text-[#535353] underline decoration-slate-900">
-                Inicia Sesion
+              <Link href="/auth/sign-in">Inicia Sesion</Link>
               </h1>
             </div>
           </form>
@@ -293,11 +327,19 @@ export function RegisterForm() {
                 className="absolute h-full w-[88.1%] rounded-xl border border-gray-200 bg-white pl-3 pr-3 font-lekton text-gray-800 shadow-lg placeholder:font-lekton placeholder:text-gray-400 focus:outline-none"
                 placeholder=""
                 type="password"
+                value={Password2}
+                onChange={handleChange}
                 name="contrasena2"
                 autoComplete="off"
                 required
               />
             </div>
+
+            {passwordvalidation ? (<div className="absolute top-[79.3%] flex h-[7.6%] w-full pl-[6%] items-center">
+                <h1 className="mt-[-2%] font-lekton text-base text-red-600 underline decoration-red-800">
+                  Contraseña incorrecta
+                </h1>
+            </div>):("")}
 
             <div className="absolute bottom-2 flex h-[10.19%] w-full justify-center">
               <button
@@ -322,8 +364,23 @@ export function RegisterForm() {
         </div>
       ) : (
         // Componente que se renderiza cuando `showEmailVerification` es false
-        <CodeRegister mail={formData.correo} />
+        <CodeRegister 
+        mail={formData.correo}
+        setShowEmailVerification={setShowEmailVerification}
+         />
       )}
+
+      {showModal ? (
+                  <Modal
+                  title={modalTitle}
+                  message={modalMessage}
+                  type={modalType}
+                  open={showModal}
+                  setOpen={setShowModal}
+                />
+      ) : ("")
+      }
+
     </div>
   );
 }
