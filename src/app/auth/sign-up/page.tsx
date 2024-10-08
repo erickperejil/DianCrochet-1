@@ -2,6 +2,7 @@ import "../../globals.css";
 import {RegisterForm} from "../components/posts/RegisterForm";
 import LoginBG from "../components/backgrounds/LoginBackGround";
 
+
 export default function Login() {
 
 

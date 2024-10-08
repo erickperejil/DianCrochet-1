@@ -4,6 +4,7 @@ import { resendCode, verifyEmailRegister } from "@services/UserAuth/user";
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import Modal from "../modals/Modal";
 import LoadingPage from "../animation/LoadingPage";
+import { useRouter } from 'next/navigation';
 
 interface AuthFormProps {
   mail: string; // Prop para recibir el título del formulario
@@ -11,6 +12,7 @@ interface AuthFormProps {
 }
 
 export default function CodeRegister({ mail, setShowEmailVerification }: AuthFormProps) {
+  const router = useRouter();
   const [showModalResend, setShowModalResend] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState<verifyCode>({
@@ -51,6 +53,7 @@ export default function CodeRegister({ mail, setShowEmailVerification }: AuthFor
         setModalTitle("Registro Exitoso");
         setModalMessage("");
         setModalType(1);
+        router.push("/landing/dashboard");
       } else {
         setModalTitle("Ocurrió un error");
         setModalMessage(response.user.mensaje);
@@ -60,11 +63,6 @@ export default function CodeRegister({ mail, setShowEmailVerification }: AuthFor
       handleModal(); // Muestra el modal
     } catch (error) {
       console.log(error);
-      setModalTitle("Error de Conexión");
-      setModalMessage(
-        "Hubo un error al conectar con el servidor. Por favor, verifica tu conexión e inténtalo de nuevo.",
-      );
-      setModalType(4);
       handleModal();
     } finally {
       setLoading(false); // Desactiva el estado de carga

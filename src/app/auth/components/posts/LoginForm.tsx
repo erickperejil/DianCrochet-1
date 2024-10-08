@@ -5,11 +5,12 @@ import React, { ChangeEvent, FormEvent, useState } from "react";
 import LoadingPage from "../animation/LoadingPage";
 import CodeRegister from "./CodeRegister";
 import Link from "next/link";
-import router from "next/router";
+import { useRouter } from 'next/navigation';
 
 // import login from '@services/UserAuth/login';
 
 export default function LoginForm() {
+  const router = useRouter();
   const [formData, setFormData] = useState<loginData>({
     correo: "",
     contrasena: "",
@@ -41,7 +42,7 @@ export default function LoginForm() {
       if (response.codigo == 1) {
         console.log("Login exitoso:", response);
         setCodigo(1)
-        router.push("/home/dashboard");
+        router.push("/landing/dashboard");
         //beep boop, aqui se implementa el cambio cuando se hace login
       } else if (response.codigo == 2) {
         setCodigo(2);
