@@ -20,7 +20,7 @@ export const login = async (data: loginData) => {
 };
 
 export const register = async (data: RegisterData) => {
-  const response = await fetch(`${API_URL}/CrearUsuario`, {
+  const response = await fetch(`${API_URL}/new`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

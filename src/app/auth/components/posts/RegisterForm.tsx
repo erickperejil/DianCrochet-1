@@ -5,10 +5,13 @@ import { RegisterData } from "@interfaces/user";
 import CodeRegister from "./CodeRegister";
 import PhoneNumberInput from "../inputs/PhoneNumberInput";
 import LoadingPage from "../animation/LoadingPage";
+import Link from "next/link";
+import Modal from "../modals/Modal";
 
 export function RegisterForm() {
   const [showForm, setShowForm] = useState(false);
   const [showEmailVerification, setShowEmailVerification] = useState(true);
+  const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState<RegisterData>({
     nombre: "",
     telefono: "",
@@ -18,28 +21,64 @@ export function RegisterForm() {
     correo: "",
     contrasena: "",
   });
+  const [Password2, SetPassword2] = useState("");
+
+
+  const [modalTitle, setModalTitle] = useState("");
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalType, setModalType] = useState(0);
 
   const [loading, setLoading] = useState(false);
 
+  const[passwordvalidation, setPasswordValidation] = useState(false);
+
   const formHandler = () => {
-    setShowForm(!showForm);
+      setShowForm(!showForm);
   };
+
+
+  const handlePasswordVerification = () =>{
+    console.log(formData.contrasena, "  =  ", Password2)
+    return formData.contrasena === Password2;
+  }
+
 
   const handlePhoneNumberChange = (phone: { numero: string }) => {
     // Actualiza el estado con el número de teléfono
-    setFormData((prevData) => ({ ...prevData, phoneNumber: phone.numero }));
+    setFormData((prevData) => ({ ...prevData, telefono: phone.numero }));
+  };
+
+  const handleSubmit1 = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    formHandler();// Inicia el estado de carga
+
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setLoading(true); // Inicia el estado de carga
+    if (!handlePasswordVerification()) {
+      setPasswordValidation(true);
+      return; // Detener el flujo si las contraseñas no coinciden
+    }
+    if(handlePasswordVerification()){
+      setPasswordValidation(false);
+    }
+    setLoading(true);
+    console.log(formData) // Inicia el estado de carga
     try {
       const response = await register(formData);
-      console.log(response);
+      console.log('respuesta: ', response);
+
 
       if (response.user.codigo == 1) {
         console.log("Registro exitoso:", response);
         setShowEmailVerification(!showEmailVerification);
+      }
+      else{
+        setShowModal(true);
+        setModalTitle("");
+        setModalMessage(response.user.mensaje);
+        setModalType(2);
       }
     } catch (error) {
       console.error("Error en el registro:", error);
@@ -54,6 +93,10 @@ export function RegisterForm() {
       ...prevData,
       [name]: value,
     }));
+    if(name === "contrasena2"){
+      SetPassword2(value)
+    }
+
   };
 
   const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -73,9 +116,10 @@ export function RegisterForm() {
       )}
       {showEmailVerification ? (
         // Contenido que deseas mostrar cuando `loading` es false
-        <form onSubmit={handleSubmit} className="z-10 h-full w-full">
-          <section
-            className={`relative h-full w-full rounded-3xl bg-white opacity-90 shadow-2xl ${
+        <div  className="z-10 h-full w-full">
+          <form
+            onSubmit={handleSubmit1}
+            className={`z-10 relative h-full w-full rounded-3xl bg-white opacity-90 shadow-2xl ${
               showForm ? "hidden" : ""
             }`}
           >
@@ -121,6 +165,7 @@ export function RegisterForm() {
                 type="text"
                 name="apellido"
                 autoComplete="off"
+                required
               />
             </div>
 
@@ -167,12 +212,12 @@ export function RegisterForm() {
                   name="genero"
                   onChange={handleSelectChange}
                   className="h-full w-full rounded-xl border-0 bg-transparent py-0 pl-2 pr-7 font-lekton text-gray-700 focus:ring-2 focus:ring-inset focus:ring-blue-500"
+                  value={formData.genero} 
                 >
                   <option
                     value=""
                     className="font-lekton"
                     disabled
-                    selected
                     hidden
                   ></option>
                   <option value="M" className="font-lekton">
@@ -189,14 +234,14 @@ export function RegisterForm() {
             </div>
 
             <div className="absolute bottom-2 flex h-[10.19%] w-full justify-center">
-              <div
-                onClick={formHandler}
+              <button
+                type = "submit"
                 className="absolute right-2 flex h-full w-1/2 items-center justify-center rounded-3xl bg-[#C68EFE] pt-[1%]"
               >
                 <h1 className="w-[88.1%] select-none text-center font-koulen text-2xl text-white">
                   SIGUIENTE
                 </h1>
-              </div>
+              </button>
             </div>
 
             <div className="absolute bottom-14 flex h-[6.1%] w-[100%] flex-col items-start pl-[6%]">
@@ -204,13 +249,14 @@ export function RegisterForm() {
                 ¿Ya tienes una cuenta?{" "}
               </h1>
               <h1 className="mt-[-2%] select-none text-center font-lekton text-sm text-[#535353] underline decoration-slate-900">
-                Inicia Sesion
+              <Link href="/auth/sign-in">Inicia Sesion</Link>
               </h1>
             </div>
-          </section>
+          </form>
 
-          <section
-            className={`relative h-full w-full rounded-3xl bg-white opacity-90 shadow-2xl ${
+          <form
+            onSubmit={handleSubmit}
+            className={`z-10 relative h-full w-full rounded-3xl bg-white opacity-90 shadow-2xl ${
               showForm ? "" : "hidden"
             }`}
           >
@@ -222,7 +268,7 @@ export function RegisterForm() {
 
             <label
               className="absolute top-[18.4%] h-[4.9%] w-full select-none pl-[6%] font-lekton text-gray-500"
-              htmlFor="user"
+              htmlFor="telefono"
             >
               telefono
             </label>
@@ -281,11 +327,19 @@ export function RegisterForm() {
                 className="absolute h-full w-[88.1%] rounded-xl border border-gray-200 bg-white pl-3 pr-3 font-lekton text-gray-800 shadow-lg placeholder:font-lekton placeholder:text-gray-400 focus:outline-none"
                 placeholder=""
                 type="password"
+                value={Password2}
+                onChange={handleChange}
                 name="contrasena2"
                 autoComplete="off"
                 required
               />
             </div>
+
+            {passwordvalidation ? (<div className="absolute top-[79.3%] flex h-[7.6%] w-full pl-[6%] items-center">
+                <h1 className="mt-[-2%] font-lekton text-base text-red-600 underline decoration-red-800">
+                  Contraseña incorrecta
+                </h1>
+            </div>):("")}
 
             <div className="absolute bottom-2 flex h-[10.19%] w-full justify-center">
               <button
@@ -306,12 +360,27 @@ export function RegisterForm() {
                 Volver
               </h1>
             </div>
-          </section>
-        </form>
+          </form>
+        </div>
       ) : (
         // Componente que se renderiza cuando `showEmailVerification` es false
-        <CodeRegister mail={formData.correo} />
+        <CodeRegister 
+        mail={formData.correo}
+        setShowEmailVerification={setShowEmailVerification}
+         />
       )}
+
+      {showModal ? (
+                  <Modal
+                  title={modalTitle}
+                  message={modalMessage}
+                  type={modalType}
+                  open={showModal}
+                  setOpen={setShowModal}
+                />
+      ) : ("")
+      }
+
     </div>
   );
 }
