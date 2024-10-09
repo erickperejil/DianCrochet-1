@@ -409,7 +409,7 @@ export function RegisterForm() {
                       viewBox="0 0 24 24"
                       strokeWidth={1.5}
                       stroke="currentColor"
-                      className="size-7 text-gray-700"
+                      className="size-7 text-gray-400"
                     >
                       <path
                         strokeLinecap="round"
@@ -424,7 +424,7 @@ export function RegisterForm() {
                       viewBox="0 0 24 24"
                       strokeWidth={1.5}
                       stroke="currentColor"
-                      className="size-7 text-gray-700"
+                      className="size-7 text-gray-400"
                     >
                       <path
                         strokeLinecap="round"
