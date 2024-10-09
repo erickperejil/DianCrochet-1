@@ -1,8 +1,72 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { resetPwd } from "@services/UserAuth/user"; // Importa la función desde user.ts
+import Modal from "../modals/Modal";
 
 export default function ResetPswForm() {
+  const [correo, setCorreo] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [modalTitle, setModalTitle] = useState("");
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalType, setModalType] = useState(1);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      const email = urlParams.get("email");
+      setCorreo(email || "");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (showModal) {
+      const timer = setTimeout(() => {
+        if (modalType === 1) {
+          console.log("Redirigiendo a la página de inicio de sesión");
+          window.location.href = "/auth/sign-in"; // Redirigir a la página de inicio de sesión
+        } else if (modalType === 3) {
+          console.log("Recargando la página");
+          window.location.reload(); // Recargar la página
+        }
+      }, 1000); // Redirigir después de 1 segundo
+
+      return () => clearTimeout(timer); // Limpiar el temporizador si el componente se desmonta
+    }
+  }, [showModal, modalType]);
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    if (password !== confirmPassword) {
+      console.log("Las contraseñas no coinciden");
+      setModalTitle("Error");
+      setModalMessage("Las contraseñas no coinciden");
+      setModalType(3); // Tipo 3 para error
+      setShowModal(true);
+      return;
+    }
+
+    try {
+      console.log("Enviando solicitud para restablecer la contraseña");
+      const response = await resetPwd(correo, password);
+      console.log("Respuesta de la API:", response);
+      console.log("Contraseña cambiada con éxito");
+      setModalTitle("Éxito");
+      setModalMessage("Contraseña cambiada con éxito");
+      setModalType(1); // Tipo 1 para éxito
+      setShowModal(true);
+    } catch (error) {
+      console.log("Error al restablecer la contraseña:", error.message);
+      setModalTitle("Error");
+      setModalMessage(error.message);
+      setModalType(3); // Tipo 3 para error
+      setShowModal(true);
+    }
+  };
+
   return (
-    <form className="relative z-10 h-[60.4%] w-[25.7%] rounded-3xl bg-white opacity-90 shadow-2xl p-6">
+    <form onSubmit={handleSubmit} className="relative z-10 h-[60.4%] w-[25.7%] rounded-3xl bg-white opacity-90 shadow-2xl p-6">
       <div className="flex flex-col items-center">
         <h1 className="w-[88.1%] font-koulen text-3xl text-gray-800 mb-6">
           RESTABLECER CLAVE
@@ -15,14 +79,18 @@ export default function ResetPswForm() {
           className="w-[88.1%] h-[10.6%] rounded-2xl border border-gray-200 bg-white pl-3 pr-3 font-lekton text-gray-800 shadow-lg placeholder:font-lekton placeholder:text-gray-400 focus:outline-none mb-4"
           placeholder="contraseña"
           type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
         <input
           id="mailcontainer"
           className="w-[88.1%] h-[10.6%] rounded-2xl border border-gray-200 bg-white pl-3 pr-3 font-lekton text-gray-800 shadow-lg placeholder:font-lekton placeholder:text-gray-400 focus:outline-none mb-6"
           placeholder="confirmar contraseña"
           type="password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
         />
-        <button className="w-[56.61%] h-12 rounded-3xl bg-[#C68EFE] flex items-center justify-center">
+        <button type="submit" className="w-[56.61%] h-12 rounded-3xl bg-[#C68EFE] flex items-center justify-center">
           <h1 className="font-koulen text-2xl text-white">
             ENVIAR 
           </h1>
@@ -33,6 +101,13 @@ export default function ResetPswForm() {
           Volver
         </a>
       </div>
+      <Modal
+        title={modalTitle}
+        type={modalType}
+        message={modalMessage}
+        open={showModal}
+        setOpen={setShowModal}
+      />
     </form>
   );
 }

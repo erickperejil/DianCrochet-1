@@ -26,7 +26,7 @@ export default function EmailAuthForm({ title }: AuthFormProps) {
     if (showModal) {
       const timer = setTimeout(() => {
         window.location.href = `/auth/fgt-pwd-code?email=${email}`;
-      }, 2000); // Redirigir después de 2 segundos
+      }, 1000); // Redirigir después de 2 segundos
 
       return () => clearTimeout(timer); // Limpiar el temporizador si el componente se desmonta
     }
