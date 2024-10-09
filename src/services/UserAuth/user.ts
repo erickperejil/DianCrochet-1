@@ -20,7 +20,7 @@ export const login = async (data: loginData) => {
 };
 
 export const register = async (data: RegisterData) => {
-  const response = await fetch(`${API_URL}/new`, {
+  const response = await fetch(`${API_URL}/crear`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -36,7 +36,7 @@ export const register = async (data: RegisterData) => {
 };
 
 export const verifyEmailRegister = async (data: verifyCode) => {
-  const response = await fetch(`${API_URL}/ValidarRegistro`, {
+  const response = await fetch(`${API_URL}/validar/registro`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -52,7 +52,7 @@ export const verifyEmailRegister = async (data: verifyCode) => {
 };
 
 export const resendCode = async(correo: string) =>{
-  const response = await fetch(`${API_URL}/NuevoCodigo`, {
+  const response = await fetch(`${API_URL}/nuevo/codigo`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",

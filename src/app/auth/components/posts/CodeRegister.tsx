@@ -128,7 +128,7 @@ export default function CodeRegister({ mail, setShowEmailVerification }: AuthFor
           </h1>
         </div>
         <div className="absolute top-[23.3%] ml-7 flex h-[10.6%] w-full">
-          <h5 className="text-l w-[70.1%] font-lekton font-normal text-gray-600">
+          <h5 className="text-l w-[80.1%] font-lekton font-normal text-gray-600">
             Ingrese el codigo que enviamos a {mail}
           </h5>
         </div>
