@@ -1,22 +1,25 @@
 'use client'
 import useInactivityRedirect from "hooks/useInactivityRedirect";
 import Header from "../components/Header";
-import { useRouter } from 'next/navigation'
+import Footer from "../components/Footer";
+import Slider from "../components/Slider";
 
 
 export default function Dashboard(){
-    const router = useRouter()
+    
     useInactivityRedirect(10000);
 
     return(
-   <body className="w-full h-full bg-slate-50">
+   <div className="w-full min-h-screen flex flex-col bg-slate-50">
    {/* Llamar a la función/componente Header */}
    <Header />
-    <main className="bg-slate-500 h-[80%] w-full">
-        Hola soy un main
+    <main className="bg-slate-50 flex-grow w-full">
+       <div className="flex align-middle">
+       <Slider/>
+       </div>
     </main>
-    <footer onClick={() => router.push('/auth/sign-in')} className="bg-slate-950 ">Footer</footer>
-   </body>
+    <Footer />
+   </div>
     );
  
 }
