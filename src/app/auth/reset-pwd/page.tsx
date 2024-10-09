@@ -1,3 +1,4 @@
+"use client";
 import ResetPswdForm from "../components/posts/ResetPwdForm";
 import LoginBG from "../components/backgrounds/LoginBackGround";
 

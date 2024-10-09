@@ -1,3 +1,4 @@
+"use client";
 import LoginBG from "../components/backgrounds/LoginBackGround";
 import EmailAuthForm from "../components/posts/EmailCodeForm";
 
