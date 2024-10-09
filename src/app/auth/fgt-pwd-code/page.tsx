@@ -3,6 +3,7 @@ import { useSearchParams } from "next/navigation";
 import React from "react";
 import PswdCodeForm from "../components/posts/PswdCodeForm";
 import LoginBG from "../components/backgrounds/LoginBackGround";
+import Header from "app/landing/components/Header";
 
 export default function PswCode() {
   const searchParams = useSearchParams();
@@ -10,7 +11,7 @@ export default function PswCode() {
 
   return (
     <main className="flex h-screen w-full flex-col bg-slate-50 overflow-hidden">
-      <nav className="h-[8%] w-full bg-slate-200 z-20"></nav>
+      <Header />
       <section className="imagen relative flex h-[92%] w-full items-center justify-center">
         <PswdCodeForm email={email || ""} />
         <LoginBG />

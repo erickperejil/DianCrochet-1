@@ -1,3 +1,4 @@
+"use client";
 import { FaUserCircle, FaShoppingCart, FaSearch } from 'react-icons/fa';
 import Image from 'next/image';
 import { useState, useRef, useEffect } from 'react';
@@ -53,7 +54,7 @@ export default function Header() {
             placeholder="Buscar..."
             className="w-full bg-transparent border-none text-gray-600 focus:outline-none focus-visible:outline-none focus:ring-0 focus:border-none"
           />
-          <button>
+          <button title='buscar'>
             <FaSearch className="text-purple-500" />
           </button>
         </div>
@@ -62,7 +63,7 @@ export default function Header() {
         <div className="flex items-center space-x-6 relative">
           {/* Perfil */}
           <div className="relative flex items-center" ref={profileRef}>
-            <button onClick={toggleProfileMenu} className="focus:outline-none">
+            <button onClick={toggleProfileMenu} className="focus:outline-none" title='iconos'>
               <FaUserCircle className="text-gray-700 text-2xl" />
             </button>
 
@@ -76,7 +77,7 @@ export default function Header() {
           </div>
 
           {/* Carrito */}
-          <button>
+          <button title='carrito'>
             <FaShoppingCart className="text-gray-700 text-2xl" />
           </button>
         </div>
