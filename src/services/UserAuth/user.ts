@@ -69,8 +69,7 @@ export const resendCode = async(correo: string) =>{
 }
 
 
-//Restablecer contraseña
-//enviar correo 
+//Restablecer contraseña enviar correo 
 
 export const resetPassword = async (correo: string) => {
   const response = await fetch(`${API_URL}/correo/restablecer/contrasena`, {
@@ -109,3 +108,23 @@ export const validarCorreo = async (correo: string, codigoVeri: string) => {
     throw new Error(error.message || "Error de red");
   }
 };
+
+
+// Restablecer la contraseña
+export const resetPwd = async (correo: string, nuevaContrasena: string) => {
+  const response = await fetch(`${API_URL}/restablecer/contrasena`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ correo, nuevaContrasena }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Error al restablecer la contraseña");
+  }
+
+  return response.json();
+};
+

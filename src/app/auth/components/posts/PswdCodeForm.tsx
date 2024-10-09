@@ -37,7 +37,7 @@ export default function PswdCodeForm({ email }: PswdCodeFormProps) {
         } else {
           window.location.href = `/auth/fgt-pwd-code?email=${email}`;
         }
-      }, 2000); // Redirigir después de 2 segundos
+      }, 1000); // Redirigir después de 1 segundos
 
       return () => clearTimeout(timer); // Limpiar el temporizador si el componente se desmonta
     }
