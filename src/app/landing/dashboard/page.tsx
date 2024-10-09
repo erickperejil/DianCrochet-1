@@ -7,7 +7,7 @@ import Slider from "../components/Slider";
 
 export default function Dashboard(){
     
-    useInactivityRedirect(10000);
+    useInactivityRedirect(100000);
 
     return(
    <div className="w-full min-h-screen flex flex-col bg-slate-50">

@@ -51,7 +51,7 @@ export default function Header() {
           <input
             type="text"
             placeholder="Buscar..."
-            className="w-full bg-transparent text-gray-600 focus:outline-none focus-visible:outline-none focus:ring-0 focus:border-none"
+            className="w-full bg-transparent border-none text-gray-600 focus:outline-none focus-visible:outline-none focus:ring-0 focus:border-none"
           />
           <button>
             <FaSearch className="text-purple-500" />
