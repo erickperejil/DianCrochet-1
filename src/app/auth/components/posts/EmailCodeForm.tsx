@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { resetPassword } from "@services/UserAuth/user";
 import Modal from "../modals/Modal";
+import Link from "next/link";
 
 interface AuthFormProps {
   title: string;
@@ -63,9 +64,7 @@ export default function EmailAuthForm({ title }: AuthFormProps) {
           </button>
         </div>
         <div className="absolute bottom-4 left-4">
-          <a href="#" className="font-lekton text-l text-gray-600 hover:underline">
-            Volver
-          </a>
+        <Link className="font-lekton text-l text-gray-600 hover:underline" href="/auth/sign-in">Volver</Link>
         </div>
       </form>
 

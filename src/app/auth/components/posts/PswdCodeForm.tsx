@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { validarCorreo } from "@services/UserAuth/user";
 import Modal from "../modals/Modal";
+import Link from "next/link";
 
 interface PswdCodeFormProps {
   email: string;
@@ -17,15 +18,20 @@ export default function PswdCodeForm({ email }: PswdCodeFormProps) {
     event.preventDefault();
     try {
       const data = await validarCorreo(email, code);
-      setModalTitle("Verificación Exitosa");
-      setModalMessage("Código verificado con éxito");
-      setModalType(1); // Tipo 1 para éxito
-      setShowModal(true);
+      if(data.codigo ==1){
+        setModalTitle("Verificación Exitosa");
+        setModalMessage("Código verificado con éxito");
+        setModalType(1); // Tipo 1 para éxito
+        setShowModal(true);
+      }else{
+        setModalTitle("Error de Verificación");
+        setModalMessage(data.mensaje);
+        setModalType(2); // Tipo 3 para error
+        setShowModal(true);
+      }
+
     } catch (error) {
-      setModalTitle("Error de Verificación");
-      setModalMessage(error.message);
-      setModalType(3); // Tipo 3 para error
-      setShowModal(true);
+      console.log(error)
     }
   };
 
@@ -77,9 +83,7 @@ export default function PswdCodeForm({ email }: PswdCodeFormProps) {
           </button>
         </div>
         <div className="absolute bottom-4 left-4">
-          <a href="#" className="font-lekton text-l text-gray-600 hover:underline">
-            Volver
-          </a>
+        <Link className="font-lekton text-l text-gray-600 hover:underline" href="/auth/forgot-pwd">Volver</Link>
         </div>
       </form>
       {showModal && (
