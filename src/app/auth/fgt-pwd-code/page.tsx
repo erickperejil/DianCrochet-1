@@ -1,5 +1,6 @@
 "use client";
 import { useSearchParams } from "next/navigation";
+import React from "react";
 import PswdCodeForm from "../components/posts/PswdCodeForm";
 import LoginBG from "../components/backgrounds/LoginBackGround";
 

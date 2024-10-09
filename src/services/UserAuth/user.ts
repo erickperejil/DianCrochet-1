@@ -87,3 +87,25 @@ export const resetPassword = async (correo: string) => {
 
   return response.json();
 };
+
+// Validar correo
+
+
+export const validarCorreo = async (correo: string, codigoVeri: string) => {
+  try {
+    const response = await fetch("http://localhost:4000/user/validar/correo", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ correo, codigoVeri }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.error || "Error al verificar el código");
+    }
+    return data;
+  } catch (error) {
+    throw new Error(error.message || "Error de red");
+  }
+};
