@@ -12,11 +12,27 @@ export default function EmailAuthForm({ title }: AuthFormProps) {
   const [email, setEmail] = useState("");
   const [showModal, setShowModal] = useState(false);
 
+  const [modalTitle, setModalTitle] = useState("");
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalType, setModalType] = useState(0);
+  const [launcher, SetLauncher] = useState(false);
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
       const response = await resetPassword(email);
+      if(response.codigo==1){
+        setModalTitle("Registro Exitoso");
+        setModalMessage(`El código ha sido enviado a ${email}`);
+        setModalType(1);
+        SetLauncher(true)
+      }else{
+        setModalTitle("Ocurrió un error");
+        setModalMessage(response.mensaje);
+        setModalType(2);
+      }
       console.log("Respuesta del servidor:", response);
+
       setShowModal(true);
     } catch (error) {
       console.error("Error:", error);
@@ -24,14 +40,14 @@ export default function EmailAuthForm({ title }: AuthFormProps) {
   };
 
   useEffect(() => {
-    if (showModal) {
+    if (showModal && launcher) {
       const timer = setTimeout(() => {
         window.location.href = `/auth/fgt-pwd-code?email=${email}`;
       }, 1000); // Redirigir después de 2 segundos
 
       return () => clearTimeout(timer); // Limpiar el temporizador si el componente se desmonta
     }
-  }, [showModal, email]);
+  }, [showModal, email, launcher]);
 
   return (
     <>
@@ -70,9 +86,9 @@ export default function EmailAuthForm({ title }: AuthFormProps) {
 
       {showModal && (
         <Modal
-          title="Código enviado"
-          message={`El código ha sido enviado a ${email}`}
-          type={1}
+          title={modalTitle}
+          message={modalMessage}
+          type={modalType}
           open={showModal}
           setOpen={setShowModal}
         />

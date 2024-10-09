@@ -13,19 +13,22 @@ export default function PswdCodeForm({ email }: PswdCodeFormProps) {
   const [modalTitle, setModalTitle] = useState("");
   const [modalMessage, setModalMessage] = useState("");
   const [modalType, setModalType] = useState(1);
+  const [launcher, setLauncher] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
       const data = await validarCorreo(email, code);
-      if(data.codigo ==1){
+      if(data.user.codigo ==1){
         setModalTitle("Verificación Exitosa");
         setModalMessage("Código verificado con éxito");
         setModalType(1); // Tipo 1 para éxito
         setShowModal(true);
+        setLauncher(true);
       }else{
         setModalTitle("Error de Verificación");
-        setModalMessage(data.mensaje);
+        console.log(data)
+        setModalMessage(data.user.mensaje);
         setModalType(2); // Tipo 3 para error
         setShowModal(true);
       }
@@ -36,7 +39,7 @@ export default function PswdCodeForm({ email }: PswdCodeFormProps) {
   };
 
   useEffect(() => {
-    if (showModal) {
+    if (showModal && launcher) {
       const timer = setTimeout(() => {
         if (modalType === 1) {
           window.location.href = `/auth/reset-pwd?email=${email}`;
@@ -47,7 +50,7 @@ export default function PswdCodeForm({ email }: PswdCodeFormProps) {
 
       return () => clearTimeout(timer); // Limpiar el temporizador si el componente se desmonta
     }
-  }, [showModal, modalType, email]);
+  }, [showModal, modalType, email, launcher]);
 
   return (
     <>
@@ -72,9 +75,7 @@ export default function PswdCodeForm({ email }: PswdCodeFormProps) {
             onChange={(e) => setCode(e.target.value)}
           />
         </div>
-        <div className="absolute bottom-[35%] left-4 pl-3">
-          <h1 className="font-lekton text-sm text-[#535353] underline decoration-[#535353]">¿No recibiste ningún código?</h1>          
-        </div>
+
         <div className="absolute bottom-[15%] flex h-[10.19%] w-full justify-center">
           <button type="submit" className="absolute flex h-full w-[56.61%] items-center justify-center rounded-3xl bg-[#C68EFE] pt-[1%]">
             <h1 className="w-[88.1%] font-koulen text-2xl text-white">

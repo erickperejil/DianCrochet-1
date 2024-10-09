@@ -52,16 +52,18 @@ export default function ResetPswForm() {
       const response = await resetPwd(correo, password);
       console.log("Respuesta de la API:", response);
       console.log("Contraseña cambiada con éxito");
-      setModalTitle("Éxito");
-      setModalMessage("Contraseña cambiada con éxito");
-      setModalType(1); // Tipo 1 para éxito
+      if (response.codigo ==1) {
+        setModalTitle("Éxito");
+        setModalMessage("Contraseña cambiada con éxito");
+        setModalType(1); //
+      }else{
+        setModalTitle("Ocurrio un error");
+        setModalMessage(response.mensaje);
+        setModalType(2); 
+      }
       setShowModal(true);
     } catch (error) {
-      console.log("Error al restablecer la contraseña:", error.message);
-      setModalTitle("Error");
-      setModalMessage(error.message);
-      setModalType(3); // Tipo 3 para error
-      setShowModal(true);
+      console.log("Error al restablecer la contraseña:", error);
     }
   };
 
