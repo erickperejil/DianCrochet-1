@@ -29,17 +29,19 @@ export default function PswdCodeForm({ email }: PswdCodeFormProps) {
     }
   };
 
-  
-
   useEffect(() => {
     if (showModal) {
       const timer = setTimeout(() => {
-        window.location.href = `/auth/reset-pwd?email=${email}`;
-      }, 2000); // Cerrar modal después de 2 segundos
+        if (modalType === 1) {
+          window.location.href = `/auth/reset-pwd?email=${email}`;
+        } else {
+          window.location.href = `/auth/fgt-pwd-code?email=${email}`;
+        }
+      }, 2000); // Redirigir después de 2 segundos
 
       return () => clearTimeout(timer); // Limpiar el temporizador si el componente se desmonta
     }
-  }, [showModal]);
+  }, [showModal, modalType, email]);
 
   return (
     <>
