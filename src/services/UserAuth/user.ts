@@ -52,7 +52,7 @@ export const verifyEmailRegister = async (data: verifyCode) => {
 };
 
 export const resendCode = async(correo: string) =>{
-  const response = await fetch(`${API_URL}/NuevoCodigo`, {
+  const response = await fetch(`${API_URL}/nuevo/codigo`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",

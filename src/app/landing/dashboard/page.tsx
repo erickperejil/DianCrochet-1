@@ -1,10 +1,12 @@
 'use client'
+import useInactivityRedirect from "hooks/useInactivityRedirect";
 import Header from "../components/Header";
 import { useRouter } from 'next/navigation'
 
+
 export default function Dashboard(){
     const router = useRouter()
-
+    useInactivityRedirect(10000);
 
     return(
    <body className="w-full h-full bg-slate-50">
