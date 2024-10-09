@@ -20,7 +20,7 @@ export const login = async (data: loginData) => {
 };
 
 export const register = async (data: RegisterData) => {
-  const response = await fetch(`${API_URL}/new`, {
+  const response = await fetch(`${API_URL}/crear`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -36,7 +36,7 @@ export const register = async (data: RegisterData) => {
 };
 
 export const verifyEmailRegister = async (data: verifyCode) => {
-  const response = await fetch(`${API_URL}/ValidarRegistro`, {
+  const response = await fetch(`${API_URL}/validar/registro`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -68,6 +68,21 @@ export const resendCode = async(correo: string) =>{
   return response.json();
 }
 
+export const passwordVerify = async(contrasena: string) =>{
+  const response = await fetch(`${API_URL}/contrasena/segura`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ contrasena }),
+  });
+  console.log('Service ', response)
+  if (!response.ok) {
+    throw new Error("Error al validar contraseña");
+  }
+
+  return response.json();
+}
 
 //Restablecer contraseña
 //enviar correo 
