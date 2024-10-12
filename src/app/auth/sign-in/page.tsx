@@ -1,7 +1,7 @@
 import "../../globals.css";
 import LoginForm from "../components/posts/LoginForm";
 import LoginBG from "../components/backgrounds/LoginBackGround";
-import Header from "app/landing/components/Header";
+import Header from "components/Header";
 
 export default function Login() {
   return (

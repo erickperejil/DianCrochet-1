@@ -1,7 +1,7 @@
 "use client";
 import LoginBG from "../components/backgrounds/LoginBackGround";
 import EmailAuthForm from "../components/posts/EmailCodeForm";
-import Header from "app/landing/components/Header";
+import Header from "components/Header";
 
 
 export default function ForgotPsw() {

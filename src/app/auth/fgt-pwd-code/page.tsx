@@ -3,7 +3,7 @@ import { useSearchParams } from "next/navigation";
 import React from "react";
 import PswdCodeForm from "../components/posts/PswdCodeForm";
 import LoginBG from "../components/backgrounds/LoginBackGround";
-import Header from "app/landing/components/Header";
+import Header from "components/Header";
 
 export default function PswCode() {
   const searchParams = useSearchParams();
