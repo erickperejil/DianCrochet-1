@@ -22,7 +22,7 @@ export default function EmailAuthForm({ title }: AuthFormProps) {
     try {
       const response = await resetPassword(email);
       if(response.codigo==1){
-        setModalTitle("Registro Exitoso");
+        setModalTitle("Verificación Exitosa");
         setModalMessage(`El código ha sido enviado a ${email}`);
         setModalType(1);
         SetLauncher(true)
