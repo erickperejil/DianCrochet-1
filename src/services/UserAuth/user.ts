@@ -120,7 +120,7 @@ export const validarCorreo = async (correo: string, codigoVeri: string) => {
     }
     return data;
   } catch (error) {
-    throw new Error(error.message || "Error de red");
+    throw new Error("Error de red");
   }
 };
 
