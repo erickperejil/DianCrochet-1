@@ -1,7 +1,7 @@
 'use client'
 
 import Navbar from "components/navbar";
-import Slider from "./landing/components/Slider";
+import SliderVideo from "./landing/components/SliderVideo";
 import Footer from "components/Footer";
 import Carrusel from "./landing/components/Carrusel";
 
@@ -15,7 +15,7 @@ export default function Dashboard(){
    <Navbar />
     <main className="bg-slate-50 flex-grow w-full mt-10 ">
        <div className="flex justify-center">
-       <Slider/>
+       <SliderVideo/>
        </div>
        <div className="flex justify-center">
             <Carrusel/>
