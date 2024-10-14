@@ -1,3 +1,4 @@
+import Product from "app/landing/components/Product";
 import Footer from "components/Footer";
 import Navbar from "components/navbar";
 import Image from "next/image";
@@ -6,9 +7,9 @@ export default function Products() {
   return (
     <div>
       <Navbar />
-      <section className=" border border-red-600 bg-white">
-        <div className="flex h-20 items-center border border-blue-800">
-          <h1 className="border border-red-600 pl-6 font-koulen text-5xl text-gray-900">
+      <section className=" bg-white">
+        <div className="flex h-20 items-center">
+          <h1 className="pl-6 font-koulen text-5xl text-gray-900">
             Productos
           </h1>
           <Image
@@ -26,8 +27,8 @@ export default function Products() {
             className="pointer-events-none ml-2 mt-4 mix-blend-multiply"
           />
         </div>
-        <div className="flex h-32 flex-col-reverse border border-blue-800">
-          <div className="mb-3 flex h-9 w-full items-center border border-blue-800 pl-6">
+        <div className="flex h-32 flex-col-reverse">
+          <div className="mb-3 flex h-9 w-full items-center pl-6">
             <div className="mr-3 flex items-center rounded-2xl bg-gray-200 px-2 font-lekton text-lg text-[#444343]">
               <h2>Aretes</h2>
               <svg
@@ -81,12 +82,12 @@ export default function Products() {
             </div>
           </div>
 
-          <div className="relative mb-3 flex h-9 w-full items-center border border-blue-800 pl-6">
-            <h2 className="border border-red-600 font-lekton text-lg text-[#444343]">
+          <div className="relative mb-3 flex h-9 w-full items-center pl-6">
+            <h2 className=" font-lekton text-lg text-[#444343]">
               Filtros :
             </h2>
 
-            <div className="ml-6 flex items-center border border-red-600 font-lekton text-lg text-[#444343]">
+            <div className="ml-6 flex items-center  font-lekton text-lg text-[#444343]">
               <h2>Categorias</h2>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -104,7 +105,7 @@ export default function Products() {
               </svg>
             </div>
 
-            <div className="ml-6 flex items-center border border-red-600 font-lekton text-lg text-[#444343]">
+            <div className="ml-6 flex items-center  font-lekton text-lg text-[#444343]">
               <h2>Precio</h2>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -122,7 +123,7 @@ export default function Products() {
               </svg>
             </div>
 
-            <div className="absolute right-[10%] ml-6 flex items-center border border-red-600 font-lekton text-lg text-[#444343]">
+            <div className="absolute right-[10%] ml-6 flex items-center  font-lekton text-lg text-[#444343]">
               <h2>Ordenar por:</h2>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -142,55 +143,40 @@ export default function Products() {
           </div>
         </div>
 
-        <section className="h-full border border-orange-600 px-[8.32%] py-12">
+        <section className="h-full px-[8.32%] py-12">
           <div className="grid grid-cols-4 gap-6">
-            <div className="rounded-lg border bg-blue-300 p-4 text-center w-[260px] h-[364px]">
-              {/* <img src="imagen1.jpg" alt="Item 1" className="w-full h-auto object-cover"> */}
+            <div className="text-center w-[260px] h-[364px]">
+             <Product nombre="Spiderman Gorro" precio="200L" imagen="/img/imagen34.svg"/>
             </div>
-            <div className="rounded-lg border bg-blue-300 p-4 text-center w-[260px] h-[364px]">
-              {/* <img src="imagen2.jpg" alt="Item 2" className="w-full h-auto object-cover"> */}
+            <div className="text-center w-[260px] h-[364px]">
+             <Product nombre="Spiderman Gorro" precio="200L" imagen="/img/imagen34.svg"/>
             </div>
-            <div className="rounded-lg border bg-blue-300 p-4 text-center w-[260px] h-[364px]">
-              {/* <img src="imagen3.jpg" alt="Item 3" className="w-full h-auto object-cover"> */}
+            <div className="text-center w-[260px] h-[364px]">
+             <Product nombre="Spiderman Gorro" precio="200L" imagen="/img/imagen34.svg"/>
             </div>
-            <div className="rounded-lg border bg-blue-300 p-4 text-center w-[260px] h-[364px]">
-              {/* <img src="imagen4.jpg" alt="Item 4" className="w-full h-auto object-cover"> */}
+            <div className="text-center w-[260px] h-[364px]">
+             <Product nombre="Spiderman Gorro" precio="200L" imagen="/img/imagen34.svg"/>
             </div>
-            <div className="rounded-lg border bg-blue-300 p-4 text-center w-[260px] h-[364px]">
-              {/* <img src="imagen5.jpg" alt="Item 5" className="w-full h-auto object-cover"> */}
+            <div className="text-center w-[260px] h-[364px]">
+             <Product nombre="Spiderman Gorro" precio="200L" imagen="/img/imagen34.svg"/>
             </div>
-            <div className="rounded-lg border bg-blue-300 p-4 text-center w-[260px] h-[364px]">
-              {/* <img src="imagen6.jpg" alt="Item 6" className="w-full h-auto object-cover"> */}
+            <div className="text-center w-[260px] h-[364px]">
+             <Product nombre="Spiderman Gorro" precio="200L" imagen="/img/imagen34.svg"/>
             </div>
-            <div className="rounded-lg border bg-blue-300 p-4 text-center w-[260px] h-[364px]">
-              {/* <img src="imagen7.jpg" alt="Item 7" className="w-full h-auto object-cover"> */}
+            <div className="text-center w-[260px] h-[364px]">
+             <Product nombre="Spiderman Gorro" precio="200L" imagen="/img/imagen34.svg"/>
             </div>
-            <div className="rounded-lg border bg-blue-300 p-4 text-center w-[260px] h-[364px]">
-              {/* <img src="imagen8.jpg" alt="Item 8" className="w-full h-auto object-cover"> */}
+            <div className="text-center w-[260px] h-[364px]">
+             <Product nombre="Spiderman Gorro" precio="200L" imagen="/img/imagen34.svg"/>
             </div>
-            <div className="rounded-lg border bg-blue-300 p-4 text-center w-[260px] h-[364px]">
-              {/* <img src="imagen9.jpg" alt="Item 9" className="w-full h-auto object-cover"> */}
-            </div>
-            <div className="rounded-lg border bg-blue-300 p-4 text-center w-[260px] h-[364px]">
-              {/* <img src="imagen10.jpg" alt="Item 10" className="w-full h-auto object-cover"> */}
-            </div>
-            <div className="rounded-lg border bg-blue-300 p-4 text-center w-[260px] h-[364px]">
-              {/* <img src="imagen11.jpg" alt="Item 11" className="w-full h-auto object-cover"> */}
-            </div>
-            <div className="rounded-lg border bg-blue-300 p-4 text-center w-[260px] h-[364px]">
-              {/* <img src="imagen12.jpg" alt="Item 12" className="w-full h-auto object-cover"> */}
-            </div>
-            <div className="rounded-lg border bg-blue-300 p-4 text-center w-[260px] h-[364px]">
-              {/* <img src="imagen11.jpg" alt="Item 11" className="w-full h-auto object-cover"> */}
-            </div>
-            <div className="rounded-lg border bg-blue-300 p-4 text-center w-[260px] h-[364px]">
-              {/* <img src="imagen12.jpg" alt="Item 12" className="w-full h-auto object-cover"> */}
-            </div>
-            <div className="rounded-lg border bg-blue-300 p-4 text-center w-[260px] h-[364px]">
-              {/* <img src="imagen11.jpg" alt="Item 11" className="w-full h-auto object-cover"> */}
-            </div>
-            <div className="rounded-lg border bg-blue-300 p-4 text-center w-[260px] h-[364px]">
-              {/* <img src="imagen12.jpg" alt="Item 12" className="w-full h-auto object-cover"> */}
+            <div className="text-center w-[260px] h-[364px]">
+             <Product nombre="Spiderman Gorro" precio="200L" imagen="/img/imagen34.svg"/>
+            </div>            <div className="text-center w-[260px] h-[364px]">
+             <Product nombre="Spiderman Gorro" precio="200L" imagen="/img/imagen34.svg"/>
+            </div>            <div className="text-center w-[260px] h-[364px]">
+             <Product nombre="Spiderman Gorro" precio="200L" imagen="/img/imagen34.svg"/>
+            </div>            <div className="text-center w-[260px] h-[364px]">
+             <Product nombre="Spiderman Gorro" precio="200L" imagen="/img/imagen34.svg"/>
             </div>
           </div>
         </section>
