@@ -15,7 +15,7 @@ export default function Footer(){
           <a href="https://www.instagram.com/dian.crochett/" aria-label="Instagram">
             <FontAwesomeIcon icon={faInstagram} className="fa-lg" />
           </a>
-          <a href="https://www.linkedin.com/company/productos-alimenticios-diana/" aria-label="LinkedIn">
+          <a href="https://ik.imagekit.io/bmrd9vb4r/Imagen%20de%20WhatsApp%202024-10-11%20a%20las%2022.57.00_fea87d59.jpg?updatedAt=1728876255755" aria-label="LinkedIn">
             <FontAwesomeIcon icon={faLinkedin} className="fa-lg" />
           </a>
         </div>
