@@ -35,7 +35,7 @@ export default function Navbar() {
   }, [isProfileOpen]);
 
   return (
-    <header className="bg-white shadow-md font-koulen">
+    <header className="bg-white shadow-md font-koulen flex fixed">
       <div className="container mx-auto flex items-center justify-between py-4 px-6">
         {/* Logo */}
         <div className="flex items-center space-x-4">
