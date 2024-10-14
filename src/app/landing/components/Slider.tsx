@@ -23,9 +23,7 @@ export default function Slider() {
     {
       url: 'https://images.unsplash.com/photo-1604510493959-8a20b3630d53?q=80&w=2080&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     },
-    {
-      url: 'https://youtu.be/dQw4w9WgXcQ',
-    },
+    
   ];
 
   const [currentIndex, setCurrentIndex] = useState<number>(0);
