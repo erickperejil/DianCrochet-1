@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 export default function Product({ nombre, precio, imagen }: { nombre: string; precio: string; imagen: string }) {
   return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 w-[260px] h-[364px]">
+    <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 w-[full] h-[full]">
       <Image
         src={imagen}
         alt={nombre}
