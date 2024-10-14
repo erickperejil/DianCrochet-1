@@ -35,8 +35,8 @@ export default function Navbar() {
   }, [isProfileOpen]);
 
   return (
-    <header className="bg-white shadow-md font-koulen">
-      <div className="container mx-auto flex items-center justify-between py-2 px-6">
+    <header className="bg-white shadow-md font-koulen flex fixed w-full z-50 ">
+      <div className="container mx-auto flex items-center justify-between py-4 px-6">
         {/* Logo */}
         <div className="flex items-center space-x-4">
           <Image src="/img/logo.svg" alt="Logo" width={40} height={40} />
