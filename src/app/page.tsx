@@ -1,9 +1,10 @@
 'use client'
 
 import Navbar from "components/navbar";
-import Slider from "./landing/components/Slider";
-import Product from "./landing/components/Product";
+import SliderVideo from "./landing/components/SliderVideo";
 import Footer from "components/Footer";
+import Carrusel from "./landing/components/Carrusel";
+
 
 
 export default function Dashboard(){
@@ -12,15 +13,15 @@ export default function Dashboard(){
    <div className="w-full min-h-screen flex flex-col bg-slate-50">
    {/* Llamar a la función/componente Header */}
    <Navbar />
-    <main className="bg-slate-50 flex-grow w-full mt-10">
-       <div className="flex align-middle">
-       <Slider/>
+    <main className="bg-slate-50 flex-grow w-full mt-10 ">
+       <div className="flex justify-center">
+       <SliderVideo/>
        </div>
        <div className="flex justify-center">
-        <Product nombre="Spiderman Gorro" precio="200L" imagen="/img/imagen34.svg"/>
+            <Carrusel/>
        </div>
        <div className="flex justify-center">
-        <Product nombre="Spiderman Gorro" precio="200L" imagen="/img/imagen34.svg"/>
+            <Carrusel/>
        </div>
     </main>
     <Footer />
