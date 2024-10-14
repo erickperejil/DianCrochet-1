@@ -12,9 +12,12 @@ export default function Dashboard(){
    <div className="w-full min-h-screen flex flex-col bg-slate-50">
    {/* Llamar a la función/componente Header */}
    <Navbar />
-    <main className="bg-slate-50 flex-grow w-full fixed">
+    <main className="bg-slate-50 flex-grow w-full mt-10">
        <div className="flex align-middle">
        <Slider/>
+       </div>
+       <div className="flex justify-center">
+        <Product nombre="Spiderman Gorro" precio="200L" imagen="/img/imagen34.svg"/>
        </div>
        <div className="flex justify-center">
         <Product nombre="Spiderman Gorro" precio="200L" imagen="/img/imagen34.svg"/>
