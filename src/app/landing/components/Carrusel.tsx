@@ -23,8 +23,8 @@ export default function Carrusel() {
   };
 
   return (
-    <div className="relative max-w-screen">
-      <div className="ml-6">
+    <div className="max-w-[1039px] relative w-full">
+      <div className="ml-6"> 
             <h1 className="font-koulen text-black">Nuevos Productos</h1>
         </div>  
       {/* Botón Izquierda */}
