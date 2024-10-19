@@ -6,15 +6,11 @@ interface Producto {
   ID_PRODUCTO: number;
   NOMBRE_PROD: string;
   PRECIO_VENTA: number;
-  DESCRIPCION: string;
-  CANTIDAD_DISP: number;
-  ID_TIPO_PROD: number;
-  ID_COLOR: number;
-  ID_TALLA: number | null;
+  URL: string | null; // Ahora incluye la URL de la imagen
 }
 
 export default function Carrusel() {
-  const [productos, setProductos] = useState<Producto[]>([]); // Definimos el tipo de estado como Producto[]
+  const [productos, setProductos] = useState<Producto[]>([]);
   const carruselRef = useRef<HTMLDivElement>(null);
 
   // Función para obtener los productos populares del backend
@@ -22,7 +18,7 @@ export default function Carrusel() {
     try {
       const response = await fetch('http://localhost:4000/producto/filtro/popularidad/1');
       const data = await response.json();
-      setProductos(data.populares); // Ya sabemos que 'populares' es un array de Producto
+      setProductos(data.populares); // Asumimos que 'populares' es un array de Producto
     } catch (error) {
       console.error('Error al obtener productos populares:', error);
     }
@@ -53,7 +49,7 @@ export default function Carrusel() {
   return (
     <div className="relative w-full">
       <div className="ml-6 mb-4">
-        <h1 className="font-koulen text-black text-2xl">Productos Populares</h1>
+        <h1 className="font-koulen text-black text-2xl">Productos Populares Kit</h1>
       </div>
 
       {/* Botón Izquierda */}
@@ -87,7 +83,7 @@ export default function Carrusel() {
             key={producto.ID_PRODUCTO}
             nombre={producto.NOMBRE_PROD}
             precio={`$${producto.PRECIO_VENTA.toFixed(2)}`} // Renderizamos el precio con dos decimales
-            imagen="/img/imagen34.svg" // Aquí podrías asignar imágenes dinámicas si las tienes
+            imagen={producto.URL ? producto.URL : '/img/default-image.svg'} // Si la URL es null, usamos una imagen por defecto
           />
         ))}
       </div>
