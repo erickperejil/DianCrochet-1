@@ -2,6 +2,8 @@ import React from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { IoRemoveOutline } from "react-icons/io5";
 import PhoneNumberInput from "../inputs/PhoneNumberInput";
+import { FaAngleLeft } from "react-icons/fa6";
+
 
 export default function ShippingForm() {
     return (
@@ -83,7 +85,14 @@ export default function ShippingForm() {
                          }}/>/
                     </div>
                     
-                </div>          
+                </div>  
+
+                {/* BOTONES */}
+                <div id="but" className="flex flex-row flex-nowrap justify-start items-stretch content-start">
+                    <button title="decline" type="button" className="text-gray-800 p-4 flex items-center">
+                      <FaAngleLeft className="mr-1"/> Volver
+                    </button>
+                </div>      
 
                 
             </div>
@@ -131,7 +140,7 @@ export default function ShippingForm() {
                 {/* BOTONES */}
                 <div id="but" className="flex flex-row flex-nowrap justify-end items-end content-start">
                     <button title="decline" type="button" className="mr-8 text-gray-800 p-4">Cancelar Orden</button>
-                    <button title="sending" type="button" className="bg-purple-400 py-4 px-9 rounded-md">Detalles de envio</button>
+                    <button title="sending" type="button" className="bg-purple-400 py-4 px-9 rounded-md">Pagar</button>
                 </div>
  
             </div>
