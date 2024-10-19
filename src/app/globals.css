@@ -5,6 +5,10 @@
 @import 'swiper/css';
 @import 'swiper/css/navigation';
 
+@import 'swiper/css';
+@import 'swiper/css/pagination';
+@import 'swiper/css/navigation';
+
 
 input:focus-visible {
   outline: none !important;

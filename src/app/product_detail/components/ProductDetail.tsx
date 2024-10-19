@@ -33,9 +33,10 @@ export default function ProductDetail({ productName, price, sizes, mainImage, th
 
   return (
     <div className="relative w-max grid grid-cols-1 md:grid-cols-2 gap-8 p-8">
-      {/* Imagen principal */}
-      <div className="flex flex-col space-y-4">
-        <div className="flex justify-center">
+      {/* Imagen principal y miniaturas */}
+      <div className="flex flex-col space-y-4 ">
+        {/* Imagen principal */}
+        <div className="flex justify-center ">
           <Image
             src={currentImage} // La imagen principal es controlada por el estado
             alt="Product image"
@@ -44,8 +45,9 @@ export default function ProductDetail({ productName, price, sizes, mainImage, th
             className="rounded-lg w-[450px]"
           />
         </div>
-        {/* Miniaturas en formato carrusel */}
-        <div className="overflow-x-scroll flex space-x-2 scrollbar-hide">
+
+        {/* Miniaturas en formato carrusel, barra de scroll oculta */}
+        <div className="overflow-x-auto flex space-x-2 scrollbar-hide justify-center ">
           <div className="flex space-x-0">
             {thumbnails.map((thumbnailSrc, index) => (
               <Image
@@ -60,6 +62,9 @@ export default function ProductDetail({ productName, price, sizes, mainImage, th
             ))}
           </div>
         </div>
+
+        {/* Descripción del producto */}
+        
       </div>
 
       {/* Detalles del producto */}
