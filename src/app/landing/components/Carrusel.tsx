@@ -1,31 +1,23 @@
 import { useEffect, useRef, useState } from 'react';
 import Product from './Product';
+import { GetProductosPopulares } from '@services/product'; 
+import { Producto } from '@interfaces/product';
 
-// Definimos la interfaz Producto
-interface Producto {
-  ID_PRODUCTO: number;
-  NOMBRE_PROD: string;
-  PRECIO_VENTA: number;
-  URL: string | null; // Ahora incluye la URL de la imagen
-}
+
 
 export default function Carrusel() {
+
   const [productos, setProductos] = useState<Producto[]>([]);
   const carruselRef = useRef<HTMLDivElement>(null);
 
-  // Función para obtener los productos populares del backend
-  const fetchProductosPopulares = async () => {
-    try {
-      const response = await fetch('http://localhost:4000/producto/filtro/popularidad/1');
-      const data = await response.json();
-      setProductos(data.populares); // Asumimos que 'populares' es un array de Producto
-    } catch (error) {
-      console.error('Error al obtener productos populares:', error);
-    }
-  };
-
   useEffect(() => {
-    fetchProductosPopulares();
+    // Usamos la función fetch importada para obtener los productos populares
+    const obtenerProductos = async () => {
+      const productosPopulares = await GetProductosPopulares();
+      setProductos(productosPopulares);
+    };
+
+    obtenerProductos();
   }, []);
 
   const scrollLeft = () => {
