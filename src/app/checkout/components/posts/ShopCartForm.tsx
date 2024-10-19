@@ -6,13 +6,13 @@ import { FaRegTrashAlt } from "react-icons/fa";
 export default function ShopCartForm() {
     return (
         <div className="flex justify-between font-koulen w-full p-8">
-            <div className="m-2 p-2 rounded-md bg-gray-200 w-1/2 flex-grow p-5 px-10">
+            <div title="fact1" className="m-2 p-2 rounded-md bg-gray-200 w-1/2 flex-grow p-5 px-10 ">
                 <div id="header" className="text-gray-700 flex flex-row flex-nowrap justify-center items-baseline content-stretch">
                     <div><h4 className="m-2  flex flex-row flex-nowrap justify-start items-baseline content-stretch text-purple-400">Resumen <IoRemoveOutline className="ml-2"/> <FaCheckCircle className="text-gray-800" /> <IoRemoveOutline /></h4></div>
                     <div><h4 className="m-2  flex flex-row flex-nowrap justify-start items-baseline content-stretch">Envio <IoRemoveOutline className="ml-2"/> <FaCheckCircle className="text-gray-800" /> <IoRemoveOutline /></h4></div>
                     <div><h4 className="m-2  flex flex-row flex-nowrap justify-start items-baseline content-stretch">Pago <IoRemoveOutline className="ml-2"/> <FaCheckCircle className="text-gray-800" /> <IoRemoveOutline /></h4></div>
                 </div>
-                <h1 className="text-4xl text-gray-900 pb-5">Articulos</h1>
+                <h1 className="text-3xl text-gray-900 pb-5">Articulos</h1>
 
                 {/* PRODUCTO 1  */}
                 <div id="product" className="bg-white rounded-md flex flex-row flex-nowrap justify-start items-start content-start overflow-hidden mb-5">
@@ -134,7 +134,7 @@ export default function ShopCartForm() {
                 
             </div>
 
-            <div className="m-2 p-10 rounded-md bg-gray-200 flex flex-col flex-nowrap justify-between items-stretch content-stretch">
+            <div title="fact2" className="m-2 p-10 rounded-md bg-gray-200 flex flex-col flex-nowrap justify-between items-stretch content-stretch">
                 <div id="hd1" className="flex flex-row flex-nowrap justify-between items-start content-start">
                 <div id="orden" className="mr-64 text-gray-800">
                     <h1 className="mb-3">Resumen de la orden</h1>
