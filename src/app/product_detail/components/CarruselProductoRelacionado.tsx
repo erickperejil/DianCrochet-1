@@ -1,8 +1,24 @@
-import Product from 'app/landing/components/Product';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import Product from 'app/landing/components/Product'; 
+import { GetProductosSimilares } from '@services/product'; 
+import { Producto } from '@interfaces/product';
 
-export default function CarruselProducto() {
+
+
+export default function Carrusel() {
+
+  const [productos, setProductos] = useState<Producto[]>([]);
   const carruselRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Usamos la función fetch importada para obtener los productos populares
+    const obtenerProductos = async () => {
+      const productosSimilares = await GetProductosSimilares();
+      setProductos(productosSimilares);
+    };
+
+    obtenerProductos();
+  }, []);
 
   const scrollLeft = () => {
     if (carruselRef.current) {
@@ -23,41 +39,51 @@ export default function CarruselProducto() {
   };
 
   return (
-    <div className="max-w-screen relative">
-      <div className="ml-6"> 
-            <h1 className="font-koulen text-black">Nuevos Productos</h1>
-        </div>  
+    <div className="relative w-full">
+      <div className="ml-6 mb-4">
+        <h1 className="font-koulen text-black text-2xl">Productos Similares</h1>
+      </div>
+
       {/* Botón Izquierda */}
       <button
         onClick={scrollLeft}
-        className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-black text-white p-2 rounded-full z-10"
+        className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/70 text-white p-3 rounded-full z-10 focus:outline-none"
       >
         ◀
       </button>
 
       {/* Contenedor del carrusel */}
       <div
-        className="flex overflow-x-hidden scroll-smooth space-x-4 p-4"
+        className="flex space-x-4 px-4"
         ref={carruselRef}
-        style={{ scrollSnapType: 'x mandatory' }}
+        style={{
+          scrollSnapType: 'x mandatory',
+          overflowX: 'hidden', // Ocultamos la barra de scroll
+          scrollbarWidth: 'none', // Ocultamos la barra de scroll en Firefox
+        }}
       >
-        {/* Productos dentro del carrusel */}
-        <Product nombre="Kirby Llavero" precio="000$" imagen="/img/imagen34.svg" />
-        <Product nombre="Gorro Spiderman" precio="000$" imagen="/img/imagen34.svg" />
-        <Product nombre="Peluche Baphomet" precio="000$" imagen="/img/imagen34.svg" />
-        <Product nombre="Gorro Cuernos" precio="000$" imagen="/img/imagen34.svg" />
-        <Product nombre="Bufanda Roja" precio="000$" imagen="/img/imagen34.svg" />
-        <Product nombre="Guantes Invernales" precio="000$" imagen="/img/imagen34.svg" />
-        <Product nombre="Sombrero de Sol" precio="000$" imagen="/img/imagen34.svg" />
-        <Product nombre="Bolso Tejido" precio="000$" imagen="/img/imagen34.svg" />
-        <Product nombre="Cartera de Mano" precio="000$" imagen="/img/imagen34.svg" />
-        <Product nombre="Cojín Decorativo" precio="000$" imagen="/img/imagen34.svg" />
+        {/* Ocultamos el scroll de navegadores basados en Webkit como Chrome */}
+        <style jsx>{`
+          div::-webkit-scrollbar {
+            display: none;
+          }
+        `}</style>
+
+        {/* Renderizamos los productos dinámicamente */}
+        {productos.map((producto) => (
+          <Product
+            key={producto.ID_PRODUCTO}
+            nombre={producto.NOMBRE_PROD}
+            precio={`$${producto.PRECIO_VENTA.toFixed(2)}`} // Renderizamos el precio con dos decimales
+            imagen={producto.URL ? producto.URL : '/img/default-image.svg'} // Si la URL es null, usamos una imagen por defecto
+          />
+        ))}
       </div>
 
       {/* Botón Derecha */}
       <button
         onClick={scrollRight}
-        className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-black text-white p-2 rounded-full z-10"
+        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/70 text-white p-3 rounded-full z-10 focus:outline-none"
       >
         ▶
       </button>
