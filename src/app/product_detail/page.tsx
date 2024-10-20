@@ -3,7 +3,7 @@
 import Navbar from "components/navbar";
 import Footer from "components/Footer";
 import ProductDetail from "./components/ProductDetail";
-import CarruselProducto from "./components/CarruselProductoRelacionado";
+import CarruselProductoRelacionado from "./components/CarruselProductoRelacionado";
 
 
 export default function ProductDetailPage(){
@@ -15,7 +15,7 @@ export default function ProductDetailPage(){
                     <ProductDetail />
                 </div>
                 <div className="ml-24 max-w-full mr-24">
-                    <CarruselProducto/>
+                    <CarruselProductoRelacionado/>
                 </div>
             </main>
             <Footer />
