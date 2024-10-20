@@ -19,12 +19,12 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"],
-      "@services/*": ["services/*"],
-      "@interfaces/*": ["interfaces/*"],
+    "@/*": ["./src/*"],
+    "@services/*": ["services/*"],
+    "@interfaces/*": ["interfaces/*"],
+    "app/*": ["./src/app/*"]
+}
 
-
-    }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
