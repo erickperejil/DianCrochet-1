@@ -22,6 +22,11 @@ const koulen = localFont({
   variable: "--koulen",
   weight: "400",
 });
+const inter = localFont({
+  src: "../public/fonts/Inter.ttf",
+  variable: "--inter",
+  weight: "400",
+});
 
 
 export const metadata: Metadata = {
@@ -37,7 +42,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${lekton.variable} ${koulen.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${lekton.variable} ${koulen.variable} ${inter.variable} antialiased`}
       >
         {children}
       </body>

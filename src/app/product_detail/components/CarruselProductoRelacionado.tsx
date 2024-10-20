@@ -1,13 +1,31 @@
-import Product from 'app/landing/components/Product';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import Product from 'app/landing/components/Product'; 
+import { GetProductosSimilares } from '@services/product'; 
+import { ProductoSimilar } from '@interfaces/product';
 
-export default function CarruselProducto() {
+export default function Carrusel() {
+
+  const [productos, setProductos] = useState<ProductoSimilar[]>([]);
   const carruselRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const obtenerProductos = async () => {
+      try {
+        const productosSimilares = await GetProductosSimilares();
+        console.log('Productos Similares:', productosSimilares); // Verificar datos
+        setProductos(productosSimilares);
+      } catch (error) {
+        console.error('Error al obtener productos similares:', error);
+      }
+    };
+
+    obtenerProductos();
+  }, []);
 
   const scrollLeft = () => {
     if (carruselRef.current) {
       carruselRef.current.scrollBy({
-        left: -300, // Ajusta este valor según el tamaño de tus productos
+        left: -300,
         behavior: 'smooth',
       });
     }
@@ -16,48 +34,57 @@ export default function CarruselProducto() {
   const scrollRight = () => {
     if (carruselRef.current) {
       carruselRef.current.scrollBy({
-        left: 300, // Ajusta este valor según el tamaño de tus productos
+        left: 300,
         behavior: 'smooth',
       });
     }
   };
 
   return (
-    <div className="max-w-screen relative">
-      <div className="ml-6"> 
-            <h1 className="font-koulen text-black">Nuevos Productos</h1>
-        </div>  
-      {/* Botón Izquierda */}
+    <div className="relative w-full">
+      <div className="ml-6 mb-4">
+        <h1 className="font-koulen text-black text-2xl">Productos Similares</h1>
+      </div>
+
       <button
         onClick={scrollLeft}
-        className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-black text-white p-2 rounded-full z-10"
+        className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/70 text-white p-3 rounded-full z-10 focus:outline-none"
       >
         ◀
       </button>
 
-      {/* Contenedor del carrusel */}
       <div
-        className="flex overflow-x-hidden scroll-smooth space-x-4 p-4"
+        className="flex space-x-4 px-4"
         ref={carruselRef}
-        style={{ scrollSnapType: 'x mandatory' }}
+        style={{
+          scrollSnapType: 'x mandatory',
+          overflowX: 'hidden',
+          scrollbarWidth: 'none',
+        }}
       >
-        {/* Productos dentro del carrusel */}
-        <Product nombre="Kirby Llavero" precio="000$" imagen="/img/imagen34.svg" />
-        <Product nombre="Gorro Spiderman" precio="000$" imagen="/img/imagen34.svg" />
-        <Product nombre="Peluche Baphomet" precio="000$" imagen="/img/imagen34.svg" />
-        <Product nombre="Gorro Cuernos" precio="000$" imagen="/img/imagen34.svg" />
-        <Product nombre="Bufanda Roja" precio="000$" imagen="/img/imagen34.svg" />
-        <Product nombre="Guantes Invernales" precio="000$" imagen="/img/imagen34.svg" />
-        <Product nombre="Sombrero de Sol" precio="000$" imagen="/img/imagen34.svg" />
-        <Product nombre="Bolso Tejido" precio="000$" imagen="/img/imagen34.svg" />
-        <Product nombre="Cartera de Mano" precio="000$" imagen="/img/imagen34.svg" />
-        <Product nombre="Cojín Decorativo" precio="000$" imagen="/img/imagen34.svg" />
+        <style jsx>{`
+          div::-webkit-scrollbar {
+            display: none;
+          }
+        `}</style>
+
+        {productos.length > 0 ? (
+          productos.map((producto, index) => (
+            <Product
+              key={`${producto.ID_PRODUCTO}-${index}`}
+              nombre={producto.NOMBRE_PROD}
+              precio={`$${producto.PRECIO_VENTA.toFixed(2)}`}
+              imagen={producto.IMG_PRINCIPAL ? producto.IMG_PRINCIPAL : '/img/default-image.svg'}
+            />
+          ))
+        ) : (
+          <p>No hay productos similares disponibles.</p>
+        )}
       </div>
 
-      {/* Botón Derecha */}
       <button
         onClick={scrollRight}
-        className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-black text-white p-2 rounded-full z-10"
+        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/70 text-white p-3 rounded-full z-10 focus:outline-none"
       >
         ▶
       </button>
