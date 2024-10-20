@@ -7,7 +7,7 @@ import Categorias from "./components/categories";
 import { useState } from "react";
 
 export default function Products() {
-  const [showCategories, setShowCategories] = useState(false);
+  const [showCategories, setShowCategories] = useState(true);
   return (
     <div>
       <Navbar />
