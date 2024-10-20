@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import Product from './Product';
-import { GetProductosPopulares } from '@services/product'; 
+import { GetKitsPopulares } from '@services/kits'; 
 import { Producto } from '@interfaces/product';
 
 
@@ -13,7 +13,7 @@ export default function Carrusel() {
   useEffect(() => {
     // Usamos la función fetch importada para obtener los productos populares
     const obtenerProductos = async () => {
-      const productosPopulares = await GetProductosPopulares();
+      const productosPopulares = await GetKitsPopulares();
       setProductos(productosPopulares);
     };
 
@@ -41,7 +41,7 @@ export default function Carrusel() {
   return (
     <div className="relative w-full">
       <div className="ml-6 mb-4">
-        <h1 className="font-koulen text-black text-2xl">Productos Populares</h1>
+        <h1 className="font-koulen text-black text-2xl">Kits Populares</h1>
       </div>
 
       {/* Botón Izquierda */}
