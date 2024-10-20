@@ -106,7 +106,6 @@ export const resetPassword = async (correo: string) => {
 
 
 export const validarCorreo = async (correo: string, codigoVeri: string) => {
-  try {
     const response = await fetch("http://localhost:4000/user/validar/correo", {
       method: "PUT",
       headers: {
@@ -119,9 +118,7 @@ export const validarCorreo = async (correo: string, codigoVeri: string) => {
       throw new Error(data.error || "Error al verificar el código");
     }
     return data;
-  } catch (error) {
-    throw new Error("Error de red");
-  }
+    
 };
 
 

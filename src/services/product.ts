@@ -12,4 +12,13 @@ export const GetProductosPopulares = async (): Promise<Producto[]> => {
   }
 };
 
+export const getProducts = async() =>{
+  const res = await fetch("http://localhost:5000/user");
+  if (!res.ok) {
+    throw new Error("Error al iniciar registro");
+  }
+  const data = await res.json();
+  return data;
+}
+
   

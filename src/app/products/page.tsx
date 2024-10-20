@@ -1,17 +1,19 @@
+'use client'
 import Product from "app/landing/components/Product";
 import Footer from "components/Footer";
 import Navbar from "components/navbar";
 import Image from "next/image";
+import Categorias from "./components/categories";
+import { useState } from "react";
 
 export default function Products() {
+  const [showCategories, setShowCategories] = useState(false);
   return (
     <div>
       <Navbar />
-      <section className=" bg-white">
+      <section className="bg-white">
         <div className="flex h-20 items-center">
-          <h1 className="pl-6 font-koulen text-5xl text-gray-900">
-            Productos
-          </h1>
+          <h1 className="pl-6 font-koulen text-5xl text-gray-900">Productos</h1>
           <Image
             src="/img/girasol.svg"
             alt="Crochet Flower"
@@ -83,11 +85,9 @@ export default function Products() {
           </div>
 
           <div className="relative mb-3 flex h-9 w-full items-center pl-6">
-            <h2 className=" font-lekton text-lg text-[#444343]">
-              Filtros :
-            </h2>
+            <h2 className="font-lekton text-lg text-[#444343]">Filtros :</h2>
 
-            <div className="ml-6 flex items-center  font-lekton text-lg text-[#444343]">
+            <div className="relative ml-6 flex items-center font-lekton text-lg text-[#444343]">
               <h2>Categorias</h2>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -103,9 +103,16 @@ export default function Products() {
                   d="m19.5 8.25-7.5 7.5-7.5-7.5"
                 />
               </svg>
+
+              <div className="top-7 absolute h-[700%] w-[160%]">
+                <Categorias
+                open = {showCategories}
+                setOpen={setShowCategories}
+                />
+              </div>
             </div>
 
-            <div className="ml-6 flex items-center  font-lekton text-lg text-[#444343]">
+            <div className="ml-6 flex items-center font-lekton text-lg text-[#444343]">
               <h2>Precio</h2>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -123,7 +130,7 @@ export default function Products() {
               </svg>
             </div>
 
-            <div className="absolute right-[10%] ml-6 flex items-center  font-lekton text-lg text-[#444343]">
+            <div className="absolute right-[10%] ml-6 flex items-center font-lekton text-lg text-[#444343]">
               <h2>Ordenar por:</h2>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -145,45 +152,94 @@ export default function Products() {
 
         <section className="h-full px-[8.32%] py-12">
           <div className="grid grid-cols-4 gap-6">
-            <div className="text-center w-[260px] h-[364px]">
-             <Product nombre="Spiderman Gorro" precio="200L" imagen="/img/imagen34.svg"/>
+            <div className="h-[364px] w-[260px] text-center">
+              <Product
+                nombre="Spiderman Gorro"
+                precio="200L"
+                imagen="/img/imagen34.svg"
+              />
             </div>
-            <div className="text-center w-[260px] h-[364px]">
-             <Product nombre="Spiderman Gorro" precio="200L" imagen="/img/imagen34.svg"/>
+            <div className="h-[364px] w-[260px] text-center">
+              <Product
+                nombre="Spiderman Gorro"
+                precio="200L"
+                imagen="/img/imagen34.svg"
+              />
             </div>
-            <div className="text-center w-[260px] h-[364px]">
-             <Product nombre="Spiderman Gorro" precio="200L" imagen="/img/imagen34.svg"/>
+            <div className="h-[364px] w-[260px] text-center">
+              <Product
+                nombre="Spiderman Gorro"
+                precio="200L"
+                imagen="/img/imagen34.svg"
+              />
             </div>
-            <div className="text-center w-[260px] h-[364px]">
-             <Product nombre="Spiderman Gorro" precio="200L" imagen="/img/imagen34.svg"/>
+            <div className="h-[364px] w-[260px] text-center">
+              <Product
+                nombre="Spiderman Gorro"
+                precio="200L"
+                imagen="/img/imagen34.svg"
+              />
             </div>
-            <div className="text-center w-[260px] h-[364px]">
-             <Product nombre="Spiderman Gorro" precio="200L" imagen="/img/imagen34.svg"/>
+            <div className="h-[364px] w-[260px] text-center">
+              <Product
+                nombre="Spiderman Gorro"
+                precio="200L"
+                imagen="/img/imagen34.svg"
+              />
             </div>
-            <div className="text-center w-[260px] h-[364px]">
-             <Product nombre="Spiderman Gorro" precio="200L" imagen="/img/imagen34.svg"/>
+            <div className="h-[364px] w-[260px] text-center">
+              <Product
+                nombre="Spiderman Gorro"
+                precio="200L"
+                imagen="/img/imagen34.svg"
+              />
             </div>
-            <div className="text-center w-[260px] h-[364px]">
-             <Product nombre="Spiderman Gorro" precio="200L" imagen="/img/imagen34.svg"/>
+            <div className="h-[364px] w-[260px] text-center">
+              <Product
+                nombre="Spiderman Gorro"
+                precio="200L"
+                imagen="/img/imagen34.svg"
+              />
             </div>
-            <div className="text-center w-[260px] h-[364px]">
-             <Product nombre="Spiderman Gorro" precio="200L" imagen="/img/imagen34.svg"/>
+            <div className="h-[364px] w-[260px] text-center">
+              <Product
+                nombre="Spiderman Gorro"
+                precio="200L"
+                imagen="/img/imagen34.svg"
+              />
             </div>
-            <div className="text-center w-[260px] h-[364px]">
-             <Product nombre="Spiderman Gorro" precio="200L" imagen="/img/imagen34.svg"/>
-            </div>            <div className="text-center w-[260px] h-[364px]">
-             <Product nombre="Spiderman Gorro" precio="200L" imagen="/img/imagen34.svg"/>
-            </div>            <div className="text-center w-[260px] h-[364px]">
-             <Product nombre="Spiderman Gorro" precio="200L" imagen="/img/imagen34.svg"/>
-            </div>            <div className="text-center w-[260px] h-[364px]">
-             <Product nombre="Spiderman Gorro" precio="200L" imagen="/img/imagen34.svg"/>
+            <div className="h-[364px] w-[260px] text-center">
+              <Product
+                nombre="Spiderman Gorro"
+                precio="200L"
+                imagen="/img/imagen34.svg"
+              />
+            </div>{" "}
+            <div className="h-[364px] w-[260px] text-center">
+              <Product
+                nombre="Spiderman Gorro"
+                precio="200L"
+                imagen="/img/imagen34.svg"
+              />
+            </div>{" "}
+            <div className="h-[364px] w-[260px] text-center">
+              <Product
+                nombre="Spiderman Gorro"
+                precio="200L"
+                imagen="/img/imagen34.svg"
+              />
+            </div>{" "}
+            <div className="h-[364px] w-[260px] text-center">
+              <Product
+                nombre="Spiderman Gorro"
+                precio="200L"
+                imagen="/img/imagen34.svg"
+              />
             </div>
           </div>
         </section>
 
-        <div className="flex h-20 items-center border border-blue-800">
-
-        </div>
+        <div className="flex h-20 items-center border border-blue-800"></div>
       </section>
       <Footer />
     </div>
