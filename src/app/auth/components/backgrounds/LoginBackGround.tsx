@@ -29,7 +29,7 @@ export default function LoginBG() {
         alt="Background Image"
         width={100}
         height={100}
-        className="absolute pointer-events-none bottom-48 right-[410px] scale-x-[-1] mix-blend-multiply"
+        className="absolute pointer-events-none bottom-48 right-[350px] scale-x-[-1] mix-blend-multiply"
       />
 
       <Image
@@ -51,9 +51,9 @@ export default function LoginBG() {
       <Image
         src="/img/CrochetRooster.jpg"
         alt="Background Image"
-        width={240}
-        height={144}
-        className="absolute pointer-events-none bottom-0 left-[-25px] scale-x-[-1] mix-blend-multiply"
+        width={200}
+        height={120}
+        className="absolute pointer-events-none bottom-[-10%] left-[-58px] scale-x-[-1] mix-blend-multiply"
         style={{ width: 'auto', height: 'auto' }}
       />
 
