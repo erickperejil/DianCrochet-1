@@ -6,7 +6,7 @@ import Header from "components/Header";
 export default function Login() {
   return (
     <main className="flex h-screen w-full flex-col bg-slate-50 overflow-hidden">
-      <Header/>
+      <Header />
       <section className="imagen relative flex h-[92%] w-full items-center justify-center">
         <LoginForm />
         <LoginBG />
