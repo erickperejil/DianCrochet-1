@@ -61,7 +61,7 @@ export function useProducto() {
   
 
 export const getProducts = async(): Promise<FullProduct[]> =>{
-  const res = await fetch("http://localhost:4000/producto");
+  const res = await fetch("http://localhost:4000/producto/Producto");
   if (!res.ok) {
     throw new Error("Error al traer productos");
   }

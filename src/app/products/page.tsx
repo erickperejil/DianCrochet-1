@@ -17,7 +17,7 @@ export default function Products() {
   const [productsSplit, setProductsSplit] = useState(0);
 
   const [pageNumber, setPageNumber] = useState(1);
-  const [indexNumbers, setIndexNumbers] = useState(3);
+  const [indexNumbers, setIndexNumbers] = useState(1);
 
   const handlePageNumber = (index: number) => {
     setPageNumber(index);
@@ -28,7 +28,7 @@ export default function Products() {
         behavior: "smooth", // Esto hace que el desplazamiento sea suave
       });
       if (index > 2) {
-        setIndexNumbers(index - 1);
+        setIndexNumbers(index);
       }
     }
   };
@@ -269,32 +269,82 @@ export default function Products() {
             </button>
             <div className="flex h-full items-center justify-evenly bg-slate-50 px-1">
               {divNumbers.map((number) =>
-                number > indexNumbers ? (
-                  indexNumbers >= 3 ? (
+                divNumbers.length > 4 ? (
+                  (pageNumber>2) ? (
+                    (number == divNumbers.length - 1 && number!=pageNumber+1 && number!=pageNumber) ? (
+                      <div className="mx-1 flex h-7 w-9 items-end justify-center font-lekton text-lg text-blue-400">
+                      ...
+                    </div>
+                    ):(
+                      (number == divNumbers.length && number!=pageNumber) ?  (
+                        <div
+                          key={number}
+                          onClick={() => handlePageNumber(number)}
+                          className={`mx-1 flex h-7 w-7 items-center justify-center border border-[#C68EFE] pt-1 font-lekton text-lg ${
+                            pageNumber === number
+                              ? "bg-[#C68EFE] text-white" // Estilos cuando pageNumber coincide con number
+                              : "text-[#C68EFE] hover:bg-[#C68EFE] hover:text-white" // Estilos por defecto
+                          }`}
+                        >
+                          {number}
+                        </div>
+                      ) : (
+                        (number>=pageNumber-1 && number<=pageNumber+1)?(
+                          <div
+                          key={number}
+                          onClick={() => handlePageNumber(number)}
+                          className={`mx-1 flex h-7 w-7 items-center justify-center border border-[#C68EFE] pt-1 font-lekton text-lg ${
+                            pageNumber === number
+                              ? "bg-[#C68EFE] text-white" // Estilos cuando pageNumber coincide con number
+                              : "text-[#C68EFE] hover:bg-[#C68EFE] hover:text-white" // Estilos por defecto
+                          }`}
+                        >
+                          {number}
+                        </div>
+                        ):(
+                          ""
+                        )
+                      )
+                    )
+                  ):(
                     number == divNumbers.length - 1 ? (
                       <div className="mx-1 flex h-7 w-9 items-end justify-center font-lekton text-lg text-blue-400">
-                        ...
-                      </div>
-                    ) : number == divNumbers.length ? (
-                      <div
-                        key={number}
-                        onClick={() => handlePageNumber(number)}
-                        className={`mx-1 flex h-7 w-7 items-center justify-center border border-[#C68EFE] pt-1 font-lekton text-lg ${
-                          pageNumber === number
-                            ? "bg-[#C68EFE] text-white" // Estilos cuando pageNumber coincide con number
-                            : "text-[#C68EFE] hover:bg-[#C68EFE] hover:text-white" // Estilos por defecto
-                        }`}
-                      >
-                        {number}
-                      </div>
-                    ) : (
-                      ""
+                      ...
+                    </div>
+                    ):(
+                      number == divNumbers.length ? (
+                        <div
+                          key={number}
+                          onClick={() => handlePageNumber(number)}
+                          className={`mx-1 flex h-7 w-7 items-center justify-center border border-[#C68EFE] pt-1 font-lekton text-lg ${
+                            pageNumber === number
+                              ? "bg-[#C68EFE] text-white" // Estilos cuando pageNumber coincide con number
+                              : "text-[#C68EFE] hover:bg-[#C68EFE] hover:text-white" // Estilos por defecto
+                          }`}
+                        >
+                          {number}
+                        </div>
+                      ) : (
+                        number<=3?(
+                          <div
+                          key={number}
+                          onClick={() => handlePageNumber(number)}
+                          className={`mx-1 flex h-7 w-7 items-center justify-center border border-[#C68EFE] pt-1 font-lekton text-lg ${
+                            pageNumber === number
+                              ? "bg-[#C68EFE] text-white" // Estilos cuando pageNumber coincide con number
+                              : "text-[#C68EFE] hover:bg-[#C68EFE] hover:text-white" // Estilos por defecto
+                          }`}
+                        >
+                          {number}
+                        </div>
+                        ):(
+                          ""
+                        )
+                      )
                     )
-                  ) : (
-                    ""
                   )
-                ) : number > indexNumbers - 3 ? (
-                  <div
+                ) : (
+                    <div
                     key={number}
                     onClick={() => handlePageNumber(number)}
                     className={`mx-1 flex h-7 w-7 items-center justify-center border border-[#C68EFE] pt-1 font-lekton text-lg ${
@@ -305,8 +355,6 @@ export default function Products() {
                   >
                     {number}
                   </div>
-                ) : (
-                  ""
                 ),
               )}
             </div>
