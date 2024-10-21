@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import Product from "../landing/components/Product";
 import Footer from "components/Footer";
 import Navbar from "components/navbar";
@@ -15,13 +15,13 @@ export default function Products() {
 
   const [productos, setProductos] = useState<FullProduct[]>([]);
 
-  const handleCategories = () =>{
-    setShowCategories(!showCategories)
-  }
+  const handleCategories = () => {
+    setShowCategories(!showCategories);
+  };
 
-  const handlePrices = () =>{
-    setShowPrices(!showPrices)
-  }
+  const handlePrices = () => {
+    setShowPrices(!showPrices);
+  };
 
   useEffect(() => {
     async function fetchGets() {
@@ -132,11 +132,8 @@ export default function Products() {
                 />
               </svg>
 
-              <div className="top-7 absolute h-[700%] w-[160%]">
-                <Categorias
-                open = {showCategories}
-                setOpen={setShowCategories}
-                />
+              <div className="absolute top-7 h-[700%] w-[160%]">
+                <Categorias open={showCategories} setOpen={setShowCategories} />
               </div>
             </div>
 
@@ -158,10 +155,8 @@ export default function Products() {
                 />
               </svg>
 
-              <div className="ml-4 rounded-lg top-7 absolute h-[210%] w-[22%]">
-                <Prices
-                open = {showPrices}
-                setOpen={setShowPrices}/>
+              <div className="absolute top-7 ml-4 h-[210%] w-[22%] rounded-lg">
+                <Prices open={showPrices} setOpen={setShowPrices} />
               </div>
             </div>
 
@@ -187,19 +182,18 @@ export default function Products() {
 
         <section className="h-full px-[8.32%] py-12">
           <div className="grid grid-cols-4 gap-6">
-          {productos.map((producto) => (
-            <div key={producto.id_producto} className="h-[364px] w-[260px] text-center">
-            <Product
-              nombre={producto.nombre_prod}
-              precio={`$${producto.precio_venta.toFixed(2)}`}
-              imagen={producto.imagen_principal}
-
-
-            />
-          </div>
-          ))}
-
-
+            {productos.slice(0, 16).map((producto) => (
+              <div
+                key={producto.id_producto}
+                className="h-[364px] w-[260px] text-center"
+              >
+                <Product
+                  nombre={producto.nombre_prod}
+                  precio={`$${producto.precio_venta.toFixed(2)}`}
+                  imagen={producto.imagen_principal}
+                />
+              </div>
+            ))}
           </div>
         </section>
 
