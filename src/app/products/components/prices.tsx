@@ -1,4 +1,5 @@
-import { useRef } from "react";
+'use client'
+import { ChangeEvent, useRef, useState } from "react";
 
 interface PricesProps {
   open: boolean; // Añadir `open` como prop
@@ -11,6 +12,21 @@ export default function Prices({ open, setOpen }: PricesProps) {
     // Si el desenfoque es fuera del contenedor, cerramos el componente
     if (ref.current && !ref.current.contains(event.relatedTarget as Node)) {
       setOpen(false);
+    }
+  };
+
+  const[minPrice, setMinPrice] = useState(0);
+  const[maxPrice, setMaxPrice] = useState(0);
+
+  const HandleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    if (name === "max_price") {
+      setMaxPrice(Number(value)); // Actualizar el valor de maxPrice
+    }
+
+    if (name === "min_price") {
+      setMinPrice(Number(value)); // Actualizar el valor de minPrice
     }
   };
 
@@ -28,9 +44,12 @@ export default function Prices({ open, setOpen }: PricesProps) {
           <div className="flex h-2/5 w-11/12 rounded-xl border border-slate-700">
             <input
               className="h-full w-9/12 rounded-lg border-none bg-transparent focus:ring-transparent"
-              type="text"
-              name=""
-              id=""
+              type="number"
+              id="min_price"
+              name="min_price"
+              value={minPrice !== null ? minPrice : ""}
+              onChange={HandleChange}
+              placeholder={`${minPrice}`}
             />
             <div className=" select-none flex h-full w-3/12 justify-center rounded-lg font-lekton">
               $
@@ -46,9 +65,12 @@ export default function Prices({ open, setOpen }: PricesProps) {
           <div className="flex h-2/5 w-11/12 rounded-xl border border-slate-700">
             <input
               className="h-full w-9/12 rounded-lg border-none bg-transparent focus:ring-transparent"
-              type="text"
-              name=""
-              id=""
+              type="number"
+              id="max_price"
+              name="max_price"
+              value={minPrice !== null ? minPrice : ""}
+              onChange={HandleChange}
+              placeholder={`${maxPrice}`}
             />
             <div className="select-none flex h-full w-3/12 justify-center rounded-lg font-lekton">
               $

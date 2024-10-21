@@ -32,3 +32,9 @@ export interface Producto {
     precio_venta: number;
     imagen_principal: string
   }
+
+  export interface Filtered{
+    categorias: string[];
+    min_precio: number | null;
+    max_precio: number | null
+  }

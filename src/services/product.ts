@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
-import { ProductoDetalle } from "@interfaces/product";
+import { Filtered, ProductoDetalle } from "@interfaces/product";
 import { useParams } from 'next/navigation';
 import { FullProduct, Producto, ProductoSimilar } from "@interfaces/product";
+
+const API_URL = "http://localhost:4000/producto";
 
 
 export const GetProductosPopulares = async (): Promise<Producto[]> => {
@@ -69,4 +71,18 @@ export const getProducts = async(): Promise<FullProduct[]> =>{
   return data.productosRandom;
 }
 
-  
+export const FilteredProducts = async (data: Filtered) => {
+  const response = await fetch(`${API_URL}/ordenados`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    throw new Error("Error filtrando productos");
+  }
+
+  return response.json();
+};

@@ -6,8 +6,8 @@ import Image from "next/image";
 import Categorias from "./components/categories";
 import { useEffect, useState } from "react";
 import Prices from "./components/prices";
-import { FullProduct } from "@interfaces/product";
-import { getProducts } from "@services/product";
+import { Filtered, FullProduct } from "@interfaces/product";
+import { FilteredProducts, getProducts } from "@services/product";
 
 export default function Products() {
   const [showCategories, setShowCategories] = useState(false);
@@ -18,6 +18,21 @@ export default function Products() {
 
   const [pageNumber, setPageNumber] = useState(1);
   const [indexNumbers, setIndexNumbers] = useState(1);
+
+  const [PricesData, setPricesData] = useState<Filtered>({
+    categorias: [""],
+    min_precio: 0,
+    max_precio: 1000,
+  });
+
+  const handleFetchCategories = async () =>{
+      try {
+        const res = await FilteredProducts(PricesData); // Llama a la función para obtener los productos
+        setProductos(res); // Actualiza el estado con el resultado
+      } catch (error) {
+        console.error("Error al traer productos:", error);
+      }
+  }
 
   const handlePageNumber = (index: number) => {
     setPageNumber(index);
@@ -57,10 +72,12 @@ export default function Products() {
 
   const handleCategories = () => {
     setShowCategories(!showCategories);
+    setShowPrices(false)
   };
 
   const handlePrices = () => {
     setShowPrices(!showPrices);
+    setShowCategories(false)
   };
 
   const totalProducts = productos.length;
@@ -168,7 +185,7 @@ export default function Products() {
                 viewBox="0 0 24 24"
                 strokeWidth={2.1}
                 stroke="currentColor"
-                className="size-5"
+                className={`size-5 transition-all ease-linear duration-300 rotate${showCategories ? ("transform rotate-180"):("")}`}
                 onClick={handleCategories}
               >
                 <path
@@ -192,7 +209,7 @@ export default function Products() {
                 viewBox="0 0 24 24"
                 strokeWidth={2.1}
                 stroke="currentColor"
-                className="size-5"
+                className={`size-5 transition-all ease-linear duration-300 rotate${showPrices ? ("transform rotate-180"):("")}`}
               >
                 <path
                   strokeLinecap="round"
