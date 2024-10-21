@@ -59,7 +59,7 @@ export default function Header() {
             {isProfileOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md overflow-hidden z-20">
                 <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Mi Perfil</a>
-                <a onClick={() => router.push('/auth/sign-in')} href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Cerrar Sesion</a>
+                <a onClick={() => router.push('/auth/sign-in')} href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Iniciar Sesion</a>
               </div>
             )}
           </div>
