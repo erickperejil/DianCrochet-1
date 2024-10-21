@@ -45,17 +45,24 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
 
       <div className="flex flex-col space-y-4">
         <div className="flex justify-center">
-          <Image
-            src={producto.imagen_principal}
-            alt={producto.nombre_prod}
-            width={350}
-            height={350}
-            className="rounded-lg w-[450px]"
-          />
+          {/* Verificación de imagen principal */}
+          {producto.imagen_principal ? (
+            <Image
+              src={producto.imagen_principal}
+              alt={producto.nombre_prod}
+              width={350}
+              height={350}
+              className="rounded-lg w-[450px]"
+            />
+          ) : (
+            <div className="w-[350px] h-[350px] flex items-center justify-center bg-gray-200 rounded-lg">
+              <p className="text-gray-500">Imagen no disponible</p>
+            </div>
+          )}
         </div>
 
         <div className="overflow-x-auto flex space-x-2 scrollbar-hide justify-center">
-          {producto.imagenes_extra.map((thumbnailSrc, index) => (
+          {(producto.imagenes_extra || []).map((thumbnailSrc, index) => (
             <Image
               key={index}
               src={thumbnailSrc}
@@ -78,31 +85,32 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
         <p className="text-black font-koulen">L{producto.precio_venta.toFixed(2)}</p>
         <p className="font-lekton text-black">*Precio no incluye envío</p>
 
-        {/* Selección de Talla */}
-        <div>
-          <h3 className="font-koulen">TALLA</h3>
-          <h1>{producto.talla}</h1>
-          <div className="flex space-x-2 mt-2 font-koulen text-black">
-            {['XS', 'S', 'M', 'L'].map((talla) => (
-              <button
-                key={talla}
-                className={`px-4 py-2 border rounded-lg ${
-                  selectedTalla === talla ? 'bg-[#C68EFE] text-white' : 'bg-gray-200'
-                }`}
-                onClick={() => setSelectedTalla(talla)}
-              >
-                {talla}
-              </button>
-            ))}
-          </div>
-        </div>
-        <div><h3 className="font-koulen">Cantidad</h3>
-        </div>
+        {producto.tallas && producto.tallas.filter(talla => talla !== null).length > 0 ? (
+            <div>
+              <h3 className="font-koulen">TALLA</h3>
+              <div className="flex space-x-2 mt-2 font-koulen text-black">
+                {producto.tallas.filter(talla => talla !== null).map((talla) => (
+                  <button
+                    key={talla}
+                    className={`px-4 py-2 border rounded-lg ${
+                      selectedTalla === talla ? 'bg-[#C68EFE] text-white' : 'bg-gray-200'
+                    }`}
+                    onClick={() => setSelectedTalla(talla)}
+                  >
+                    {talla}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div></div> // Si no hay tallas, renderiza un div vacío
+        )}
 
         {/* Selección de Cantidad */}
+        <div>
+          <h3 className="font-koulen">Cantidad</h3>
+        </div>
         <div className="flex items-center space-x-4">
-          
-         
           <div className="flex items-center border rounded-lg">
             <button
               className="px-4 py-2 text-white bg-[#C68EFE] rounded-lg mr-5"
@@ -125,9 +133,8 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
             </button>
           </div>
         </div>
-          <div>
 
-          </div>
+        {/* Botón de añadir al carrito */}
         <button className="mt-4 px-4 py-2 bg-[#C68EFE] text-white rounded-lg hover:bg-purple-600 font-lekton">
           Añadir al Carrito
         </button>

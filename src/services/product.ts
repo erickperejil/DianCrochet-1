@@ -34,6 +34,7 @@ export function useProducto() {
     const obtenerDetallesProducto = async () => {
       try {
         const response = await fetch(`http://localhost:4000/producto/detalle/${id}`);
+        
 
         if (!response.ok) {
           throw new Error(`Error en la respuesta del servidor: ${response.statusText}`);
@@ -55,8 +56,9 @@ export function useProducto() {
       obtenerDetallesProducto();
     }
   }, [id]);
-
+  console.log(producto)
   return producto;
+  
 }
   
 
