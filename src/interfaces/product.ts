@@ -5,3 +5,16 @@ export interface Producto {
     PRECIO_VENTA: number;
     URL: string | null; // Ahora incluye la URL de la imagen
   }
+
+  export interface ProductoDetalle {
+    id_producto: number;
+    nombre_prod: string;
+    precio_venta: number;
+    descripcion: string;
+    cantidad_disp: number;
+    tipo_prod: string;
+    color: string;
+    talla: string;
+    imagen_principal: string;
+    imagenes_extra: string[];
+  }
