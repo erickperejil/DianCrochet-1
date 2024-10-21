@@ -1,13 +1,40 @@
 'use client'
-import Product from "app/landing/components/Product";
+import Product from "../landing/components/Product";
 import Footer from "components/Footer";
 import Navbar from "components/navbar";
 import Image from "next/image";
 import Categorias from "./components/categories";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Prices from "./components/prices";
+import { FullProduct } from "@interfaces/product";
+import { getProducts } from "@services/product";
 
 export default function Products() {
-  const [showCategories, setShowCategories] = useState(true);
+  const [showCategories, setShowCategories] = useState(false);
+  const [showPrices, setShowPrices] = useState(false);
+
+  const [productos, setProductos] = useState<FullProduct[]>([]);
+
+  const handleCategories = () =>{
+    setShowCategories(!showCategories)
+  }
+
+  const handlePrices = () =>{
+    setShowPrices(!showPrices)
+  }
+
+  useEffect(() => {
+    async function fetchGets() {
+      try {
+        const res = await getProducts(); // Llama a la función para obtener los productos
+        setProductos(res); // Actualiza el estado con el resultado
+      } catch (error) {
+        console.error("Error al traer productos:", error);
+      }
+    }
+    fetchGets();
+  }, []);
+
   return (
     <div>
       <Navbar />
@@ -96,6 +123,7 @@ export default function Products() {
                 strokeWidth={2.1}
                 stroke="currentColor"
                 className="size-5"
+                onClick={handleCategories}
               >
                 <path
                   strokeLinecap="round"
@@ -115,6 +143,7 @@ export default function Products() {
             <div className="ml-6 flex items-center font-lekton text-lg text-[#444343]">
               <h2>Precio</h2>
               <svg
+                onClick={handlePrices}
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -128,6 +157,12 @@ export default function Products() {
                   d="m19.5 8.25-7.5 7.5-7.5-7.5"
                 />
               </svg>
+
+              <div className="ml-4 rounded-lg top-7 absolute h-[210%] w-[22%]">
+                <Prices
+                open = {showPrices}
+                setOpen={setShowPrices}/>
+              </div>
             </div>
 
             <div className="absolute right-[10%] ml-6 flex items-center font-lekton text-lg text-[#444343]">
@@ -152,90 +187,19 @@ export default function Products() {
 
         <section className="h-full px-[8.32%] py-12">
           <div className="grid grid-cols-4 gap-6">
-            <div className="h-[364px] w-[260px] text-center">
-              <Product
-                nombre="Spiderman Gorro"
-                precio="200L"
-                imagen="/img/imagen34.svg"
-              />
-            </div>
-            <div className="h-[364px] w-[260px] text-center">
-              <Product
-                nombre="Spiderman Gorro"
-                precio="200L"
-                imagen="/img/imagen34.svg"
-              />
-            </div>
-            <div className="h-[364px] w-[260px] text-center">
-              <Product
-                nombre="Spiderman Gorro"
-                precio="200L"
-                imagen="/img/imagen34.svg"
-              />
-            </div>
-            <div className="h-[364px] w-[260px] text-center">
-              <Product
-                nombre="Spiderman Gorro"
-                precio="200L"
-                imagen="/img/imagen34.svg"
-              />
-            </div>
-            <div className="h-[364px] w-[260px] text-center">
-              <Product
-                nombre="Spiderman Gorro"
-                precio="200L"
-                imagen="/img/imagen34.svg"
-              />
-            </div>
-            <div className="h-[364px] w-[260px] text-center">
-              <Product
-                nombre="Spiderman Gorro"
-                precio="200L"
-                imagen="/img/imagen34.svg"
-              />
-            </div>
-            <div className="h-[364px] w-[260px] text-center">
-              <Product
-                nombre="Spiderman Gorro"
-                precio="200L"
-                imagen="/img/imagen34.svg"
-              />
-            </div>
-            <div className="h-[364px] w-[260px] text-center">
-              <Product
-                nombre="Spiderman Gorro"
-                precio="200L"
-                imagen="/img/imagen34.svg"
-              />
-            </div>
-            <div className="h-[364px] w-[260px] text-center">
-              <Product
-                nombre="Spiderman Gorro"
-                precio="200L"
-                imagen="/img/imagen34.svg"
-              />
-            </div>{" "}
-            <div className="h-[364px] w-[260px] text-center">
-              <Product
-                nombre="Spiderman Gorro"
-                precio="200L"
-                imagen="/img/imagen34.svg"
-              />
-            </div>{" "}
-            <div className="h-[364px] w-[260px] text-center">
-              <Product
-                nombre="Spiderman Gorro"
-                precio="200L"
-                imagen="/img/imagen34.svg"
-              />
-            </div>{" "}
-            <div className="h-[364px] w-[260px] text-center">
-              <Product
-                nombre="Spiderman Gorro"
-                precio="200L"
-                imagen="/img/imagen34.svg"
-              />
-            </div>
+          {productos.map((producto) => (
+            <div key={producto.id_producto} className="h-[364px] w-[260px] text-center">
+            <Product
+              nombre={producto.nombre_prod}
+              precio={`$${producto.precio_venta.toFixed(2)}`}
+              imagen={producto.imagen_principal}
+
+
+            />
+          </div>
+          ))}
+
+
           </div>
         </section>
 

@@ -1,4 +1,4 @@
-import { Producto, ProductoSimilar } from "@interfaces/product";
+import { FullProduct, Producto, ProductoSimilar } from "@interfaces/product";
 
 // Función para obtener los productos populares desde el backend
 export const GetProductosPopulares = async (): Promise<Producto[]> => {
@@ -24,13 +24,13 @@ export const GetProductosSimilares = async (): Promise<ProductoSimilar[]> => {
 }; 
 
 
-export const getProducts = async() =>{
-  const res = await fetch("http://localhost:5000/user");
+export const getProducts = async(): Promise<FullProduct[]> =>{
+  const res = await fetch("http://localhost:4000/producto");
   if (!res.ok) {
-    throw new Error("Error al iniciar registro");
+    throw new Error("Error al traer productos");
   }
   const data = await res.json();
-  return data;
+  return data.productosRandom;
 }
 
   
