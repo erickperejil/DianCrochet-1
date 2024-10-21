@@ -7,8 +7,18 @@ import { useRouter } from 'next/navigation'
 
 export default function Navbar() {
   const [isProfileOpen, setProfileOpen] = useState(false);
-  const profileRef = useRef<HTMLDivElement>(null);  // Definir tipo para la referencia
-  const router = useRouter()
+  const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);  // Estado para la URL de la imagen de perfil
+  const profileRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+
+  // Recuperar la imagen de perfil del localStorage cuando el componente se monte
+  useEffect(() => {
+    const storedResponse = localStorage.getItem('loginResponse');
+    if (storedResponse) {
+      const parsedResponse = JSON.parse(storedResponse);
+      setProfileImageUrl(parsedResponse.imagen_url);  // Establecer la URL de la imagen en el estado
+    }
+  }, []);
 
   const toggleProfileMenu = () => {
     setProfileOpen(!isProfileOpen);
@@ -16,24 +26,28 @@ export default function Navbar() {
 
   // useEffect para manejar el clic fuera del menú
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {  // Especificar el tipo del evento
+    const handleClickOutside = (event: MouseEvent) => {
       if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
-        setProfileOpen(false);  // Cierra el menú si se hace clic fuera de él
+        setProfileOpen(false);
       }
     };
 
-    // Agregar event listener cuando el menú está abierto
     if (isProfileOpen) {
       document.addEventListener('mousedown', handleClickOutside);
     } else {
       document.removeEventListener('mousedown', handleClickOutside);
     }
 
-    // Limpiar event listener cuando se desmonte el componente
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isProfileOpen]);
+
+  // Función para manejar el cierre de sesión
+  const handleLogout = () => {
+    localStorage.clear();  // Limpia todos los datos del localStorage
+    router.push('/auth/sign-in');  // Redirige al usuario a la página de inicio de sesión
+  };
 
   return (
     <header className="bg-white shadow-md font-koulen flex fixed w-full z-50 ">
@@ -41,7 +55,7 @@ export default function Navbar() {
         {/* Logo */}
         <div className="flex items-center space-x-4">
           <Link href="http://localhost:3000/">
-          <Image src="/img/logo.svg" alt="Logo" width={40} height={40} />
+            <Image src="/img/logo.svg" alt="Logo" width={40} height={40} />
           </Link>
           <nav className="hidden md:flex space-x-8">
             <a href="#" className="text-gray-700 hover:text-purple-500">PRODUCTOS</a>
@@ -62,19 +76,37 @@ export default function Navbar() {
           </button>
         </div>
 
-        {/* Iconoss */}
+        {/* Iconos */}
         <div className="flex items-center space-x-6 relative">
           {/* Perfil */}
           <div className="relative flex items-center" ref={profileRef}>
             <button onClick={toggleProfileMenu} className="focus:outline-none" title='iconos'>
-              <FaUserCircle className="text-gray-700 text-2xl" />
+              {profileImageUrl ? (
+                // Si la URL de la imagen está disponible, mostrar la imagen de perfil
+                <Image
+                  src={profileImageUrl}
+                  alt="Imagen de Perfil"
+                  width={40}
+                  height={40}
+                  className="rounded-full"
+                />
+              ) : (
+                // Si no hay imagen disponible, mostrar el icono por defecto
+                <FaUserCircle className="text-gray-700 text-2xl" />
+              )}
             </button>
 
-            {/* Acorderon Perfil */}
+            {/* Menú de Perfil */}
             {isProfileOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md overflow-hidden z-20">
                 <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Mi Perfil</a>
-                <a onClick={() => router.push('/auth/sign-in')} href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Cerrar Sesion</a>
+                <a
+                  onClick={handleLogout}  // Llama a la función handleLogout al hacer clic
+                  href="#"
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                >
+                  Cerrar Sesión
+                </a>
               </div>
             )}
           </div>
@@ -88,6 +120,3 @@ export default function Navbar() {
     </header>
   );
 }
-
-
-      
