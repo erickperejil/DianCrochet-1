@@ -81,6 +81,7 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
         {/* Selección de Talla */}
         <div>
           <h3 className="font-koulen">TALLA</h3>
+          <h1>{producto.talla}</h1>
           <div className="flex space-x-2 mt-2 font-koulen text-black">
             {['XS', 'S', 'M', 'L'].map((talla) => (
               <button
