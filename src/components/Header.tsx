@@ -3,6 +3,7 @@ import { FaUserCircle, FaShoppingCart } from 'react-icons/fa';
 import Image from 'next/image';
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation'
+import Link from 'next/link';
 
 export default function Header() {
   const [isProfileOpen, setProfileOpen] = useState(false);
@@ -39,9 +40,11 @@ export default function Header() {
       <div className="container mx-auto flex items-center justify-between py-4 px-6">
         {/* Logo */}
         <div className="flex items-center space-x-4">
-          <Image src="/img/logo.svg" alt="Logo" width={40} height={40} />
+          <Link href="http://localhost:3000/">
+            <Image src="/img/logo.svg" alt="Logo" width={40} height={40} />
+          </Link>
           <nav className="hidden md:flex space-x-8">
-            <a href="#" className="text-gray-700 hover:text-purple-500">PRODUCTOS</a>
+            <a onClick={() => router.push('/products')}href="#" className="text-gray-700 hover:text-purple-500">PRODUCTOS</a>
             <a href="#" className="text-gray-700 hover:text-purple-500">KITS</a>
             <a href="#" className="text-gray-700 hover:text-purple-500">TUTORIALES</a>
           </nav>

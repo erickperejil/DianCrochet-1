@@ -1,27 +1,24 @@
 import { useEffect, useRef, useState } from 'react';
-import Product from 'app/landing/components/Product'; 
 import { GetProductosSimilares } from '@services/product'; 
 import { ProductoSimilar } from '@interfaces/product';
+import { useRouter } from 'next/navigation'; 
+import Productx from './Productx';
 
-export default function Carrusel() {
-
+export default function CarruselProductoRelacionado() {
   const [productos, setProductos] = useState<ProductoSimilar[]>([]);
   const carruselRef = useRef<HTMLDivElement>(null);
+  const router = useRouter(); 
 
   useEffect(() => {
     const obtenerProductos = async () => {
-      try {
-        const productosSimilares = await GetProductosSimilares();
-        console.log('Productos Similares:', productosSimilares); // Verificar datos
-        setProductos(productosSimilares);
-      } catch (error) {
-        console.error('Error al obtener productos similares:', error);
-      }
+      const productosSimilares = await GetProductosSimilares();
+      setProductos(productosSimilares);
     };
 
     obtenerProductos();
   }, []);
 
+  
   const scrollLeft = () => {
     if (carruselRef.current) {
       carruselRef.current.scrollBy({
@@ -38,6 +35,11 @@ export default function Carrusel() {
         behavior: 'smooth',
       });
     }
+  };
+
+  const handleProductClick = (id: number) => {
+    // Redirigir a la página de detalle del producto
+    router.push(`/product_detail/${id}`);
   };
 
   return (
@@ -68,18 +70,19 @@ export default function Carrusel() {
           }
         `}</style>
 
-        {productos.length > 0 ? (
-          productos.map((producto, index) => (
-            <Product
-              key={`${producto.ID_PRODUCTO}-${index}`}
+        {productos.map((producto) => (
+          <div
+            key={producto.ID_PRODUCTO}
+            className="cursor-pointer"
+            onClick={() => handleProductClick(producto.ID_PRODUCTO)} // Evento de clic para redirigir
+          >
+            <Productx
               nombre={producto.NOMBRE_PROD}
-              precio={`$${producto.PRECIO_VENTA.toFixed(2)}`}
+              precio={`L${producto.PRECIO_VENTA.toFixed(2)}`}
               imagen={producto.IMG_PRINCIPAL ? producto.IMG_PRINCIPAL : '/img/default-image.svg'}
             />
-          ))
-        ) : (
-          <p>No hay productos similares disponibles.</p>
-        )}
+          </div>
+        ))}
       </div>
 
       <button

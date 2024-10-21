@@ -43,10 +43,13 @@ export default function LoginForm() {
       // Realiza una petición POST con los datos del formulario
       const response = await login(formData);
       setMessage(response.mensaje);
+
       if (response.codigo == 1) {
         console.log("Login exitoso:", response);
+         // Guarda el objeto 'response' en el localStorage
+        localStorage.setItem('loginResponse', JSON.stringify(response));
         setCodigo(1);
-        router.push("/landing/dashboard");
+        router.push("http://localhost:3000/");
         //beep boop, aqui se implementa el cambio cuando se hace login
       } else if (response.codigo == 2) {
         setCodigo(2);
