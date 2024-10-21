@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ProductoDetalle } from "@interfaces/product";
 import { useParams } from 'next/navigation';
-import { Producto, ProductoSimilar } from "@interfaces/product";
+import { FullProduct, Producto, ProductoSimilar } from "@interfaces/product";
 
 
 export const GetProductosPopulares = async (): Promise<Producto[]> => {
