@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import Product from 'app/landing/components/Product'; 
 import { GetProductosSimilares } from '@services/product'; 
 import { ProductoSimilar } from '@interfaces/product';
+import Producto from './Producto';
 
-export default function Carrusel() {
+export default function CarruselProductoRelacionado() {
 
   const [productos, setProductos] = useState<ProductoSimilar[]>([]);
   const carruselRef = useRef<HTMLDivElement>(null);
@@ -70,7 +70,7 @@ export default function Carrusel() {
 
         {productos.length > 0 ? (
           productos.map((producto, index) => (
-            <Product
+            <Producto
               key={`${producto.ID_PRODUCTO}-${index}`}
               nombre={producto.NOMBRE_PROD}
               precio={`$${producto.PRECIO_VENTA.toFixed(2)}`}

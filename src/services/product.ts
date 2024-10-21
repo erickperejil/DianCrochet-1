@@ -1,4 +1,3 @@
-import { Producto } from "@interfaces/product";
 import { useState, useEffect } from 'react';
 import { ProductoDetalle } from "@interfaces/product";
 import { useParams } from 'next/navigation';
@@ -60,4 +59,4 @@ export function useProducto() {
   return producto;
 }
   
-}; 
+

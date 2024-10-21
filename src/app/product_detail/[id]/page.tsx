@@ -2,9 +2,11 @@
 
 import Navbar from 'components/navbar';
 import Footer from 'components/Footer';
-import CarruselProducto from '../components/CarruselProducto';
+
 import { useProducto } from '@services/product';
 import ProductDetail from '../components/ProductDetail';
+import CarruselProductoRelacionado from '../components/CarruselProductoRelacionado';
+
 
 export default function ProductDetailPageDinamic() {
   const producto = useProducto();
@@ -21,7 +23,7 @@ export default function ProductDetailPageDinamic() {
       <ProductDetail producto={producto} />
       </div>
       <div className="ml-24 max-w-full mr-24">
-        <CarruselProducto />
+        <CarruselProductoRelacionado/>
       </div>
       </main>
       <Footer />
