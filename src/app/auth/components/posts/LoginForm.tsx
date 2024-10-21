@@ -46,7 +46,7 @@ export default function LoginForm() {
       if (response.codigo == 1) {
         console.log("Login exitoso:", response);
         setCodigo(1);
-        router.push("/landing/dashboard");
+        router.push("http://localhost:3000/");
         //beep boop, aqui se implementa el cambio cuando se hace login
       } else if (response.codigo == 2) {
         setCodigo(2);
