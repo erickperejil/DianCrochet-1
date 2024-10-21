@@ -1,5 +1,5 @@
 'use client';
-import VideoPage from './components/video';
+import VideoPage from './components/video'; 
 import Navbar from 'components/navbar';
 import Footer from 'components/Footer';
 
