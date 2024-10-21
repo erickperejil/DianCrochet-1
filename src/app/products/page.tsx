@@ -14,6 +14,46 @@ export default function Products() {
   const [showPrices, setShowPrices] = useState(false);
 
   const [productos, setProductos] = useState<FullProduct[]>([]);
+  const [productsSplit, setProductsSplit] = useState(0);
+
+  const [pageNumber, setPageNumber] = useState(1);
+  const [indexNumbers, setIndexNumbers] = useState(3);
+
+  const handlePageNumber = (index: number) => {
+    setPageNumber(index);
+    setProductsSplit((index - 1) * 16);
+    if (productsSplit != (index - 1) * 16) {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth", // Esto hace que el desplazamiento sea suave
+      });
+      if (index > 2) {
+        setIndexNumbers(index - 1);
+      }
+    }
+  };
+
+  const handleSplitNext = () => {
+    if (productos.length >= productsSplit + 16) {
+      setProductsSplit(productsSplit + 16);
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth", // Esto hace que el desplazamiento sea suave
+      });
+      setPageNumber(pageNumber + 1);
+    }
+  };
+
+  const handleSplitPrev = () => {
+    if (productsSplit - 16 >= 0) {
+      setProductsSplit(productsSplit - 16);
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth", // Esto hace que el desplazamiento sea suave
+      });
+      setPageNumber(pageNumber - 1);
+    }
+  };
 
   const handleCategories = () => {
     setShowCategories(!showCategories);
@@ -22,6 +62,12 @@ export default function Products() {
   const handlePrices = () => {
     setShowPrices(!showPrices);
   };
+
+  const totalProducts = productos.length;
+
+  // Calculamos x como el número de páginas (o grupos) en base a 16 productos por grupo
+  const pagesNumber = Math.ceil(totalProducts / 15);
+  const divNumbers = Array.from({ length: pagesNumber }, (_, i) => i + 1);
 
   useEffect(() => {
     async function fetchGets() {
@@ -182,22 +228,110 @@ export default function Products() {
 
         <section className="h-full px-[8.32%] py-12">
           <div className="grid grid-cols-4 gap-6">
-            {productos.slice(0, 16).map((producto) => (
-              <div
-                key={producto.id_producto}
-                className="h-[364px] w-[260px] text-center"
-              >
-                <Product
-                  nombre={producto.nombre_prod}
-                  precio={`$${producto.precio_venta.toFixed(2)}`}
-                  imagen={producto.imagen_principal}
-                />
-              </div>
-            ))}
+            {productos
+              .slice(productsSplit, productsSplit + 16)
+              .map((producto) => (
+                <div
+                  key={producto.id_producto}
+                  className="h-[364px] w-[260px] text-center"
+                >
+                  <Product
+                    nombre={producto.nombre_prod}
+                    precio={`$${producto.precio_venta.toFixed(2)}`}
+                    imagen={producto.imagen_principal}
+                  />
+                </div>
+              ))}
           </div>
         </section>
 
-        <div className="flex h-20 items-center border border-blue-800"></div>
+        <div className="flex h-20 items-start justify-end border border-blue-800 px-[8.32%]">
+          <div className="flex h-2/3">
+            <button
+              onClick={handleSplitPrev}
+              type="button"
+              className="mb-2 me-2 flex h-full w-20 items-center justify-center bg-gradient-to-l from-[#C68EFE] from-30% to-pink-500 px-5 py-2.5 text-center text-sm font-medium text-white transition-all duration-1000 ease-in-out hover:bg-gradient-to-r focus:outline-none focus:ring-4 focus:ring-transparent"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="3"
+                stroke="currentColor"
+                className="size-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
+                />
+              </svg>
+            </button>
+            <div className="flex h-full items-center justify-evenly bg-slate-50 px-1">
+              {divNumbers.map((number) =>
+                number > indexNumbers ? (
+                  indexNumbers >= 3 ? (
+                    number == divNumbers.length - 1 ? (
+                      <div className="mx-1 flex h-7 w-9 items-end justify-center font-lekton text-lg text-blue-400">
+                        ...
+                      </div>
+                    ) : number == divNumbers.length ? (
+                      <div
+                        key={number}
+                        onClick={() => handlePageNumber(number)}
+                        className={`mx-1 flex h-7 w-7 items-center justify-center border border-[#C68EFE] pt-1 font-lekton text-lg ${
+                          pageNumber === number
+                            ? "bg-[#C68EFE] text-white" // Estilos cuando pageNumber coincide con number
+                            : "text-[#C68EFE] hover:bg-[#C68EFE] hover:text-white" // Estilos por defecto
+                        }`}
+                      >
+                        {number}
+                      </div>
+                    ) : (
+                      ""
+                    )
+                  ) : (
+                    ""
+                  )
+                ) : number > indexNumbers - 3 ? (
+                  <div
+                    key={number}
+                    onClick={() => handlePageNumber(number)}
+                    className={`mx-1 flex h-7 w-7 items-center justify-center border border-[#C68EFE] pt-1 font-lekton text-lg ${
+                      pageNumber === number
+                        ? "bg-[#C68EFE] text-white" // Estilos cuando pageNumber coincide con number
+                        : "text-[#C68EFE] hover:bg-[#C68EFE] hover:text-white" // Estilos por defecto
+                    }`}
+                  >
+                    {number}
+                  </div>
+                ) : (
+                  ""
+                ),
+              )}
+            </div>
+            <button
+              onClick={handleSplitNext}
+              type="button"
+              className="mb-2 me-2 flex h-full w-20 items-center justify-center bg-gradient-to-r from-[#C68EFE] from-30% to-pink-500 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gradient-to-l focus:outline-none focus:ring-4 focus:ring-transparent dark:focus:ring-transparent"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="3"
+                stroke="currentColor"
+                className="size-6 -scale-x-90"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
       </section>
       <Footer />
     </div>
