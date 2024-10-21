@@ -86,7 +86,7 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
               <button
                 key={talla}
                 className={`px-4 py-2 border rounded-lg ${
-                  selectedTalla === talla ? 'bg-purple-500 text-white' : 'bg-gray-200'
+                  selectedTalla === talla ? 'bg-[#C68EFE] text-white' : 'bg-gray-200'
                 }`}
                 onClick={() => setSelectedTalla(talla)}
               >
@@ -104,7 +104,7 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
          
           <div className="flex items-center border rounded-lg">
             <button
-              className="px-4 py-2 text-white bg-purple-500 rounded-lg mr-5"
+              className="px-4 py-2 text-white bg-[#C68EFE] rounded-lg mr-5"
               onClick={() => handleCantidadChange(cantidad - 1)}
             >
               -
@@ -117,7 +117,7 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
               min={1}
             />
             <button
-              className="px-4 py-2 bg-purple-500 text-white rounded-lg ml-5"
+              className="px-4 py-2 bg-[#C68EFE] text-white rounded-lg ml-5"
               onClick={() => handleCantidadChange(cantidad + 1)}
             >
               +
@@ -127,7 +127,7 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
           <div>
 
           </div>
-        <button className="mt-4 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 font-lekton">
+        <button className="mt-4 px-4 py-2 bg-[#C68EFE] text-white rounded-lg hover:bg-purple-600 font-lekton">
           Añadir al Carrito
         </button>
       </div>
