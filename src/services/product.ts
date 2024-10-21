@@ -3,7 +3,7 @@ import { ProductoDetalle } from "@interfaces/product";
 import { useParams } from 'next/navigation';
 import { Producto, ProductoSimilar } from "@interfaces/product";
 
-// Función para obtener los productos populares desde el backend
+
 export const GetProductosPopulares = async (): Promise<Producto[]> => {
   try {
     const response = await fetch('http://localhost:4000/producto/filtro/popularidad/1');
@@ -28,7 +28,7 @@ export const GetProductosSimilares = async (): Promise<ProductoSimilar[]> => {
 
 export function useProducto() {
   const [producto, setProducto] = useState<ProductoDetalle | null>(null);
-  const { id } = useParams(); // Obtiene el ID de la URL
+  const { id } = useParams(); 
 
   useEffect(() => {
     const obtenerDetallesProducto = async () => {

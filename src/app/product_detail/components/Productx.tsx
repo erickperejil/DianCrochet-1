@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 
-export default function Producto({ nombre, precio, imagen }: { nombre: string; precio: string; imagen: string }) {
+export default function Productx({ nombre, precio, imagen }: { nombre: string; precio: string; imagen: string }) {
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 w-[full] h-[full]">
       <div className='w-[260px] h-[305px]'>

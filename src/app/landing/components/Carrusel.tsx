@@ -2,12 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import Product from './Product';
 import { GetProductosPopulares } from '@services/product'; 
 import { Producto } from '@interfaces/product';
-import { useRouter } from 'next/navigation'; // Para la navegación moderna
+import { useRouter } from 'next/navigation'; 
 
 export default function Carrusel() {
   const [productos, setProductos] = useState<Producto[]>([]);
   const carruselRef = useRef<HTMLDivElement>(null);
-  const router = useRouter(); // Inicializamos el router para la navegación
+  const router = useRouter(); 
 
   useEffect(() => {
     const obtenerProductos = async () => {
