@@ -44,7 +44,7 @@ export default function Header() {
             <Image src="/img/logo.svg" alt="Logo" width={40} height={40} />
           </Link>
           <nav className="hidden md:flex space-x-8">
-            <a href="#" className="text-gray-700 hover:text-purple-500">PRODUCTOS</a>
+            <a onClick={() => router.push('/products')}href="#" className="text-gray-700 hover:text-purple-500">PRODUCTOS</a>
             <a href="#" className="text-gray-700 hover:text-purple-500">KITS</a>
             <a href="#" className="text-gray-700 hover:text-purple-500">TUTORIALES</a>
           </nav>
