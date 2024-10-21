@@ -60,3 +60,13 @@ export function useProducto() {
 }
   
 
+export const getProducts = async(): Promise<FullProduct[]> =>{
+  const res = await fetch("http://localhost:4000/producto");
+  if (!res.ok) {
+    throw new Error("Error al traer productos");
+  }
+  const data = await res.json();
+  return data.productosRandom;
+}
+
+  
