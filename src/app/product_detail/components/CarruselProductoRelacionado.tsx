@@ -78,7 +78,7 @@ export default function CarruselProductoRelacionado() {
           >
             <Productx
               nombre={producto.NOMBRE_PROD}
-              precio={`$${producto.PRECIO_VENTA.toFixed(2)}`}
+              precio={`L${producto.PRECIO_VENTA.toFixed(2)}`}
               imagen={producto.IMG_PRINCIPAL ? producto.IMG_PRINCIPAL : '/img/default-image.svg'}
             />
           </div>

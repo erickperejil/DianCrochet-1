@@ -80,7 +80,7 @@ export default function Carrusel() {
           >
             <Product
               nombre={producto.NOMBRE_PROD}
-              precio={`$${producto.PRECIO_VENTA.toFixed(2)}`}
+              precio={`L${producto.PRECIO_VENTA.toFixed(2)}`}
               imagen={producto.URL ? producto.URL : '/img/default-image.svg'}
             />
           </div>

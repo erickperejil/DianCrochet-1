@@ -75,7 +75,7 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
 
       <div className="flex flex-col space-y-4">
         <h1 className="text-2xl font-koulen">{producto.nombre_prod}</h1>
-        <p className="text-black font-koulen">${producto.precio_venta.toFixed(2)}</p>
+        <p className="text-black font-koulen">L{producto.precio_venta.toFixed(2)}</p>
         <p className="font-lekton text-black">*Precio no incluye envío</p>
 
         {/* Selección de Talla */}
