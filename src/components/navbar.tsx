@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { FaUserCircle, FaShoppingCart, FaSearch } from 'react-icons/fa';
 import Image from 'next/image';
 import { useState, useRef, useEffect } from 'react';
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation';
 
 export default function Navbar() {
   const [isProfileOpen, setProfileOpen] = useState(false);
@@ -113,11 +113,11 @@ export default function Navbar() {
               <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md overflow-hidden z-20">
                 <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Mi Perfil</a>
                 <a
-                  onClick={handleLogout}  // Llama a la función handleLogout al hacer clic
+                  onClick={correo ? handleLogout : () => router.push('/auth/sign-in')}  // Llama a handleLogout si hay correo, si no redirige a iniciar sesión
                   href="#"
                   className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
                 >
-                  Cerrar Sesión
+                  {correo ? "Cerrar Sesión" : "Iniciar Sesión"}  {/* Mostrar "Cerrar Sesión" o "Iniciar Sesión" según el estado del correo */}
                 </a>
               </div>
             )}
