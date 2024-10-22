@@ -75,6 +75,19 @@ export default function ShopCartForm() {
             console.error('Error al eliminar el producto del carrito:', error);
         }
     };
+
+    // Agrupar productos por id_producto y sumar cantidades
+    const groupedCarrito = carrito.reduce((acc, item) => {
+        const existingItem = acc.find(i => i.id_producto === item.id_producto);
+        if (existingItem) {
+            existingItem.cantidad_compra += item.cantidad_compra;
+            existingItem.subtotal = (existingItem.subtotal ?? 0) + (item.subtotal ?? 0);
+        } else {
+            acc.push({ ...item });
+        }
+        return acc;
+    }, [] as CarritoItem[]);
+
     return (
         <div className="flex justify-between font-koulen w-full p-8">
             <div title="Articulos" className="m-2 p-2 rounded-md bg-gray-200 w-1/2 flex-grow p-5 px-10 ">
@@ -85,7 +98,8 @@ export default function ShopCartForm() {
                 </div>
                 <h1 className="text-3xl text-gray-900 pb-5">Articulos</h1>
 
-                {carrito.map((item) => (
+                <div id="PRODUCTOS" className="max-h-96 overflow-y-auto">
+                {groupedCarrito.map((item) => (
                     <div key={item.id_prod_fact} id="product" className="bg-white rounded-md flex flex-row flex-nowrap justify-start items-start content-start overflow-hidden mb-5">
                         <div id="img" className="mr-8 w-1/12 h-auto rounded-none rounded-tl-md rounded-bl-md" title={item.nombre_prod}>
                             {item.url ? (
@@ -112,7 +126,12 @@ export default function ShopCartForm() {
                             </div>
                         </div>
                     </div>
-                ))}
+                    
+
+                    ))}
+                </div>
+
+                
             </div>
 
             <div title="fact2" className="m-2 p-10 rounded-md bg-gray-200 flex flex-col flex-nowrap justify-between items-stretch content-stretch">
