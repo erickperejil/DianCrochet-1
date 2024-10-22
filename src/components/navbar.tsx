@@ -110,11 +110,14 @@ export default function Navbar() {
               </div>
             )}
           </div>
-
+          <div>
           {/* Carrito */}
+          <Link href="http://localhost:3000/checkout/shop-cart">
           <button title='carrito'>
             <FaShoppingCart className="text-gray-700 text-2xl" />
           </button>
+          </Link>
+          </div>
         </div>
       </div>
     </header>
