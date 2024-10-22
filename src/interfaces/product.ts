@@ -32,3 +32,10 @@ export interface Producto {
     precio_venta: number;
     imagen_principal: string
   }
+
+  export interface CarritoRequest {
+    correo: string;
+    idProducto: string;
+    cantidadCompra: string;
+    talla: string | null;
+  }

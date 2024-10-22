@@ -1,6 +1,7 @@
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ProductoDetalle } from '@interfaces/product';
+import { agregarAlCarrito } from '../post/agregarAlCarrito'; // Importa la función del POST
 
 interface ProductDetailProps {
   producto: ProductoDetalle;
@@ -10,6 +11,20 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
   const [selectedTalla, setSelectedTalla] = useState<string | null>(null);
   const [cantidad, setCantidad] = useState<number>(1);
   const [zoomImage, setZoomImage] = useState<string | null>(null);
+  const [mensajeExito, setMensajeExito] = useState<string | null>(null);
+  const [mensajeError, setMensajeError] = useState<string | null>(null); // Estado para mensaje de error
+  const [correo, setCorreo] = useState<string>(''); // Estado para almacenar el correo
+
+  useEffect(() => {
+    // Obtener el correo desde el local storage
+    const storedData = localStorage.getItem('loginResponse');
+    if (storedData) {
+      const parsedData = JSON.parse(storedData);
+      const storedCorreo = parsedData?.query_result?.CORREO;
+      console.log('Correo almacenado:', storedCorreo);
+      setCorreo(storedCorreo || ''); // Asignar correo o una cadena vacía
+    }
+  }, []);
 
   const handleCantidadChange = (newCantidad: number) => {
     if (newCantidad >= 1) {
@@ -25,9 +40,37 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
     setZoomImage(null);
   };
 
+  const handleAddToCart = async () => {
+    // Verifica si el correo está disponible
+    if (!correo) {
+      console.error('No se encontró el correo del usuario en localStorage');
+      setMensajeError('Debes iniciar sesión para poder agregar productos al carrito.'); // Mostrar mensaje de advertencia
+      setTimeout(() => setMensajeError(null), 3000); // Ocultar mensaje después de 3 segundos
+      return;
+    }
+
+    const idProducto = producto.id_producto.toString();
+
+    // Convertir la cantidad a string antes de enviarla
+    const data = {
+      correo,
+      idProducto,
+      cantidadCompra: cantidad.toString(), // Conversión de number a string
+      talla: selectedTalla || null,
+    };
+
+    try {
+      const result = await agregarAlCarrito(data);
+      console.log('Resultado del POST:', result);
+      setMensajeExito('¡Producto agregado al carrito con éxito!');
+      setTimeout(() => setMensajeExito(null), 3000);
+    } catch (error) {
+      console.error('Error al agregar al carrito:', error);
+    }
+  };
+
   return (
     <div className="relative w-max grid grid-cols-1 md:grid-cols-2 gap-8 p-8">
-      {/* Modal para la imagen con zoom */}
       {zoomImage && (
         <div
           className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
@@ -43,9 +86,20 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
         </div>
       )}
 
+      {mensajeExito && (
+        <div className="fixed top-5 right-5 bg-green-500 text-white px-4 py-2 rounded-lg z-50">
+          {mensajeExito}
+        </div>
+      )}
+
+      {mensajeError && (
+        <div className="fixed top-5 right-5 bg-red-500 text-white px-4 py-2 rounded-lg z-50">
+          {mensajeError}
+        </div>
+      )}
+
       <div className="flex flex-col space-y-4">
         <div className="flex justify-center">
-          {/* Verificación de imagen principal */}
           {producto.imagen_principal ? (
             <Image
               src={producto.imagen_principal}
@@ -86,27 +140,26 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
         <p className="font-lekton text-black">*Precio no incluye envío</p>
 
         {producto.tallas && producto.tallas.filter(talla => talla !== null).length > 0 ? (
-            <div>
-              <h3 className="font-koulen">TALLA</h3>
-              <div className="flex space-x-2 mt-2 font-koulen text-black">
-                {producto.tallas.filter(talla => talla !== null).map((talla) => (
-                  <button
-                    key={talla}
-                    className={`px-4 py-2 border rounded-lg ${
-                      selectedTalla === talla ? 'bg-[#C68EFE] text-white' : 'bg-gray-200'
-                    }`}
-                    onClick={() => setSelectedTalla(talla)}
-                  >
-                    {talla}
-                  </button>
-                ))}
-              </div>
+          <div>
+            <h3 className="font-koulen">TALLA</h3>
+            <div className="flex space-x-2 mt-2 font-koulen text-black">
+              {producto.tallas.filter(talla => talla !== null).map((talla) => (
+                <button
+                  key={talla}
+                  className={`px-4 py-2 border rounded-lg ${
+                    selectedTalla === talla ? 'bg-[#C68EFE] text-white' : 'bg-gray-200'
+                  }`}
+                  onClick={() => setSelectedTalla(talla)}
+                >
+                  {talla}
+                </button>
+              ))}
             </div>
-          ) : (
-            <div></div> // Si no hay tallas, renderiza un div vacío
+          </div>
+        ) : (
+          <div></div>
         )}
 
-        {/* Selección de Cantidad */}
         <div>
           <h3 className="font-koulen">Cantidad</h3>
         </div>
@@ -134,8 +187,10 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
           </div>
         </div>
 
-        {/* Botón de añadir al carrito */}
-        <button className="mt-4 px-4 py-2 bg-[#C68EFE] text-white rounded-lg hover:bg-purple-600 font-lekton">
+        <button
+          className="mt-4 px-4 py-2 bg-[#C68EFE] text-white rounded-lg hover:bg-purple-600 font-lekton"
+          onClick={handleAddToCart}
+        >
           Añadir al Carrito
         </button>
       </div>
