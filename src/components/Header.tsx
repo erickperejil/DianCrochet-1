@@ -2,13 +2,15 @@
 import { FaUserCircle, FaShoppingCart } from 'react-icons/fa';
 import Image from 'next/image';
 import { useState, useRef, useEffect } from 'react';
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 export default function Header() {
   const [isProfileOpen, setProfileOpen] = useState(false);
+  const [correo, setCorreo] = useState<string>(''); // Estado para almacenar el correo
+  const [mensajeAdvertencia, setMensajeAdvertencia] = useState<string | null>(null); // Mensaje de advertencia
   const profileRef = useRef<HTMLDivElement>(null);  // Definir tipo para la referencia
-  const router = useRouter()
+  const router = useRouter();
 
   const toggleProfileMenu = () => {
     setProfileOpen(!isProfileOpen);
@@ -35,6 +37,24 @@ export default function Header() {
     };
   }, [isProfileOpen]);
 
+  // Recuperar el correo del localStorage cuando el componente se monte
+  useEffect(() => {
+    const storedResponse = localStorage.getItem('loginResponse');
+    if (storedResponse) {
+      const parsedResponse = JSON.parse(storedResponse);
+      setCorreo(parsedResponse?.query_result?.CORREO || '');  // Establecer el correo si existe
+    }
+  }, []);
+
+  const handleCarritoClick = () => {
+    if (!correo) {
+      setMensajeAdvertencia('Debes iniciar sesión para ver el carrito.');
+      setTimeout(() => setMensajeAdvertencia(null), 3000); // Limpiar el mensaje después de 3 segundos
+    } else {
+      router.push('/checkout/shop-cart'); // Redirigir al carrito si está logueado
+    }
+  };
+
   return (
     <header className="bg-white shadow-md font-koulen">
       <div className="container mx-auto flex items-center justify-between py-4 px-6">
@@ -44,38 +64,41 @@ export default function Header() {
             <Image src="/img/logo.svg" alt="Logo" width={40} height={40} />
           </Link>
           <nav className="hidden md:flex space-x-8">
-            <a onClick={() => router.push('/products')}href="#" className="text-gray-700 hover:text-purple-500">PRODUCTOS</a>
+            <a onClick={() => router.push('/products')} href="#" className="text-gray-700 hover:text-purple-500">PRODUCTOS</a>
             <a href="#" className="text-gray-700 hover:text-purple-500">KITS</a>
             <a href="#" className="text-gray-700 hover:text-purple-500">TUTORIALES</a>
           </nav>
         </div>
 
-        {/* Iconoss */}
+        {/* Iconos */}
         <div className="flex items-center space-x-6 relative">
           {/* Perfil */}
           <div className="relative flex items-center" ref={profileRef}>
-            <button onClick={toggleProfileMenu} className="focus:outline-none" title='iconos'>
+            <button onClick={toggleProfileMenu} className="focus:outline-none" title="Perfil">
               <FaUserCircle className="text-gray-700 text-2xl" />
             </button>
 
-            {/* Acorderon Perfil */}
+            {/* Menú de perfil */}
             {isProfileOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md overflow-hidden z-20">
-                <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Mi Perfil</a>
-                <a onClick={() => router.push('/auth/sign-in')} href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Cerrar Sesion</a>
+                {/* Aquí puedes agregar enlaces adicionales como "Mi Perfil" o "Iniciar Sesión" */}
               </div>
             )}
           </div>
 
           {/* Carrito */}
-          <button title='carrito'>
+          <button onClick={handleCarritoClick} title="Carrito">
             <FaShoppingCart className="text-gray-700 text-2xl" />
           </button>
+
+          {/* Mostrar mensaje de advertencia si no está logueado */}
+          {mensajeAdvertencia && (
+            <div className="fixed top-5 right-5 bg-red-500 text-white px-4 py-2 rounded-lg z-50">
+              {mensajeAdvertencia}
+            </div>
+          )}
         </div>
       </div>
     </header>
   );
 }
-
-
-      

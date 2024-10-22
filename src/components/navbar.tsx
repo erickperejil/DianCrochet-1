@@ -8,15 +8,18 @@ import { useRouter } from 'next/navigation'
 export default function Navbar() {
   const [isProfileOpen, setProfileOpen] = useState(false);
   const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);  // Estado para la URL de la imagen de perfil
+  const [correo, setCorreo] = useState<string>(''); // Estado para almacenar el correo
+  const [mensajeAdvertencia, setMensajeAdvertencia] = useState<string | null>(null); // Mensaje de advertencia
   const profileRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  // Recuperar la imagen de perfil del localStorage cuando el componente se monte
+  // Recuperar la imagen de perfil y correo del localStorage cuando el componente se monte
   useEffect(() => {
     const storedResponse = localStorage.getItem('loginResponse');
     if (storedResponse) {
       const parsedResponse = JSON.parse(storedResponse);
       setProfileImageUrl(parsedResponse.imagen_url);  // Establecer la URL de la imagen en el estado
+      setCorreo(parsedResponse?.query_result?.CORREO || '');  // Establecer el correo
     }
   }, []);
 
@@ -47,6 +50,15 @@ export default function Navbar() {
   const handleLogout = () => {
     localStorage.clear();  // Limpia todos los datos del localStorage
     router.push('/auth/sign-in');  // Redirige al usuario a la página de inicio de sesión
+  };
+
+  const handleCarritoClick = () => {
+    if (!correo) {
+      setMensajeAdvertencia('Debes iniciar sesión para ver el carrito.');
+      setTimeout(() => setMensajeAdvertencia(null), 3000); // Limpiar el mensaje después de 3 segundos
+    } else {
+      router.push('/checkout/shop-cart'); // Redirigir al carrito si está logueado
+    }
   };
 
   return (
@@ -110,14 +122,18 @@ export default function Navbar() {
               </div>
             )}
           </div>
-          <div>
+
           {/* Carrito */}
-          <Link href="http://localhost:3000/checkout/shop-cart">
-          <button title='carrito'>
+          <button onClick={handleCarritoClick} title='carrito'>
             <FaShoppingCart className="text-gray-700 text-2xl" />
           </button>
-          </Link>
-          </div>
+
+          {/* Mostrar mensaje de advertencia si no está logueado */}
+          {mensajeAdvertencia && (
+            <div className="fixed top-5 right-5 bg-red-500 text-white px-4 py-2 rounded-lg z-50">
+              {mensajeAdvertencia}
+            </div>
+          )}
         </div>
       </div>
     </header>

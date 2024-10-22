@@ -71,4 +71,5 @@ export const getProducts = async(): Promise<FullProduct[]> =>{
   return data.productosRandom;
 }
 
+
   
