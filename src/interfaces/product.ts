@@ -14,7 +14,7 @@ export interface Producto {
     cantidad_disp: number;
     tipo_prod: string;
     color: string;
-    talla: string;
+    tallas: string[];
     imagen_principal: string;
     imagenes_extra: string[];
   }
