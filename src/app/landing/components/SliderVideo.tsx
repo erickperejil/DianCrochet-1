@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import React, { useState } from 'react';
 import { BsChevronCompactLeft, BsChevronCompactRight } from 'react-icons/bs';
 import { RxDotFilled } from 'react-icons/rx';
@@ -44,22 +45,23 @@ export default function SliderVideo() {
   const goToSlide = (slideIndex: number) => {
     setCurrentIndex(slideIndex);
   };
-
+  {/*
   const handleThumbnailClick = (videoId: string) => {
     window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank');
-  };
+  };*/}
 
   return (
     <div className="max-w-[1039px] h-[600px] w-full m-auto py-16 px-4 relative group">
       <div className="ml-2">
         <h1 className="font-koulen text-black">Novedades</h1>
       </div>
-      <div
-        style={{ backgroundImage: `url(${slides[currentIndex].url})` }}
-        className="w-full h-full rounded-2xl bg-center bg-cover duration-500 cursor-pointer"
-        onClick={() => handleThumbnailClick(slides[currentIndex].videoId)}
-      ></div>
-
+      <Link href="http://localhost:3000/videos">
+          <div
+            style={{ backgroundImage: `url(${slides[currentIndex].url})` }}
+            className="w-full h-full rounded-2xl bg-center bg-cover duration-500 cursor-pointer"
+            /*onClick={() => handleThumbnailClick(slides[currentIndex].videoId)} */
+          ></div>
+      </Link>
       {/* Flecha Izquiera */}
       <div className="hidden group-hover:block absolute top-[50%] -translate-x-0 translate-y-[-50%] left-5 text-2xl rounded-full p-2 bg-black/20 text-white cursor-pointer">
         <BsChevronCompactLeft onClick={prevSlide} size={30} />

@@ -2,16 +2,14 @@ import { useEffect, useRef, useState } from 'react';
 import Product from './Product';
 import { GetProductosPopulares } from '@services/product'; 
 import { Producto } from '@interfaces/product';
-
-
+import { useRouter } from 'next/navigation'; 
 
 export default function Carrusel() {
-
   const [productos, setProductos] = useState<Producto[]>([]);
   const carruselRef = useRef<HTMLDivElement>(null);
+  const router = useRouter(); 
 
   useEffect(() => {
-    // Usamos la función fetch importada para obtener los productos populares
     const obtenerProductos = async () => {
       const productosPopulares = await GetProductosPopulares();
       setProductos(productosPopulares);
@@ -23,7 +21,7 @@ export default function Carrusel() {
   const scrollLeft = () => {
     if (carruselRef.current) {
       carruselRef.current.scrollBy({
-        left: -300, // Ajusta este valor según el tamaño de tus productos
+        left: -300,
         behavior: 'smooth',
       });
     }
@@ -32,10 +30,15 @@ export default function Carrusel() {
   const scrollRight = () => {
     if (carruselRef.current) {
       carruselRef.current.scrollBy({
-        left: 300, // Ajusta este valor según el tamaño de tus productos
+        left: 300,
         behavior: 'smooth',
       });
     }
+  };
+
+  const handleProductClick = (id: number) => {
+    // Redirigir a la página de detalle del producto
+    router.push(`/product_detail/${id}`);
   };
 
   return (
@@ -58,11 +61,10 @@ export default function Carrusel() {
         ref={carruselRef}
         style={{
           scrollSnapType: 'x mandatory',
-          overflowX: 'hidden', // Ocultamos la barra de scroll
-          scrollbarWidth: 'none', // Ocultamos la barra de scroll en Firefox
+          overflowX: 'hidden',
+          scrollbarWidth: 'none',
         }}
       >
-        {/* Ocultamos el scroll de navegadores basados en Webkit como Chrome */}
         <style jsx>{`
           div::-webkit-scrollbar {
             display: none;
@@ -71,12 +73,17 @@ export default function Carrusel() {
 
         {/* Renderizamos los productos dinámicamente */}
         {productos.map((producto) => (
-          <Product
+          <div
             key={producto.ID_PRODUCTO}
-            nombre={producto.NOMBRE_PROD}
-            precio={`$${producto.PRECIO_VENTA.toFixed(2)}`} // Renderizamos el precio con dos decimales
-            imagen={producto.URL ? producto.URL : '/img/default-image.svg'} // Si la URL es null, usamos una imagen por defecto
-          />
+            className="cursor-pointer"
+            onClick={() => handleProductClick(producto.ID_PRODUCTO)} // Evento de clic para redirigir
+          >
+            <Product
+              nombre={producto.NOMBRE_PROD}
+              precio={`L${producto.PRECIO_VENTA.toFixed(2)}`}
+              imagen={producto.URL ? producto.URL : '/img/default-image.svg'}
+            />
+          </div>
         ))}
       </div>
 
