@@ -53,6 +53,28 @@ export default function ShopCartForm() {
         const newTotal = newSubtotal + newImpuestos;
         setTotal(newTotal);
     }, [carrito]);
+
+    // Eliminar producto carrito
+    const handleDelete = async (idProducto: number) => {
+        try {
+            const response = await fetch('http://localhost:4000/factura/carrito/producto/eliminar', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ correo, idProducto }),
+            });
+
+            if (response.ok) {
+                // Eliminar el producto del estado local
+                setCarrito(carrito.filter(item => item.id_producto !== idProducto));
+            } else {
+                console.error('Error al eliminar el producto del carrito');
+            }
+        } catch (error) {
+            console.error('Error al eliminar el producto del carrito:', error);
+        }
+    };
     return (
         <div className="flex justify-between font-koulen w-full p-8">
             <div title="Articulos" className="m-2 p-2 rounded-md bg-gray-200 w-1/2 flex-grow p-5 px-10 ">
@@ -84,7 +106,9 @@ export default function ShopCartForm() {
                             </div>
                             <div id="precio" className="mt-8 flex flex-col flex-nowrap justify-start items-end content-stretch">
                                 <h3 className="text-gray-700">{item.subtotal !== null ? `${item.subtotal} Lps` : 'No disponible'}</h3>
-                                <button title="delete"><FaRegTrashAlt className="text-gray-700 hover:text-red-700"/></button>
+                                <button title="delete" onClick={() => handleDelete(item.id_producto)}>
+                                    <FaRegTrashAlt className="text-gray-700 hover:text-red-700"/>
+                                </button>
                             </div>
                         </div>
                     </div>
