@@ -135,20 +135,21 @@ export default function ShopCartForm() {
             </div>
 
             <div title="fact2" className="m-2 p-10 rounded-md bg-gray-200 flex flex-col flex-nowrap justify-between items-stretch content-stretch">
-                <div id="hd1" className="flex flex-row flex-nowrap justify-between items-start content-start">
-                <div id="orden" className="mr-64 text-gray-800">
-                    <h1 className="mb-3">Resumen de la orden</h1>
-                    <div id="cantprod" className="max-h-52 overflow-y-auto w-auto">
-                        {carrito.map((item) => (
-                         <h2 key={item.id_prod_fact} className="mb-3">{item.cantidad_compra} x {item.nombre_prod}</h2>
-                        ))}
-                    </div>
+            <div id="hd1" className="flex flex-row flex-nowrap justify-between items-start content-start">
+                 <div id="orden" className="mr-64 text-gray-800">
+                     <h1 className="mb-3">Resumen de la orden</h1>
+                     <div id="cantprod" className="max-h-52 overflow-y-auto w-auto">
+                         {groupedCarrito.map((item) => (
+                             <h2 key={item.id_prod_fact} className="mb-3">{item.cantidad_compra} x {item.nombre_prod}</h2>
+                         ))}
+                     </div>
+                 </div>
+                 <div id="pago" className="text-gray-800">
+                     <h1>Pagos con</h1>
+                     <img title="paypal" src="/img/paypal-logo-0.png" className="w-16 border-blue-900 rounded-md border-2 px-3" />
+                 </div>
             </div>
-                <div id="pago" className="text-gray-800">
-                    <h1>Pagos con</h1>
-                    <img title="paypal" src="/img/paypal-logo-0.png" className=" w-16 border-blue-900 rounded-md border-2 px-3"  />
-                </div>
-                </div> 
+
 
                 {/* 
                 <div id="hd2" className="flex flex-col space-y-2">
