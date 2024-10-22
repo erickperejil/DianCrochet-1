@@ -1,5 +1,5 @@
 'use client'
-import { ChangeEvent, useRef} from "react";
+import { ChangeEvent, useEffect, useRef} from "react";
 
 interface PricesProps {
   open: boolean; // Añadir `open` como prop
@@ -19,12 +19,27 @@ export default function Prices({
   setMaxPrice,
 }: PricesProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const handleBlur = (event: React.FocusEvent<HTMLDivElement>) => {
-    // Si el desenfoque es fuera del contenedor, cerramos el componente
-    if (ref.current && !ref.current.contains(event.relatedTarget as Node)) {
-      setOpen(false);
+
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (ref.current && !ref.current.contains(event.target as Node)) {
+      setOpen(false); // Cierra el componente si se hace clic fuera
     }
   };
+
+  // Manejo de eventos de clic para cerrar el componente al hacer clic fuera
+  useEffect(() => {
+    if (open) {
+      document.addEventListener('click', handleClickOutside);
+    } else {
+      document.removeEventListener('click', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
 
 
@@ -53,10 +68,8 @@ export default function Prices({
 
   return open ? (
     <div
-    ref={ref} // Referencia al div principal
-    tabIndex={-1} // Para que el div pueda recibir foco
-    onBlur={handleBlur} 
-    className="select-none flex h-full w-full rounded-lg bg-slate-50 shadow-lg shadow-[#0000004D]">
+    ref={ref} // Referencia al div principal} // Para que el div pueda recibir foco
+    className="z-30 absolute select-none flex h-full w-full rounded-lg bg-slate-50 shadow-lg shadow-[#0000004D]">
       <div className="flex h-full w-1/2">
         <div className="flex h-full w-1/3 items-center justify-center">
           <h2 className="select-none font-lekton">Min</h2>

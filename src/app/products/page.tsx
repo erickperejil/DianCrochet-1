@@ -18,7 +18,6 @@ export default function Products() {
 
   const [pageNumber, setPageNumber] = useState(1);
 
-
   const [, setPricesData] = useState<Filtered>({
     categorias: [],
     min_precio: null,
@@ -29,16 +28,28 @@ export default function Products() {
   const [maxPrice, setMaxPrice] = useState(0);
   const [categories, setCategories] = useState<string[]>([]);
 
+  const deleteCategory = (index: number) => {
+    setCategories((prevCategories) =>
+      prevCategories.filter((_, i) => i !== index),
+    );
+  };
   const handleSendCategories = async (updatedCategories: string[]) => {
     // Usa las categorías actualizadas que recibiste como argumento
     const filteredData = {
       categorias: updatedCategories,
-      min_precio: (minPrice==0 && maxPrice==0)?(null):(minPrice),
-      max_precio: (minPrice==0 && maxPrice==0)?(null):(maxPrice),
+      min_precio: minPrice == 0 && maxPrice == 0 ? null : minPrice,
+      max_precio:
+        (minPrice == 0 && maxPrice == 0) || minPrice > maxPrice
+          ? null
+          : maxPrice,
     };
-  
- // Ahora debería mostrar las categorías correcta  
-    if (filteredData.categorias.length > 0 || minPrice !== 0 || maxPrice !== 0) {
+
+    // Ahora debería mostrar las categorías correcta
+    if (
+      filteredData.categorias.length > 0 ||
+      minPrice !== 0 ||
+      maxPrice !== 0
+    ) {
       try {
         const res = await FilteredProducts(filteredData); // Llama a la función para obtener los productos filtrados
         setProductos([]); // Limpia productos antes de actualizar
@@ -52,10 +63,9 @@ export default function Products() {
     }
   };
 
-
-  const handleFilter = ()=>{
+  const handleFilter = () => {
     setShowPrices(false); // Oculta precios
-    console.log("padre:", categories)
+    console.log("padre:", categories);
     setPricesData((prevState) => ({
       ...prevState,
       categorias: categories,
@@ -63,7 +73,22 @@ export default function Products() {
       max_precio: null,
     }));
     handleSendCategories(categories);
+  };
+  
+  const deletePrice = () =>{
+    setMinPrice(0);
+    setMaxPrice(0)
   }
+
+  const handlePrices = () => {
+    setShowPrices(!showPrices);
+    setShowCategories(false);
+    setPricesData({
+      categorias: categories,
+      min_precio: minPrice,
+      max_precio: maxPrice,
+    });
+  };
 
   const handlePageNumber = (index: number) => {
     setPageNumber(index);
@@ -73,7 +98,6 @@ export default function Products() {
         top: 0,
         behavior: "smooth", // Esto hace que el desplazamiento sea suave
       });
-
     }
   };
 
@@ -97,19 +121,6 @@ export default function Products() {
       });
       setPageNumber(pageNumber - 1);
     }
-  };
-
-
-
-  const handlePrices = () => {
-    setShowPrices(!showPrices);
-    setShowCategories(false);
-    setPricesData({
-      categorias: categories,
-      min_precio: minPrice,
-      max_precio: maxPrice,
-    });
-    handleSendCategories(categories);
   };
 
   const totalProducts = productos.length;
@@ -157,40 +168,77 @@ export default function Products() {
         </div>
         <div className="flex h-32 flex-col-reverse">
           <div className="mb-3 flex h-9 w-full items-center pl-6">
-            <div className="mr-3 flex items-center rounded-2xl bg-gray-200 px-2 font-lekton text-lg text-[#444343]">
-              <h2>Aretes</h2>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="size-5 pl-1"
+            {categories.map((category, index) => (
+              <div
+                key={index}
+                className="mr-3 flex items-center rounded-2xl bg-gray-200 px-2 font-lekton text-lg text-[#444343]"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18 18 6M6 6l12 12"
-                />
-              </svg>
-            </div>
-            <div className="mr-3 flex items-center rounded-2xl bg-gray-200 px-2 font-lekton text-lg text-[#444343]">
-              <h2>Amigurumis</h2>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="size-5 pl-1"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18 18 6M6 6l12 12"
-                />
-              </svg>
-            </div>
+                <h2>{category}</h2>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="z-20 size-5 pl-1"
+                  onClick={() => {
+                    deleteCategory(index);
+                  }}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18 18 6M6 6l12 12"
+                  />
+                </svg>
+              </div>
+            ))}
+
+            {!showPrices && (minPrice !== 0 || maxPrice !== 0) && (
+              <div className="mr-3 flex items-center rounded-2xl bg-gray-200 px-2 font-lekton text-lg text-[#444343]">
+                {minPrice > maxPrice ? (
+                  <>
+                    <h2>{minPrice}-min</h2>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="z-20 size-5 pl-1"
+                      onClick={deletePrice}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M6 18 18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </>
+                ) : (
+                  <>
+                    <h2>
+                      {minPrice}-{maxPrice}
+                    </h2>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="z-20 size-5 pl-1"
+                      onClick={deletePrice}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M6 18 18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </>
+                )}
+              </div>
+            )}
 
             <div className="mr-3 flex items-center px-2 font-lekton text-lg text-[#444343]">
               <svg
@@ -199,7 +247,7 @@ export default function Products() {
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
                 stroke="currentColor"
-                className="size-6 z-20"
+                className="z-20 size-6"
                 onClick={handleFilter}
               >
                 <path
@@ -259,7 +307,7 @@ export default function Products() {
               </div>
             </div>
 
-            <div className="ml-6 flex items-center font-lekton text-lg text-[#444343]">
+            <div className="relative ml-6 flex items-center font-lekton text-lg text-[#444343]">
               <h2>Precio</h2>
               <svg
                 onClick={handlePrices}
@@ -276,8 +324,7 @@ export default function Products() {
                   d="m19.5 8.25-7.5 7.5-7.5-7.5"
                 />
               </svg>
-
-              <div className="absolute top-7 ml-4 h-[210%] w-[22%] rounded-lg">
+              <div className="absolute top-7 ml-4 h-[250%] w-[340%] rounded-lg">
                 <Prices
                   open={showPrices}
                   setOpen={setShowPrices}
