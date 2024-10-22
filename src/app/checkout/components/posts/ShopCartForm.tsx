@@ -4,6 +4,9 @@ import { IoRemoveOutline } from "react-icons/io5";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { CiImageOff } from "react-icons/ci";
 import { CarritoItem } from "@interfaces/invoice";
+import { useRouter } from 'next/navigation';
+import LoadingSpinner from "../loadding/LoadingSpinnerSob";
+
 
 export default function ShopCartForm() {
     const [carrito, setCarrito] = useState<CarritoItem[]>([]);
@@ -11,6 +14,14 @@ export default function ShopCartForm() {
     const [subtotal, setSubtotal] = useState(0);
     const [impuestos, setImpuestos] = useState(0);
     const [total, setTotal] = useState(0);
+    const router = useRouter();
+    const [loading, setLoading] = useState(false);
+
+
+    const handleShippingDetailsClick = () => {
+      setLoading(true);
+      router.push('/checkout/shipping');
+    };
     
     useEffect(() => {
         // Obtener el correo desde el local storage
@@ -90,6 +101,7 @@ export default function ShopCartForm() {
 
     return (
         <div className="flex justify-between font-koulen w-full p-8">
+            {loading && <LoadingSpinner />}
             <div title="Articulos" className="m-2 p-2 rounded-md bg-gray-200 w-1/2 flex-grow p-5 px-10 ">
                 <div id="header" className="text-gray-700 flex flex-row flex-nowrap justify-center items-baseline content-stretch">
                     <div><h4 className="m-2 flex flex-row flex-nowrap justify-start items-baseline content-stretch text-purple-400">Resumen <IoRemoveOutline className="ml-2"/> <FaCheckCircle className="text-gray-800" /> <IoRemoveOutline /></h4></div>
@@ -134,7 +146,7 @@ export default function ShopCartForm() {
                 
             </div>
 
-            <div title="fact2" className="m-2 p-10 rounded-md bg-gray-200 flex flex-col flex-nowrap justify-between items-stretch content-stretch">
+            <div title="Resumen orden" className="m-2 p-10 rounded-md bg-gray-200 flex flex-col flex-nowrap justify-between items-stretch content-stretch">
             <div id="hd1" className="flex flex-row flex-nowrap justify-between items-start content-start">
                  <div id="orden" className="mr-64 text-gray-800">
                      <h1 className="mb-3">Resumen de la orden</h1>
@@ -146,7 +158,9 @@ export default function ShopCartForm() {
                  </div>
                  <div id="pago" className="text-gray-800">
                      <h1>Pagos con</h1>
-                     <img title="paypal" src="/img/paypal-logo-0.png" className="w-16 border-blue-900 rounded-md border-2 px-3" />
+                     <button className="w-16 border-blue-900 rounded-md border-2 px-3 transition-all duration-300 ease-in-out hover:shadow-lg hover:translate-y-[-5px]">
+                        <img title="paypal" src="/img/paypal-logo-0.png"  />
+                    </button>
                  </div>
             </div>
 
@@ -176,10 +190,12 @@ export default function ShopCartForm() {
                     </div>
                  </div>
 
+                 
+
                 {/* BOTONES */}
                 <div id="but" className="flex flex-row flex-nowrap justify-end items-end content-start">
-                    <button title="decline" type="button" className="mr-8 text-gray-800 p-4">Cancelar Orden</button>
-                    <button title="sending" type="button" className="bg-purple-400 py-4 px-9 rounded-md">Detalles de envio</button>
+                    <button title="decline" type="button" className="mr-8 text-gray-800 p-4 transition-all duration-300 ease-in-out hover:shadow-lg hover:translate-y-[-5px] rounded-md">Cancelar Orden</button>
+                    <button title="sending" type="button" className="bg-purple-400 py-4 px-9 rounded-md transition-all duration-300 ease-in-out hover:shadow-lg hover:translate-y-[-5px]" onClick={handleShippingDetailsClick}>Detalles de envio</button>
                 </div>
  
             </div>

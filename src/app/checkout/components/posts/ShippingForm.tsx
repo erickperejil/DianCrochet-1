@@ -3,9 +3,16 @@ import { FaCheckCircle } from "react-icons/fa";
 import { IoRemoveOutline } from "react-icons/io5";
 import PhoneNumberInput from "../inputs/PhoneNumberInput";
 import { FaAngleLeft } from "react-icons/fa6";
+import { useRouter } from 'next/navigation';
 
 
 export default function ShippingForm() {
+    const router = useRouter();
+
+const handleBackClick = () => {
+  router.back();
+};
+
     return (
         <div className="flex justify-between font-koulen w-full p-8">
             <div title="detalle envio" className="m-2 p-2 rounded-md bg-gray-200 w-1/2 flex-grow py-5 px-40 ">
@@ -89,7 +96,7 @@ export default function ShippingForm() {
 
                 {/* BOTONES */}
                 <div id="but" className="flex flex-row flex-nowrap justify-start items-stretch content-start">
-                    <button title="decline" type="button" className="text-gray-800 p-4 flex items-center">
+                    <button title="decline" type="button" className="text-gray-800 p-4 flex items-center transition-all duration-300 ease-in-out hover:shadow-lg hover:translate-y-[-5px] rounded-md" onClick={handleBackClick}>
                       <FaAngleLeft className="mr-1"/> Volver
                     </button>
                 </div>      
