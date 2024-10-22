@@ -71,7 +71,7 @@ export const getProducts = async(): Promise<FullProduct[]> =>{
   return data.productosRandom;
 }
 
-export const FilteredProducts = async (data: Filtered) => {
+export const FilteredProducts = async (data: Filtered)=> {
   const response = await fetch(`${API_URL}/ordenados`, {
     method: "POST",
     headers: {
@@ -82,7 +82,17 @@ export const FilteredProducts = async (data: Filtered) => {
 
   if (!response.ok) {
     throw new Error("Error filtrando productos");
+    return [];
   }
-
-  return response.json();
+  const datos = await response.json();
+  return datos.productos;
 };
+
+export const getCategories = async()=>{
+  const res = await fetch(`${API_URL}/categorias`);
+  if (!res.ok) {
+    throw new Error("Error al traer categorias");
+  }
+  const data = await res.json();
+  return data.categorias;
+}

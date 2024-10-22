@@ -38,3 +38,8 @@ export interface Producto {
     min_precio: number | null;
     max_precio: number | null
   }
+
+  export interface Categories{
+    ID_CATEGORIA:number;
+    CATEGORIA: string
+  }

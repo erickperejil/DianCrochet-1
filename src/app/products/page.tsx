@@ -17,21 +17,52 @@ export default function Products() {
   const [productsSplit, setProductsSplit] = useState(0);
 
   const [pageNumber, setPageNumber] = useState(1);
-  const [indexNumbers, setIndexNumbers] = useState(1);
 
-  const [PricesData, setPricesData] = useState<Filtered>({
-    categorias: [""],
-    min_precio: 0,
-    max_precio: 1000,
+
+  const [, setPricesData] = useState<Filtered>({
+    categorias: [],
+    min_precio: null,
+    max_precio: null,
   });
 
-  const handleFetchCategories = async () =>{
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(0);
+  const [categories, setCategories] = useState<string[]>([]);
+
+  const handleSendCategories = async (updatedCategories: string[]) => {
+    // Usa las categorías actualizadas que recibiste como argumento
+    const filteredData = {
+      categorias: updatedCategories,
+      min_precio: (minPrice==0 && maxPrice==0)?(null):(minPrice),
+      max_precio: (minPrice==0 && maxPrice==0)?(null):(maxPrice),
+    };
+  
+ // Ahora debería mostrar las categorías correcta  
+    if (filteredData.categorias.length > 0 || minPrice !== 0 || maxPrice !== 0) {
       try {
-        const res = await FilteredProducts(PricesData); // Llama a la función para obtener los productos
-        setProductos(res); // Actualiza el estado con el resultado
+        const res = await FilteredProducts(filteredData); // Llama a la función para obtener los productos filtrados
+        setProductos([]); // Limpia productos antes de actualizar
+        console.log("Enviando: ", filteredData); // Asegúrate de que envías los datos correctos
+        console.log("Recibiendo: ", res); // Imprime los resultados de los productos filtrados
+        // setProductos(res); // Actualiza el estado con los nuevos productos
       } catch (error) {
         console.error("Error al traer productos:", error);
+        setProductos([]); // Limpia en caso de error
       }
+    }
+  };
+
+
+  const handleFilter = ()=>{
+    setShowPrices(false); // Oculta precios
+    console.log("padre:", categories)
+    setPricesData((prevState) => ({
+      ...prevState,
+      categorias: categories,
+      min_precio: null,
+      max_precio: null,
+    }));
+    handleSendCategories(categories);
   }
 
   const handlePageNumber = (index: number) => {
@@ -42,9 +73,7 @@ export default function Products() {
         top: 0,
         behavior: "smooth", // Esto hace que el desplazamiento sea suave
       });
-      if (index > 2) {
-        setIndexNumbers(index);
-      }
+
     }
   };
 
@@ -70,14 +99,17 @@ export default function Products() {
     }
   };
 
-  const handleCategories = () => {
-    setShowCategories(!showCategories);
-    setShowPrices(false)
-  };
+
 
   const handlePrices = () => {
     setShowPrices(!showPrices);
-    setShowCategories(false)
+    setShowCategories(false);
+    setPricesData({
+      categorias: categories,
+      min_precio: minPrice,
+      max_precio: maxPrice,
+    });
+    handleSendCategories(categories);
   };
 
   const totalProducts = productos.length;
@@ -97,6 +129,10 @@ export default function Products() {
     }
     fetchGets();
   }, []);
+
+  const handleToggleCategories = () => {
+    setShowCategories((prev) => !prev);
+  };
 
   return (
     <div>
@@ -163,6 +199,24 @@ export default function Products() {
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
                 stroke="currentColor"
+                className="size-6 z-20"
+                onClick={handleFilter}
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z"
+                />
+              </svg>
+            </div>
+
+            <div className="mr-3 flex items-center px-2 font-lekton text-lg text-[#444343]">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
                 className="size-6"
               >
                 <path
@@ -185,8 +239,8 @@ export default function Products() {
                 viewBox="0 0 24 24"
                 strokeWidth={2.1}
                 stroke="currentColor"
-                className={`size-5 transition-all ease-linear duration-300 rotate${showCategories ? ("transform rotate-180"):("")}`}
-                onClick={handleCategories}
+                className={`size-5 transition-all duration-300 ease-linear rotate${showCategories ? "rotate-180 transform" : ""}`}
+                onClick={handleToggleCategories}
               >
                 <path
                   strokeLinecap="round"
@@ -196,7 +250,12 @@ export default function Products() {
               </svg>
 
               <div className="absolute top-7 h-[700%] w-[160%]">
-                <Categorias open={showCategories} setOpen={setShowCategories} />
+                <Categorias
+                  open={showCategories}
+                  setOpen={setShowCategories}
+                  categories={categories}
+                  setCategories={setCategories}
+                />
               </div>
             </div>
 
@@ -209,7 +268,7 @@ export default function Products() {
                 viewBox="0 0 24 24"
                 strokeWidth={2.1}
                 stroke="currentColor"
-                className={`size-5 transition-all ease-linear duration-300 rotate${showPrices ? ("transform rotate-180"):("")}`}
+                className={`size-5 transition-all duration-300 ease-linear rotate${showPrices ? "rotate-180 transform" : ""}`}
               >
                 <path
                   strokeLinecap="round"
@@ -219,7 +278,14 @@ export default function Products() {
               </svg>
 
               <div className="absolute top-7 ml-4 h-[210%] w-[22%] rounded-lg">
-                <Prices open={showPrices} setOpen={setShowPrices} />
+                <Prices
+                  open={showPrices}
+                  setOpen={setShowPrices}
+                  minPrice={minPrice}
+                  maxPrice={maxPrice}
+                  setMinPrice={setMinPrice}
+                  setMaxPrice={setMaxPrice}
+                />
               </div>
             </div>
 
@@ -287,81 +353,73 @@ export default function Products() {
             <div className="flex h-full items-center justify-evenly bg-slate-50 px-1">
               {divNumbers.map((number) =>
                 divNumbers.length > 4 ? (
-                  (pageNumber>2) ? (
-                    (number == divNumbers.length - 1 && number!=pageNumber+1 && number!=pageNumber) ? (
+                  pageNumber > 2 ? (
+                    number == divNumbers.length - 1 &&
+                    number != pageNumber + 1 &&
+                    number != pageNumber ? (
                       <div className="mx-1 flex h-7 w-9 items-end justify-center font-lekton text-lg text-blue-400">
+                        ...
+                      </div>
+                    ) : number == divNumbers.length && number != pageNumber ? (
+                      <div
+                        key={number}
+                        onClick={() => handlePageNumber(number)}
+                        className={`mx-1 flex h-7 w-7 items-center justify-center border border-[#C68EFE] pt-1 font-lekton text-lg ${
+                          pageNumber === number
+                            ? "bg-[#C68EFE] text-white" // Estilos cuando pageNumber coincide con number
+                            : "text-[#C68EFE] hover:bg-[#C68EFE] hover:text-white" // Estilos por defecto
+                        }`}
+                      >
+                        {number}
+                      </div>
+                    ) : number >= pageNumber - 1 && number <= pageNumber + 1 ? (
+                      <div
+                        key={number}
+                        onClick={() => handlePageNumber(number)}
+                        className={`mx-1 flex h-7 w-7 items-center justify-center border border-[#C68EFE] pt-1 font-lekton text-lg ${
+                          pageNumber === number
+                            ? "bg-[#C68EFE] text-white" // Estilos cuando pageNumber coincide con number
+                            : "text-[#C68EFE] hover:bg-[#C68EFE] hover:text-white" // Estilos por defecto
+                        }`}
+                      >
+                        {number}
+                      </div>
+                    ) : (
+                      ""
+                    )
+                  ) : number == divNumbers.length - 1 ? (
+                    <div className="mx-1 flex h-7 w-9 items-end justify-center font-lekton text-lg text-blue-400">
                       ...
                     </div>
-                    ):(
-                      (number == divNumbers.length && number!=pageNumber) ?  (
-                        <div
-                          key={number}
-                          onClick={() => handlePageNumber(number)}
-                          className={`mx-1 flex h-7 w-7 items-center justify-center border border-[#C68EFE] pt-1 font-lekton text-lg ${
-                            pageNumber === number
-                              ? "bg-[#C68EFE] text-white" // Estilos cuando pageNumber coincide con number
-                              : "text-[#C68EFE] hover:bg-[#C68EFE] hover:text-white" // Estilos por defecto
-                          }`}
-                        >
-                          {number}
-                        </div>
-                      ) : (
-                        (number>=pageNumber-1 && number<=pageNumber+1)?(
-                          <div
-                          key={number}
-                          onClick={() => handlePageNumber(number)}
-                          className={`mx-1 flex h-7 w-7 items-center justify-center border border-[#C68EFE] pt-1 font-lekton text-lg ${
-                            pageNumber === number
-                              ? "bg-[#C68EFE] text-white" // Estilos cuando pageNumber coincide con number
-                              : "text-[#C68EFE] hover:bg-[#C68EFE] hover:text-white" // Estilos por defecto
-                          }`}
-                        >
-                          {number}
-                        </div>
-                        ):(
-                          ""
-                        )
-                      )
-                    )
-                  ):(
-                    number == divNumbers.length - 1 ? (
-                      <div className="mx-1 flex h-7 w-9 items-end justify-center font-lekton text-lg text-blue-400">
-                      ...
+                  ) : number == divNumbers.length ? (
+                    <div
+                      key={number}
+                      onClick={() => handlePageNumber(number)}
+                      className={`mx-1 flex h-7 w-7 items-center justify-center border border-[#C68EFE] pt-1 font-lekton text-lg ${
+                        pageNumber === number
+                          ? "bg-[#C68EFE] text-white" // Estilos cuando pageNumber coincide con number
+                          : "text-[#C68EFE] hover:bg-[#C68EFE] hover:text-white" // Estilos por defecto
+                      }`}
+                    >
+                      {number}
                     </div>
-                    ):(
-                      number == divNumbers.length ? (
-                        <div
-                          key={number}
-                          onClick={() => handlePageNumber(number)}
-                          className={`mx-1 flex h-7 w-7 items-center justify-center border border-[#C68EFE] pt-1 font-lekton text-lg ${
-                            pageNumber === number
-                              ? "bg-[#C68EFE] text-white" // Estilos cuando pageNumber coincide con number
-                              : "text-[#C68EFE] hover:bg-[#C68EFE] hover:text-white" // Estilos por defecto
-                          }`}
-                        >
-                          {number}
-                        </div>
-                      ) : (
-                        number<=3?(
-                          <div
-                          key={number}
-                          onClick={() => handlePageNumber(number)}
-                          className={`mx-1 flex h-7 w-7 items-center justify-center border border-[#C68EFE] pt-1 font-lekton text-lg ${
-                            pageNumber === number
-                              ? "bg-[#C68EFE] text-white" // Estilos cuando pageNumber coincide con number
-                              : "text-[#C68EFE] hover:bg-[#C68EFE] hover:text-white" // Estilos por defecto
-                          }`}
-                        >
-                          {number}
-                        </div>
-                        ):(
-                          ""
-                        )
-                      )
-                    )
+                  ) : number <= 3 ? (
+                    <div
+                      key={number}
+                      onClick={() => handlePageNumber(number)}
+                      className={`mx-1 flex h-7 w-7 items-center justify-center border border-[#C68EFE] pt-1 font-lekton text-lg ${
+                        pageNumber === number
+                          ? "bg-[#C68EFE] text-white" // Estilos cuando pageNumber coincide con number
+                          : "text-[#C68EFE] hover:bg-[#C68EFE] hover:text-white" // Estilos por defecto
+                      }`}
+                    >
+                      {number}
+                    </div>
+                  ) : (
+                    ""
                   )
                 ) : (
-                    <div
+                  <div
                     key={number}
                     onClick={() => handlePageNumber(number)}
                     className={`mx-1 flex h-7 w-7 items-center justify-center border border-[#C68EFE] pt-1 font-lekton text-lg ${
