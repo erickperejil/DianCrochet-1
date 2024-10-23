@@ -39,3 +39,22 @@ export interface Producto {
     cantidadCompra: string;
     talla: string | null;
   }
+  export interface FullMaterial{
+    id_material: number;
+    nombre_prod: string;
+    precio_venta: number;
+    imagen_principal: string
+  }
+
+  export interface Filtered{
+    categorias: string[] | null;
+    min_precio: number | null;
+    max_precio: number | null;
+    columna_ordenamiento: string | null;
+    direccion_ordenamiento: string | null;
+  }
+
+  export interface Categories{
+    ID_CATEGORIA:number;
+    CATEGORIA: string
+  }

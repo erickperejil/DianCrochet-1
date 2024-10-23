@@ -1,6 +1,6 @@
 'use client';
 import { Categories } from "@interfaces/product";
-import { getCategories } from "@services/product";
+import { getCategoriesMaterials } from "@services/product";
 import { useRef, useState, useEffect } from "react";
 
 interface CategoriesProps {
@@ -10,7 +10,7 @@ interface CategoriesProps {
   setCategories: (categories: string[]) => void;
 }
 
-export default function Categorias({ open, setOpen, categories, setCategories }: CategoriesProps) {
+export default function CategoriasMateriales({ open, setOpen, categories, setCategories }: CategoriesProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [categoriasOptions, setCategoriasOptions] = useState<Categories[]>([]);
 
@@ -18,7 +18,7 @@ export default function Categorias({ open, setOpen, categories, setCategories }:
   useEffect(() => {
     async function fetchCategorias() {
       try {
-        const res = await getCategories();
+        const res = await getCategoriesMaterials();
         setCategoriasOptions(res);
       } catch (error) {
         console.error("Error al traer categorias:", error);
@@ -61,10 +61,10 @@ export default function Categorias({ open, setOpen, categories, setCategories }:
     open ? (
       <div
         ref={ref}
-        className="z-30 select-none absolute flex whitespace-nowrap flex-col rounded-lg bg-slate-50 p-2 shadow-2xl shadow-slate-900 drop-shadow-lg"
+        className="z-30 select-none absolute flex flex-col rounded-lg bg-slate-50 p-2 shadow-2xl shadow-slate-900 drop-shadow-lg"
       >
         {categoriasOptions.map((category) => (
-          <div key={category.ID_CATEGORIA} className="mb-[2px] flex items-center">
+          <div key={category.ID_CATEGORIA} className="mb-[2px] flex items-center whitespace-nowrap">
             <input
               id={`${category.ID_CATEGORIA}`}
               type="checkbox"

@@ -9,11 +9,22 @@ interface ProductDetailProps {
 
 const ProductDetail = ({ producto }: ProductDetailProps) => {
   const [selectedTalla, setSelectedTalla] = useState<string | null>(null);
-  const [cantidad, setCantidad] = useState<number>(1);
+  const [cantidad] = useState<number>(1);
   const [zoomImage, setZoomImage] = useState<string | null>(null);
   const [mensajeExito, setMensajeExito] = useState<string | null>(null);
   const [mensajeError, setMensajeError] = useState<string | null>(null); // Estado para mensaje de error
   const [correo, setCorreo] = useState<string>(''); // Estado para almacenar el correo
+  const [quantity, setQuantity] = useState(1);
+
+  const increaseQuantity = () => {
+    setQuantity((prev) => prev + 1);
+  };
+
+  const decreaseQuantity = () => {
+    if (quantity > 1) {
+      setQuantity((prev) => prev - 1);
+    }
+  };
 
   useEffect(() => {
     // Obtener el correo desde el local storage
@@ -26,11 +37,7 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
     }
   }, []);
 
-  const handleCantidadChange = (newCantidad: number) => {
-    if (newCantidad >= 1) {
-      setCantidad(newCantidad);
-    }
-  };
+  
 
   const handleThumbnailClick = (src: string) => {
     setZoomImage(src);
@@ -70,7 +77,7 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
   };
 
   return (
-    <div className="relative w-max grid grid-cols-1 md:grid-cols-2 gap-8 p-8">
+    <div className="relative w-max grid grid-cols-1 md:grid-cols-2 gap-[15%] p-8 ">
       {zoomImage && (
         <div
           className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
@@ -87,7 +94,7 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
       )}
 
       {mensajeExito && (
-        <div className="fixed top-5 right-5 bg-green-500 text-white px-4 py-2 rounded-lg z-50">
+        <div className="fixed top-5 right-5 bg-[#C68EFE] text-white px-4 py-2 rounded-lg z-50">
           {mensajeExito}
         </div>
       )}
@@ -130,24 +137,24 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
         </div>
 
         <div className="ml-24 mr-24 max-w-full p-5">
-          <p className="text-justify font-lekton text-gray-700">{producto.descripcion}</p>
+          <p className="text-justify font-crimson text-[#727171]">{producto.descripcion}</p>
         </div>
       </div>
 
       <div className="flex flex-col space-y-4">
-        <h1 className="text-2xl font-koulen">{producto.nombre_prod}</h1>
-        <p className="text-black font-koulen">L{producto.precio_venta.toFixed(2)}</p>
-        <p className="font-lekton text-black">*Precio no incluye envío</p>
+        <h1 className="text-5xl font-koulen">{producto.nombre_prod}</h1>
+        <p className="text-[#727171] font-robotoMono">L{producto.precio_venta.toFixed(2)}</p>
+        <p className="font-roboto text-[#727171]">*Precio no incluye envío</p>
 
         {producto.tallas && producto.tallas.filter(talla => talla !== null).length > 0 ? (
           <div>
-            <h3 className="font-koulen">TALLA</h3>
-            <div className="flex space-x-2 mt-2 font-koulen text-black">
+            <h3 className="font-koulen text-[#424242]">TALLA</h3>
+            <div className="flex space-x-2 mt-2 font-koulen text-[#424242]">
               {producto.tallas.filter(talla => talla !== null).map((talla) => (
                 <button
                   key={talla}
-                  className={`px-4 py-2 border rounded-lg ${
-                    selectedTalla === talla ? 'bg-[#C68EFE] text-white' : 'bg-gray-200'
+                  className={`px-11 py-2 border rounded-lg ${
+                    selectedTalla === talla ? 'bg-[#C68EFE] text-white' : 'bg-[#D9D9D9]'
                   }`}
                   onClick={() => setSelectedTalla(talla)}
                 >
@@ -161,38 +168,32 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
         )}
 
         <div>
-          <h3 className="font-koulen">Cantidad</h3>
+          <h3 className="font-robotoMono text-[#727171]">Cantidad</h3>
         </div>
-        <div className="flex items-center space-x-4">
-          <div className="flex items-center border rounded-lg">
+        <div className="flex flex-col items-start">
+          <div className="flex items-center bg-gray-100 rounded-full shadow-md px-2 py-1">
             <button
-              className="px-4 py-2 text-white bg-[#C68EFE] rounded-lg mr-5"
-              onClick={() => handleCantidadChange(cantidad - 1)}
+              onClick={decreaseQuantity}
+              className="text-xl font-semibold text-[#727171] hover:text-[#C68EFE]"
             >
               -
             </button>
-            <input
-              type="number"
-              value={cantidad}
-              onChange={(e) => handleCantidadChange(parseInt(e.target.value))}
-              className="w-12 text-center border-none focus:outline-none appearance-none"
-              min={1}
-            />
+            <span className="mx-6 text-lg font-medium" >{quantity}</span>
             <button
-              className="px-4 py-2 bg-[#C68EFE] text-white rounded-lg ml-5"
-              onClick={() => handleCantidadChange(cantidad + 1)}
+              onClick={increaseQuantity}
+              className="text-xl font-semibold text-[#727171] hover:text-[#C68EFE]"
             >
               +
             </button>
           </div>
-        </div>
-
-        <button
-          className="mt-4 px-4 py-2 bg-[#C68EFE] text-white rounded-lg hover:bg-purple-600 font-lekton"
-          onClick={handleAddToCart}
-        >
-          Añadir al Carrito
-        </button>
+    </div>
+        <div className='flex flex-col items-center'>
+          <button
+            className="mt-4 px-4 py-2 bg-[#C68EFE] text-white rounded-lg hover:bg-purple-600 font-lekton"
+            onClick={handleAddToCart}>
+            Añadir al Carrito
+          </button>
+          </div>
       </div>
     </div>
   );
