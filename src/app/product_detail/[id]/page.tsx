@@ -6,13 +6,14 @@ import Footer from 'components/Footer';
 import { useProducto } from '@services/product';
 import ProductDetail from '../components/ProductDetail';
 import CarruselProductoRelacionado from '../components/CarruselProductoRelacionado';
+import PantallaCarga from '../components/pantallacarga';
 
 
 export default function ProductDetailPageDinamic() {
   const producto = useProducto();
 
   if (!producto) {
-    return <p>Cargando detalles del producto...</p>;
+    return <PantallaCarga/>;
   }
 
   return (
