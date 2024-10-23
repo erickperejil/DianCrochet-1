@@ -17,3 +17,9 @@ export interface CarritoItem {
 export interface Carrito {
     carrito: CarritoItem[];
 }
+
+interface Departamento {
+    ID_DEPARTAMENTO: number;
+    DEPARTAMENTO: string;
+  }
+  
