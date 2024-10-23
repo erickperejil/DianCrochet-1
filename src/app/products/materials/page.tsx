@@ -1,24 +1,23 @@
 "use client";
-import Product from "../landing/components/Product";
+import Product from "../../landing/components/Product";
 import Footer from "components/Footer";
 import Navbar from "components/navbar";
 import Image from "next/image";
-import Categorias from "./components/categories";
 import { useEffect, useState } from "react";
-import Prices from "./components/prices";
-import { Filtered, FullProduct } from "@interfaces/product";
-import { FilteredProducts, getProducts } from "@services/product";
-import Ordenamiento from "./components/ordenamiento";
+import Prices from "../components/prices";
+import { Filtered, FullMaterial } from "@interfaces/product";
+import { getMaterials, FilteredMaterials } from "@services/product";
+import Ordenamiento from "../components/ordenamiento";
+import CategoriasMateriales from "../components/categoriesMaterials";
 import { useRouter } from 'next/navigation'; 
 
-
-export default function Products() {
+export default function Materials() {
   const router = useRouter(); 
   const [showCategories, setShowCategories] = useState(false);
   const [showPrices, setShowPrices] = useState(false);
   const [showOrder, setShowOrder] = useState(false);
 
-  const [productos, setProductos] = useState<FullProduct[]>([]);
+  const [productos, setProductos] = useState<FullMaterial[]>([]);
   const [productsSplit, setProductsSplit] = useState(0);
 
   const [pageNumber, setPageNumber] = useState(1);
@@ -38,20 +37,18 @@ export default function Products() {
   const [orden, setOrden] = useState("");
 
   const nombresFiltros: { [key: string]: string } = {
-    "NOMBRE_PROD_ASC": "Alfabético A-Z",
-    "NOMBRE_PROD_DESC": "Alfabético Z-A",
-    "FECHA_CREACION_ASC": "Lo más antiguo",
-    "FECHA_CREACION_DESC": "Lo más nuevo",
-    "PRECIO_VENTA_ASC": "Precio menor primero",
-    "PRECIO_VENTA_DESC": "Precio mayor primero",
+    NOMBRE_PROD_ASC: "Alfabético A-Z",
+    NOMBRE_PROD_DESC: "Alfabético Z-A",
+    FECHA_CREACION_ASC: "Lo más antiguo",
+    FECHA_CREACION_DESC: "Lo más nuevo",
+    PRECIO_VENTA_ASC: "Precio menor primero",
+    PRECIO_VENTA_DESC: "Precio mayor primero",
   };
 
-  const deleteFilter = () =>{
+  const deleteFilter = () => {
     setOrdenamiento("");
     setOrden("");
-  }
-  
-  
+  };
 
   const deleteCategory = (index: number) => {
     setCategories((prevCategories) =>
@@ -77,11 +74,10 @@ export default function Products() {
     console.log(filteredData);
     // Ahora debería mostrar las categorías correcta
     try {
-      const res = await FilteredProducts(filteredData); // Llama a la función para obtener los productos filtrados
+      console.log("enviando:", filteredData)
+      const res = await FilteredMaterials(filteredData); 
+      console.log("recibiendo:", res)// Llama a la función para obtener los productos filtrados
       setProductos(res); // Limpia productos antes de actualizar
-      console.log("Enviando: ", filteredData); // Asegúrate de que envías los datos correctos
-      console.log("Recibiendo: ", res); // Imprime los resultados de los productos filtrados
-      // setProductos(res); // Actualiza el estado con los nuevos productos
     } catch (error) {
       console.error("Error al traer productos:", error);
     }
@@ -155,11 +151,6 @@ export default function Products() {
     }
   };
 
-  const handleProductClick = (id: number) => {
-    // Redirigir a la página de detalle del producto
-    router.push(`/product_detail/${id}`);
-  };
-
   const totalProducts = productos.length;
 
   // Calculamos x como el número de páginas (o grupos) en base a 16 productos por grupo
@@ -169,10 +160,10 @@ export default function Products() {
   useEffect(() => {
     async function fetchGets() {
       try {
-        const res = await getProducts(); // Llama a la función para obtener los productos
+        const res = await getMaterials(); // Llama a la función para obtener los productos
         setProductos(res); // Actualiza el estado con el resultado
       } catch (error) {
-        console.error("Error al traer productos:", error);
+        console.error("Error al traer materiales:", error);
       }
     }
     fetchGets();
@@ -182,13 +173,21 @@ export default function Products() {
     setShowCategories((prev) => !prev);
   };
 
+  
+  const handleProductClick = (id: number) => {
+    // Redirigir a la página de detalle del producto
+    router.push(`/product_detail/${id}`);
+  };
+
   return (
     <div>
       <Navbar />
       <div className="h-24 bg-white"></div>
       <section className="bg-white">
         <div className="flex h-20 items-center">
-          <h1 className="pl-6 font-koulen text-5xl text-gray-900">Productos</h1>
+          <h1 className="pl-6 font-koulen text-5xl text-gray-900">
+            Materiales
+          </h1>
           <Image
             src="/img/girasol.svg"
             alt="Crochet Flower"
@@ -204,7 +203,7 @@ export default function Products() {
             className="pointer-events-none ml-2 mt-4 mix-blend-multiply"
           />
         </div>
-        <div className="flex h-32 flex-col-reverse -mt-4">
+        <div className="-mt-4 flex h-32 flex-col-reverse">
           <div className="mb-3 flex h-9 w-full items-center pl-6">
             {categories.map((category, index) => (
               <div
@@ -313,30 +312,28 @@ export default function Products() {
               </svg>
             </div>
 
-            {ordenamiento != "" &&
-                <div className="absolute right-[7.5%] mr-3 flex items-center rounded-2xl bg-gray-200 px-2 font-lekton text-lg text-[#444343]">
-                  <>
-                    <h2>{nombresFiltros[`${ordenamiento}_${orden}`] || ""}</h2>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="z-20 size-5 pl-1"
-                      onClick={deleteFilter}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M6 18 18 6M6 6l12 12"
-                      />
-                    </svg>
-                  </>
-                </div>
-            }
-
-              
+            {ordenamiento != "" && (
+              <div className="absolute right-[7.5%] mr-3 flex items-center rounded-2xl bg-gray-200 px-2 font-lekton text-lg text-[#444343]">
+                <>
+                  <h2>{nombresFiltros[`${ordenamiento}_${orden}`] || ""}</h2>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="z-20 size-5 pl-1"
+                    onClick={deleteFilter}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 18 18 6M6 6l12 12"
+                    />
+                  </svg>
+                </>
+              </div>
+            )}
           </div>
 
           <div className="relative mb-3 flex h-9 w-full items-center pl-6">
@@ -361,7 +358,7 @@ export default function Products() {
               </svg>
 
               <div className="absolute top-7">
-                <Categorias
+                <CategoriasMateriales
                   open={showCategories}
                   setOpen={setShowCategories}
                   categories={categories}
@@ -435,9 +432,9 @@ export default function Products() {
               .slice(productsSplit, productsSplit + 16)
               .map((producto) => (
                 <div
-                  key={producto.id_producto}
+                  key={producto.id_material}
                   className="h-[364px] w-[260px] text-center"
-                  onClick={()=>handleProductClick(producto.id_producto)}
+                  onClick={() => handleProductClick(producto.id_material)}
                 >
                   <Product
                     nombre={producto.nombre_prod}
@@ -478,79 +475,138 @@ export default function Products() {
             <div className="flex h-full items-center justify-evenly bg-slate-50 px-1">
               {divNumbers.map((number) =>
                 divNumbers.length > 4 ? (
-                  pageNumber > 2 ? (
-                    number == divNumbers.length - 1 &&
-                    number != pageNumber + 1 &&
-                    number != pageNumber ? (
-                      <div className="mx-1 flex h-7 w-9 items-end justify-center font-lekton text-lg text-blue-400">
-                        ...
-                      </div>
-                    ) : number == divNumbers.length && number != pageNumber ? (
-                      <div
-                        key={number}
-                        onClick={() => handlePageNumber(number)}
-                        className={`mx-1 flex h-7 w-7 items-center justify-center border border-pink-500 pt-1 font-lekton text-lg ${
-                          pageNumber === number
-                            ? "bg-pink-500 text-white" // Estilos cuando pageNumber coincide con number
-                            : "text-pink-500 hover:bg-pink-500 hover:text-white" // Estilos por defecto
-                        }`}
-                      >
-                        {number}
-                      </div>
-                    ) : number >= pageNumber - 1 && number <= pageNumber + 1 ? (
-                      <div
-                        key={number}
-                        onClick={() => handlePageNumber(number)}
-                        className={`mx-1 flex h-7 w-7 items-center justify-center border border-pink-500 pt-1 font-lekton text-lg ${
-                          pageNumber === number
-                            ? "bg-pink-500 text-white" // Estilos cuando pageNumber coincide con number
-                            : "text-pink-500 hover:bg-pink-500 hover:text-white" // Estilos por defecto
-                        }`}
-                      >
-                        {number}
-                      </div>
-                    ) : (
-                      ""
-                    )
-                  ) : number == divNumbers.length - 1 ? (
-                    <div className="mx-1 flex h-7 w-9 items-end justify-center font-lekton text-lg text-blue-400">
-                      ...
+                  pageNumber === 1 ? (
+                    // Cuando estamos en el primer número
+                    <div>
+                      {number <= 3 ? (
+                        <div
+                          key={number}
+                          onClick={() => handlePageNumber(number)}
+                          className={`mx-1 flex h-7 w-7 items-center justify-center border border-pink-500 pt-1 font-lekton text-lg ${
+                            pageNumber === number
+                              ? "bg-pink-500 text-white"
+                              : "text-pink-500 hover:bg-pink-500 hover:text-white"
+                          }`}
+                        >
+                          {number}
+                        </div>
+                      ) : number === 4 ? (
+                        <div className="mx-1 flex h-7 w-9 items-end justify-center font-lekton text-lg text-blue-400">
+                          ...
+                        </div>
+                      ) : null}
                     </div>
-                  ) : number == divNumbers.length ? (
-                    <div
-                      key={number}
-                      onClick={() => handlePageNumber(number)}
-                      className={`mx-1 flex h-7 w-7 items-center justify-center border border-pink-500 pt-1 font-lekton text-lg ${
-                        pageNumber === number
-                          ? "bg-pink-500 text-white" // Estilos cuando pageNumber coincide con number
-                          : "text-pink-500 hover:bg-pink-500 hover:text-white" // Estilos por defecto
-                      }`}
-                    >
-                      {number}
+                  ) : pageNumber === 2 ? (
+                    // Cuando estamos en el segundo número
+                    <div>
+                      {number <= 3 ? (
+                        <div
+                          key={number}
+                          onClick={() => handlePageNumber(number)}
+                          className={`mx-1 flex h-7 w-7 items-center justify-center border border-pink-500 pt-1 font-lekton text-lg ${
+                            pageNumber === number
+                              ? "bg-pink-500 text-white"
+                              : "text-pink-500 hover:bg-pink-500 hover:text-white"
+                          }`}
+                        >
+                          {number}
+                        </div>
+                      ) : number === 4 ? (
+                        <div className="mx-1 flex h-7 w-9 items-end justify-center font-lekton text-lg text-blue-400">
+                          ...
+                        </div>
+                      ) : number === divNumbers.length ? (
+                        <div
+                          key={number}
+                          onClick={() => handlePageNumber(number)}
+                          className={`mx-1 flex h-7 w-7 items-center justify-center border border-pink-500 pt-1 font-lekton text-lg ${
+                            pageNumber === number
+                              ? "bg-pink-500 text-white"
+                              : "text-pink-500 hover:bg-pink-500 hover:text-white"
+                          }`}
+                        >
+                          {number}
+                        </div>
+                      ) : null}
                     </div>
-                  ) : number <= 3 ? (
-                    <div
-                      key={number}
-                      onClick={() => handlePageNumber(number)}
-                      className={`mx-1 flex h-7 w-7 items-center justify-center border border-pink-500 pt-1 font-lekton text-lg ${
-                        pageNumber === number
-                          ? "bg-pink-500 text-white" // Estilos cuando pageNumber coincide con number
-                          : "text-pink-500 hover:bg-pink-500 hover:text-white" // Estilos por defecto
-                      }`}
-                    >
-                      {number}
+                  ) : pageNumber === 3 ? (
+                    // Cuando estamos en el tercer número
+                    <div>
+                      {number >= 2 && number <= 4 ? (
+                        <div
+                          key={number}
+                          onClick={() => handlePageNumber(number)}
+                          className={`mx-1 flex h-7 w-7 items-center justify-center border border-pink-500 pt-1 font-lekton text-lg ${
+                            pageNumber === number
+                              ? "bg-pink-500 text-white"
+                              : "text-pink-500 hover:bg-pink-500 hover:text-white"
+                          }`}
+                        >
+                          {number}
+                        </div>
+                      ) : number === 5 ? (
+                        <div className="mx-1 flex h-7 w-9 items-end justify-center font-lekton text-lg text-blue-400">
+                          ...
+                        </div>
+                      ) : null}
+                    </div>
+                  ) : pageNumber === divNumbers.length - 1 ||
+                    pageNumber === divNumbers.length ? (
+                    // Cuando estamos en el penúltimo o último número
+                    <div>
+                      {number === 1 ? (
+                        <div
+                          key={number}
+                          onClick={() => handlePageNumber(number)}
+                          className={`mx-1 flex h-7 w-7 items-center justify-center border border-pink-500 pt-1 font-lekton text-lg ${
+                            pageNumber === number
+                              ? "bg-pink-500 text-white"
+                              : "text-pink-500 hover:bg-pink-500 hover:text-white"
+                          }`}
+                        >
+                          {number}
+                        </div>
+                      ) : number === divNumbers.length - 2 ? (
+                        <div className="mx-1 flex h-7 w-9 items-end justify-center font-lekton text-lg text-blue-400">
+                          ...
+                        </div>
+                      ) : number === divNumbers.length ? (
+                        <div
+                          key={number}
+                          onClick={() => handlePageNumber(number)}
+                          className={`mx-1 flex h-7 w-7 items-center justify-center border border-pink-500 pt-1 font-lekton text-lg ${
+                            pageNumber === number
+                              ? "bg-pink-500 text-white"
+                              : "text-pink-500 hover:bg-pink-500 hover:text-white"
+                          }`}
+                        >
+                          {number}
+                        </div>
+                      ) : null}
                     </div>
                   ) : (
-                    ""
+                    // Para cualquier otro número
+                    <div
+                      key={number}
+                      onClick={() => handlePageNumber(number)}
+                      className={`mx-1 flex h-7 w-7 items-center justify-center border border-pink-500 pt-1 font-lekton text-lg ${
+                        pageNumber === number
+                          ? "bg-pink-500 text-white"
+                          : "text-pink-500 hover:bg-pink-500 hover:text-white"
+                      }`}
+                    >
+                      {number}
+                    </div>
                   )
                 ) : (
+                  // Para menos de 4 elementos
                   <div
                     key={number}
                     onClick={() => handlePageNumber(number)}
                     className={`mx-1 flex h-7 w-7 items-center justify-center border border-pink-500 pt-1 font-lekton text-lg ${
                       pageNumber === number
-                        ? "bg-pink-500 text-white" // Estilos cuando pageNumber coincide con number
-                        : "text-pink-500 hover:bg-pink-500 hover:text-white" // Estilos por defecto
+                        ? "bg-pink-500 text-white"
+                        : "text-pink-500 hover:bg-pink-500 hover:text-white"
                     }`}
                   >
                     {number}
