@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
-import { ProductoDetalle } from "@interfaces/product";
+import { Filtered, FullMaterial, ProductoDetalle } from "@interfaces/product";
 import { useParams } from 'next/navigation';
 import { FullProduct, Producto, ProductoSimilar } from "@interfaces/product";
+
+const API_URL = "http://localhost:4000/producto";
 
 
 export const GetProductosPopulares = async (): Promise<Producto[]> => {
@@ -63,7 +65,7 @@ export function useProducto() {
   
 
 export const getProducts = async(): Promise<FullProduct[]> =>{
-  const res = await fetch("http://localhost:4000/producto");
+  const res = await fetch("http://localhost:4000/producto/Producto");
   if (!res.ok) {
     throw new Error("Error al traer productos");
   }
@@ -73,3 +75,63 @@ export const getProducts = async(): Promise<FullProduct[]> =>{
 
 
   
+export const FilteredProducts = async (data: Filtered)=> {
+  const response = await fetch(`${API_URL}/ordenados/Producto`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    throw new Error("Error filtrando productos");
+    return [];
+  }
+  const datos = await response.json();
+  return datos.productos;
+};
+
+export const getCategories = async()=>{
+  const res = await fetch(`${API_URL}/categorias`);
+  if (!res.ok) {
+    throw new Error("Error al traer categorias");
+  }
+  const data = await res.json();
+  return data.categorias;
+}
+
+export const getCategoriesMaterials = async()=>{
+  const res = await fetch(`${API_URL}/categorias/materiales`);
+  if (!res.ok) {
+    throw new Error("Error al traer categorias");
+  }
+  const data = await res.json();
+  return data.categoriasMateriales;
+}
+
+export const getMaterials = async(): Promise<FullMaterial[]> =>{
+  const res = await fetch("http://localhost:4000/producto/Material");
+  if (!res.ok) {
+    throw new Error("Error al traer productos");
+  }
+  const data = await res.json();
+  return data.productosRandom;
+}
+
+export const FilteredMaterials = async (data: Filtered)=> {
+  const response = await fetch(`${API_URL}/materiales/ordenados/Material`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    throw new Error("Error filtrando productos");
+    return [];
+  }
+  const datos = await response.json();
+  return datos.productos;
+};
