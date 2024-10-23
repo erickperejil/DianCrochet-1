@@ -9,8 +9,11 @@ import Prices from "./components/prices";
 import { Filtered, FullProduct } from "@interfaces/product";
 import { FilteredProducts, getProducts } from "@services/product";
 import Ordenamiento from "./components/ordenamiento";
+import { useRouter } from 'next/navigation'; 
+
 
 export default function Products() {
+  const router = useRouter(); 
   const [showCategories, setShowCategories] = useState(false);
   const [showPrices, setShowPrices] = useState(false);
   const [showOrder, setShowOrder] = useState(false);
@@ -150,6 +153,11 @@ export default function Products() {
       });
       setPageNumber(pageNumber - 1);
     }
+  };
+
+  const handleProductClick = (id: number) => {
+    // Redirigir a la página de detalle del producto
+    router.push(`/product_detail/${id}`);
   };
 
   const totalProducts = productos.length;
@@ -429,6 +437,7 @@ export default function Products() {
                 <div
                   key={producto.id_producto}
                   className="h-[364px] w-[260px] text-center"
+                  onClick={()=>handleProductClick(producto.id_producto)}
                 >
                   <Product
                     nombre={producto.nombre_prod}
