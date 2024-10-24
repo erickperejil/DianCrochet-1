@@ -9,6 +9,7 @@ interface ProductDetailProps {
 
 const ProductDetail = ({ producto }: ProductDetailProps) => {
   const [selectedTalla, setSelectedTalla] = useState<string | null>(null);
+  const [selectedGrosores, setSelectedGrosores] = useState<string | null>(null);
   const [zoomImage, setZoomImage] = useState<string | null>(null);
   const [mensajeExito, setMensajeExito] = useState<string | null>(null);
   const [mensajeError, setMensajeError] = useState<string | null>(null); // Estado para mensaje de error
@@ -63,6 +64,7 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
       idProducto,
       cantidadCompra: cantidad.toString(), // Conversión de number a string
       talla: selectedTalla || null,
+
     };
 
     try {
@@ -158,6 +160,27 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
                   onClick={() => setSelectedTalla(talla)}
                 >
                   {talla}
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div></div>
+        )}
+
+      {producto.grosores && producto.grosores.filter(grosor => grosor !== null).length > 0 ? (
+          <div>
+            <h3 className="font-koulen text-[#424242]">GROSORES</h3>
+            <div className="flex space-x-2 mt-2 font-koulen text-[#424242]">
+              {producto.grosores.filter(grosor => grosor !== null).map((grosor) => (
+                <button
+                  key={grosor}
+                  className={`px-11 py-2 border rounded-lg ${
+                    selectedGrosores === grosor ? 'bg-[#C68EFE] text-white' : 'bg-[#D9D9D9]'
+                  }`}
+                  onClick={() => setSelectedGrosores(grosor)}
+                >
+                  {grosor}
                 </button>
               ))}
             </div>

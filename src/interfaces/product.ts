@@ -17,6 +17,7 @@ export interface Producto {
     tallas: string[];
     imagen_principal: string;
     imagenes_extra: string[];
+    grosores: (string | null)[];
   }
 
   export interface ProductoSimilar {
@@ -70,7 +71,7 @@ export interface Producto {
     tallas: (string | null)[];
     imagen_principal: string;
     imagenes_extra: string[];
-    grosores: string[];
+    grosores: (string | null)[];
     cantidad_por_grosor: number[];
     nombre_marca: string;
   }

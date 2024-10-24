@@ -118,7 +118,7 @@ export default function Navbar() {
                   href="#"
                   className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
                 >
-                  {correo ? "Cerrar Sesión" : "Iniciar Sesión"}  {/* Mostrar "Cerrar Sesión" o "Iniciar Sesión" según el estado del correo */}
+                  {correo ? "Cerrar Sesion" : "Iniciar Sesion"}  {/* Mostrar "Cerrar Sesión" o "Iniciar Sesión" según el estado del correo */}
                 </a>
               </div>
             )}
