@@ -54,8 +54,8 @@ export default function Navbar() {
 
   const handleCarritoClick = () => {
     if (!correo) {
-      setMensajeAdvertencia('Debes iniciar sesión para ver el carrito.');
-      setTimeout(() => setMensajeAdvertencia(null), 3000); // Limpiar el mensaje después de 3 segundos
+      setMensajeAdvertencia('Debes iniciar sesion para ver el carrito.');
+      setTimeout(() => setMensajeAdvertencia(null), 1000); // Limpiar el mensaje después de 1 segundos
     } else {
       router.push('/checkout/shop-cart'); // Redirigir al carrito si está logueado
     }
@@ -131,7 +131,7 @@ export default function Navbar() {
 
           {/* Mostrar mensaje de advertencia si no está logueado */}
           {mensajeAdvertencia && (
-            <div className="fixed top-5 right-5 bg-red-500 text-white px-4 py-2 rounded-lg z-50">
+            <div className="fixed bottom-5 right-5 bg-gray-200 opacity-75 text-purple-900 px-4 py-2 rounded-lg z-50">
               {mensajeAdvertencia}
             </div>
           )}
