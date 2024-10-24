@@ -168,26 +168,30 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
           <div></div>
         )}
 
-      {producto.grosores && producto.grosores.filter(grosor => grosor !== null).length > 0 ? (
-          <div>
-            <h3 className="font-koulen text-[#424242]">GROSORES</h3>
-            <div className="flex space-x-2 mt-2 font-koulen text-[#424242]">
-              {producto.grosores.filter(grosor => grosor !== null).map((grosor) => (
-                <button
-                  key={grosor}
-                  className={`px-11 py-2 border rounded-lg ${
-                    selectedGrosores === grosor ? 'bg-[#C68EFE] text-white' : 'bg-[#D9D9D9]'
-                  }`}
-                  onClick={() => setSelectedGrosores(grosor)}
+          {producto.grosores && producto.grosores.filter(grosor => grosor !== null).length > 0 ? (
+            <div>
+              <h3 className="font-koulen text-[#424242]">GROSORES</h3>
+              <div className="mt-2 font-koulen text-[#424242]">
+                <select 
+                  id="grosorSelect" 
+                  className="px-11 py-2 border rounded-lg bg-[#D9D9D9] text-[#424242]"
+                  value={selectedGrosores || ""} 
+                  onChange={(e) => setSelectedGrosores(e.target.value)}
                 >
-                  {grosor}
-                </button>
-              ))}
+                  <option value="" disabled>Seleccionar</option> {/* Opción por defecto */}
+                  {producto.grosores.filter(grosor => grosor !== null).map((grosor) => (
+                    <option key={grosor} value={grosor}>
+                      {grosor}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
-          </div>
-        ) : (
-          <div></div>
-        )}
+          ) : (
+            <div></div>
+          )}
+
+
 
         <div>
           <h3 className="font-robotoMono text-[#727171]">Cantidad</h3>
