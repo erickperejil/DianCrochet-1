@@ -209,7 +209,7 @@ export default function Products() {
             {categories.map((category, index) => (
               <div
                 key={index}
-                className="mr-3 flex items-center rounded-2xl bg-gray-200 px-2 font-lekton text-lg text-[#444343]"
+                className="mr-3 flex items-center rounded-2xl bg-gray-200 px-2 font-lekton text-lg text-[#444343] "
               >
                 <h2>{category}</h2>
                 <svg
@@ -436,7 +436,7 @@ export default function Products() {
               .map((producto) => (
                 <div
                   key={producto.id_producto}
-                  className="h-[364px] w-[260px] text-center"
+                  className="h-[364px] w-[260px] text-center cursor-pointer"
                   onClick={()=>handleProductClick(producto.id_producto)}
                 >
                   <Product
