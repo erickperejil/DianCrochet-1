@@ -51,7 +51,7 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
     // Verifica si el correo está disponible
     if (!correo) {
       console.error('No se encontró el correo del usuario en localStorage');
-      setMensajeError('Debes iniciar sesión para poder agregar productos al carrito.'); // Mostrar mensaje de advertencia
+      setMensajeError('Inicia sesion para comprar'); // Mostrar mensaje de advertencia
       setTimeout(() => setMensajeError(null), 3000); // Ocultar mensaje después de 3 segundos
       return;
     }
@@ -100,11 +100,16 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
         </div>
       )}
 
-      {mensajeError && (
-        <div className="fixed top-5 right-5 bg-red-500 text-white px-4 py-2 rounded-lg z-50">
-          {mensajeError}
-        </div>
-      )}
+{mensajeError && (
+             <div className="text-lg items-center w-1/4 flex justify-center font-koulen fixed bottom-5 right-5 bg-gray-200 opacity-70 text-purple-900 px-4 py-2 rounded-lg z-50">
+            {mensajeError}
+            <svg className={"ml-6 size-6 text-blue-500"} xmlns="http://www.w3.org/2000/svg" strokeWidth={2} width="2em" height="1em" viewBox="0 0 32 32">
+              <path fill="currentColor" d="m15.875 4l-.094.031l-8 1.875L7 6.094v20.25l.813.125l8 1.5l.093.031H18V4zM20 6v2h3v16h-3v2h5V6zm-4 .031V26l-7-1.313V7.657zM14.344 15c-.367 0-.688.45-.688 1s.32 1 .688 1s.656-.45.656-1s-.29-1-.656-1"></path>
+            </svg>
+           </div>
+
+)}
+
 
       <div className="flex flex-col space-y-4">
         <div className="flex justify-center">
