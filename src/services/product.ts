@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Filtered, FullMaterial, ProductoDetalle } from "@interfaces/product";
+import { DetalleMaterial, Filtered, FullMaterial, ProductoDetalle } from "@interfaces/product";
 import { useParams } from 'next/navigation';
 import { FullProduct, Producto, ProductoSimilar } from "@interfaces/product";
 
@@ -135,3 +135,39 @@ export const FilteredMaterials = async (data: Filtered)=> {
   const datos = await response.json();
   return datos.productos;
 };
+
+
+export function useMaterial() {
+  const [producto, setProducto] = useState<DetalleMaterial | null>(null);
+  const { id } = useParams(); 
+
+  useEffect(() => {
+    const obtenerDetallesMaterial = async () => {
+      try {
+        const response = await fetch(`http://localhost:4000/producto/detalle/${id}`);
+        
+
+        if (!response.ok) {
+          throw new Error(`Error en la respuesta del servidor: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+
+        if (data.DetalleMaterial && data.DetalleMaterial.length > 0) {
+          setProducto(data.DetalleMaterial[0]);
+        } else {
+          console.error('No se encontraron detalles del producto en la respuesta');
+        }
+      } catch (error) {
+        console.error('Error al obtener el detalle del producto:', error);
+      }
+    };
+
+    if (id) {
+      obtenerDetallesMaterial();
+    }
+  }, [id]);
+  console.log(producto)
+  return producto;
+  
+}
