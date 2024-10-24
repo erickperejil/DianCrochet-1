@@ -433,7 +433,7 @@ export default function Materials() {
               .map((producto) => (
                 <div
                   key={producto.id_material}
-                  className="h-[364px] w-[260px] text-center"
+                  className="h-[364px] w-[260px] text-center cursor-pointer"
                   onClick={() => handleProductClick(producto.id_material)}
                 >
                   <Product
