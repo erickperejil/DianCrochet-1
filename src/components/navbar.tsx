@@ -131,7 +131,7 @@ export default function Navbar() {
 
           {/* Mostrar mensaje de advertencia si no está logueado */}
           {mensajeAdvertencia && (
-            <div className="fixed bottom-5 right-5 bg-gray-200 opacity-75 text-purple-900 px-4 py-2 rounded-lg z-50">
+            <div className="fixed bottom-5 right-5 bg-gray-200 opacity-70 text-purple-900 px-4 py-2 rounded-lg z-50">
               {mensajeAdvertencia}
             </div>
           )}
