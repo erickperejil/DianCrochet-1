@@ -36,7 +36,13 @@ const robotoMono = localFont({
 
 const roboto = localFont({
   src: "../public/fonts/Roboto-Light.ttf",
-  variable: "--robotoMono",
+  variable: "--roboto",
+  weight: "400",
+});
+
+const crimsom = localFont({
+  src: "../public/fonts/CrimsonText-Regular.ttf",
+  variable: "--crimsom",
   weight: "400",
 });
 
