@@ -28,6 +28,17 @@ const inter = localFont({
   weight: "400",
 });
 
+const robotoMono = localFont({
+  src: "../public/fonts/RobotoMono-Italic-VariableFont_wght.ttf",
+  variable: "--robotoMono",
+  weight: "400",
+});
+
+const roboto = localFont({
+  src: "../public/fonts/Roboto-Light.ttf",
+  variable: "--robotoMono",
+  weight: "400",
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -42,7 +53,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${lekton.variable} ${koulen.variable} ${inter.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${robotoMono.variable} ${roboto.variable}  ${lekton.variable} ${koulen.variable} ${inter.variable} antialiased`}
       >
         {children}
       </body>

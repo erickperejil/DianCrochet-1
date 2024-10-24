@@ -19,8 +19,8 @@ const config: Config = {
       koulen: ['var(--koulen)'],
       inter: ['var(--inter)'],
       crimson: ['Crimson Text', 'serif'],
-      roboto:['Roboto'],
-      robotoMono:['Roboto Mono']
+      roboto:['var(--roboto)'],
+      robotoMono:['var(--robotoMono)']
     },
   },
   plugins: [forms],
