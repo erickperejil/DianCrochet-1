@@ -94,8 +94,10 @@ export default function Products() {
     setPricesData((prevState) => ({
       ...prevState,
       categorias: categories,
-      min_precio: null,
-      max_precio: null,
+      min_precio: minPrice,
+      max_precio: maxPrice,
+      columna_ordenamiento: ordenamiento,
+      direccion_ordenamiento: orden,
     }));
     handleSendCategories(categories);
   };
@@ -448,9 +450,7 @@ export default function Products() {
               <LoadingSpinner />{" "}
             </div>
           ) : (
-            <></>
-          )}
-          <div className="grid select-none grid-cols-4 gap-6">
+            <div className="grid select-none grid-cols-4 gap-6">
             {productos
               .slice(productsSplit, productsSplit + 16)
               .map((producto) => (
@@ -471,6 +471,8 @@ export default function Products() {
                 </div>
               ))}
           </div>
+          )}
+
         </section>
 
         <div className="flex h-20 items-start justify-end px-[8.32%]">

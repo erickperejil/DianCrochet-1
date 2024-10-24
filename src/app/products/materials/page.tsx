@@ -452,9 +452,7 @@ export default function Materials() {
               <LoadingSpinner />{" "}
             </div>
           ) : (
-            <></>
-          )}
-          <div className="grid grid-cols-4 gap-6">
+            <div className="grid grid-cols-4 gap-6">
             {productos
               .slice(productsSplit, productsSplit + 16)
               .map((producto) => (
@@ -475,6 +473,8 @@ export default function Materials() {
                 </div>
               ))}
           </div>
+          )}
+
         </section>
 
         <div className="flex h-20 items-start justify-end px-[8.32%]">
