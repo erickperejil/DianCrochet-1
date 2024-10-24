@@ -81,4 +81,5 @@ export interface Producto {
     idProducto: string;
     cantidadCompra: string;
     grosores: string | null;
+    tallas: string | null;
   }
