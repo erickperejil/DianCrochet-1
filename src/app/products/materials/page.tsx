@@ -154,6 +154,22 @@ export default function Materials() {
     }
   };
 
+  useEffect(() => {
+    // Actualiza el estado de precios con los nuevos valores de categoría
+    setPricesData((prevState) => ({
+      ...prevState,
+      categorias: categories,
+      min_precio: null,
+      max_precio: null,
+    }));
+  
+    // Llama a la función para enviar categorías
+    if(!showPrices){
+      handleSendCategories(categories);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [categories, minPrice, maxPrice, ordenamiento, orden, showPrices]);
+
   
   const deleteFilters = () => {
     setMinPrice(0)
@@ -215,11 +231,12 @@ export default function Materials() {
           />
         </div>
         <div className="-mt-4 flex h-32 flex-col-reverse">
-          <div className="mb-3 flex h-9 w-full items-center pl-6">
+          <div className="mb-3 flex h-9 w-full items-center pl-6 ">
+           <div className=" flex w-[78%] flex-wrap items-center">
             {categories.map((category, index) => (
               <div
                 key={index}
-                className="mr-3 flex items-center rounded-2xl bg-gray-200 px-2 font-lekton text-lg text-[#444343]"
+                className="mr-3 mt-2 flex items-center rounded-2xl bg-gray-200 px-2 font-lekton text-lg text-[#444343]"
               >
                 <h2>{category}</h2>
                 <svg
@@ -288,10 +305,7 @@ export default function Materials() {
               </div>
             )}
 
-            {categories.length > 0 ||
-            minPrice !== 0 ||
-            maxPrice !== 0 ||
-            ordenamiento != "" ? (
+            {(categories.length > 0 || minPrice !== 0 || maxPrice !== 0 || ordenamiento != "")? (
               <>
                 <div className="mr-3 flex items-center px-2 font-lekton text-lg text-[#444343]">
                   <svg
@@ -304,8 +318,8 @@ export default function Materials() {
                     onClick={handleFilter}
                   >
                     <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                       d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z"
                     />
                   </svg>
@@ -331,29 +345,33 @@ export default function Materials() {
             ) : (
               ""
             )}
+           </div>  
 
+            <div className="h-full  flex items-center ">
             {ordenamiento != "" && (
-              <div className="absolute right-[7.5%] mr-3 flex items-center rounded-2xl bg-gray-200 px-2 font-lekton text-lg text-[#444343]">
-                <>
-                  <h2>{nombresFiltros[`${ordenamiento}_${orden}`] || ""}</h2>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="z-20 size-5 pl-1"
-                    onClick={deleteFilter}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M6 18 18 6M6 6l12 12"
-                    />
-                  </svg>
-                </>
-              </div>
-            )}
+                <div className="absolute right-[7.5%] mr-3 flex items-center rounded-2xl bg-gray-200 px-2 font-lekton text-lg text-[#444343]">
+                  <>
+                    <h2>{nombresFiltros[`${ordenamiento}_${orden}`] || ""}</h2>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="z-20 size-5 pl-1"
+                      onClick={deleteFilter}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M6 18 18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </>
+                </div>
+              )}
+            </div>  
+
           </div>
 
           <div className="relative mb-3 flex h-9 w-full items-center pl-6">
@@ -362,13 +380,13 @@ export default function Materials() {
             <div className="relative ml-6 flex cursor-pointer items-center font-lekton text-lg text-[#444343]">
               <h2 onClick={handleToggleCategories}>Categorias</h2>
               <svg
+                onClick={handleToggleCategories}
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth={2.1}
                 stroke="currentColor"
                 className={`size-5 transition-all duration-300 ease-linear ${showCategories ? "rotate-180 transform" : ""}`}
-                onClick={handleToggleCategories}
               >
                 <path
                   strokeLinecap="round"
@@ -387,8 +405,8 @@ export default function Materials() {
               </div>
             </div>
 
-            <div className="relative ml-6 flex items-center font-lekton text-lg text-[#444343]">
-            <h2 onClick={handlePrices}>Precio</h2>
+            <div className="relative ml-6 flex cursor-pointer select-none items-center font-lekton text-lg text-[#444343]">
+              <h2 onClick={handlePrices}>Precio</h2>
               <svg
                 onClick={handlePrices}
                 xmlns="http://www.w3.org/2000/svg"
@@ -493,8 +511,8 @@ export default function Materials() {
                 className="size-6"
               >
                 <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                   d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
                 />
               </svg>
@@ -506,7 +524,7 @@ export default function Materials() {
                     number == divNumbers.length - 1 &&
                     number != pageNumber + 1 &&
                     number != pageNumber ? (
-                      <div className="mx-1 flex h-7 w-9 items-end justify-center font-lekton text-lg text-blue-400">
+                      <div  key={number} className="mx-1 flex h-7 w-9 items-end justify-center font-lekton text-lg text-blue-400">
                         ...
                       </div>
                     ) : number == divNumbers.length && number != pageNumber ? (
@@ -537,7 +555,7 @@ export default function Materials() {
                       ""
                     )
                   ) : number == divNumbers.length - 1 ? (
-                    <div className="mx-1 flex h-7 w-9 items-end justify-center font-lekton text-lg text-blue-400">
+                    <div  key={number} className="mx-1 flex h-7 w-9 items-end justify-center font-lekton text-lg text-blue-400">
                       ...
                     </div>
                   ) : number == divNumbers.length ? (
@@ -596,8 +614,8 @@ export default function Materials() {
                 className="size-6 -scale-x-90"
               >
                 <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                   d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
                 />
               </svg>

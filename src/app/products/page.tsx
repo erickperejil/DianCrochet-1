@@ -230,11 +230,12 @@ export default function Products() {
           />
         </div>
         <div className="-mt-4 flex h-32 flex-col-reverse">
-          <div className="mb-3 flex h-9 w-full items-center pl-6">
+          <div className="mb-3 flex h-9 w-full items-center pl-6 ">
+           <div className=" flex w-[78%] flex-wrap items-center">
             {categories.map((category, index) => (
               <div
                 key={index}
-                className="mr-3 flex items-center rounded-2xl bg-gray-200 px-2 font-lekton text-lg text-[#444343]"
+                className="mr-3 mt-2 flex items-center rounded-2xl bg-gray-200 px-2 font-lekton text-lg text-[#444343]"
               >
                 <h2>{category}</h2>
                 <svg
@@ -343,29 +344,33 @@ export default function Products() {
             ) : (
               ""
             )}
+           </div>  
 
+            <div className="h-full  flex items-center ">
             {ordenamiento != "" && (
-              <div className="absolute right-[7.5%] mr-3 flex items-center rounded-2xl bg-gray-200 px-2 font-lekton text-lg text-[#444343]">
-                <>
-                  <h2>{nombresFiltros[`${ordenamiento}_${orden}`] || ""}</h2>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="z-20 size-5 pl-1"
-                    onClick={deleteFilter}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M6 18 18 6M6 6l12 12"
-                    />
-                  </svg>
-                </>
-              </div>
-            )}
+                <div className="absolute right-[7.5%] mr-3 flex items-center rounded-2xl bg-gray-200 px-2 font-lekton text-lg text-[#444343]">
+                  <>
+                    <h2>{nombresFiltros[`${ordenamiento}_${orden}`] || ""}</h2>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="z-20 size-5 pl-1"
+                      onClick={deleteFilter}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M6 18 18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </>
+                </div>
+              )}
+            </div>  
+
           </div>
 
           <div className="relative mb-3 flex h-9 w-full items-center pl-6">
