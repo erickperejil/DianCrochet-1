@@ -9,20 +9,19 @@ interface ProductDetailProps {
 
 const ProductDetail = ({ producto }: ProductDetailProps) => {
   const [selectedTalla, setSelectedTalla] = useState<string | null>(null);
-  const [cantidad] = useState<number>(1);
   const [zoomImage, setZoomImage] = useState<string | null>(null);
   const [mensajeExito, setMensajeExito] = useState<string | null>(null);
   const [mensajeError, setMensajeError] = useState<string | null>(null); // Estado para mensaje de error
   const [correo, setCorreo] = useState<string>(''); // Estado para almacenar el correo
-  const [quantity, setQuantity] = useState(1);
+  const [cantidad, setCantidad] = useState<number>(1);
 
   const increaseQuantity = () => {
-    setQuantity((prev) => prev + 1);
+    setCantidad((prev) => prev + 1);
   };
 
   const decreaseQuantity = () => {
-    if (quantity > 1) {
-      setQuantity((prev) => prev - 1);
+    if (cantidad > 1) {
+      setCantidad((prev) => prev - 1);
     }
   };
 
@@ -178,7 +177,7 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
             >
               -
             </button>
-            <span className="mx-6 text-lg font-medium" >{quantity}</span>
+            <span className="mx-6 text-lg font-medium" >{cantidad}</span>
             <button
               onClick={increaseQuantity}
               className="text-xl font-semibold text-[#727171] hover:text-[#C68EFE]"
