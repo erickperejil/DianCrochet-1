@@ -17,9 +17,9 @@ export const GetProductosPopulares = async (): Promise<Producto[]> => {
   }
 };
 
-export const GetProductosSimilares = async (): Promise<ProductoSimilar[]> => {
+export const GetProductosSimilares = async (id: number): Promise<ProductoSimilar[]> => {
   try {
-    const response = await fetch('http://localhost:4000/producto/similares/21');
+    const response = await fetch(`http://localhost:4000/producto/similares/${id}`);
     const data = await response.json();
     return data.productosSimilares; 
   } catch (error) {

@@ -3,15 +3,14 @@ import Image from 'next/image';
 
 export default function Product({ nombre, precio, imagen }: { nombre: string; precio: string; imagen: string }) {
   return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 w-[full] h-[full]">
-      <div className='w-[260px] h-[305px]'>
-      <Image
-        src={imagen}
-        alt={nombre}
-        width={260}
-        height={305}
-        className="rounded-t-lg"
-      />
+    <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 w-full h-full">
+      <div className='w-[260px] h-[305px] relative overflow-hidden'>
+        <Image
+          src={imagen}
+          alt={nombre}
+          layout="fill" // Esto hace que la imagen ocupe todo el espacio disponible
+          className="rounded-t-lg object-cover" // Ajusta la imagen al contenedor sin distorsionar
+        />
       </div>
       <div className="p-2 text-left">
         <h3 className="text-sm font-koulen text-gray-800">{nombre}</h3>
