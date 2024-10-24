@@ -226,4 +226,4 @@ const DepartmentSelect = () => {
             </div>
         </div>
     );
-}
+}}

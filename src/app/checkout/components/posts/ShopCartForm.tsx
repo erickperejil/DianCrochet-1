@@ -87,6 +87,39 @@ export default function ShopCartForm() {
         }
     };
 
+    //Actualizar cantidad de productos
+    const handleQuantityChange = async (idProducto: number, delta: number) => {
+        const updatedCarrito = carrito.map(item => {
+            if (item.id_producto === idProducto) {
+                const newCantidad = item.cantidad_compra + delta;
+                return {
+                    ...item,
+                    cantidad_compra: newCantidad > 0 ? newCantidad : 1, // Asegurarse de que la cantidad no sea menor que 1
+                    subtotal: (item.subtotal ?? 0) / item.cantidad_compra * (newCantidad > 0 ? newCantidad : 1) // Actualizar el subtotal
+                };
+            }
+            return item;
+        });
+
+        setCarrito(updatedCarrito);
+
+        try {
+            const response = await fetch('http://localhost:4000/factura/carrito/actualizar', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ correo, nuevaCantidad: updatedCarrito.find(item => item.id_producto === idProducto)?.cantidad_compra, idProducto }),
+            });
+
+            if (!response.ok) {
+                console.error('Error al actualizar la cantidad del producto en el carrito');
+            }
+        } catch (error) {
+            console.error('Error al actualizar la cantidad del producto en el carrito:', error);
+        }
+    };
+
     // Agrupar productos por id_producto y sumar cantidades
     const groupedCarrito = carrito.reduce((acc, item) => {
         const existingItem = acc.find(i => i.id_producto === item.id_producto);
@@ -125,9 +158,9 @@ export default function ShopCartForm() {
                                 <h1 id="nombre" className="text-gray-700 text-lg">{item.nombre_prod}</h1>
                                 <h4 id="cantidad" className="font-lekton text-gray-400">Cantidad: {item.cantidad_compra}</h4>
                                 <div className="flex items-center border border-black rounded-full bg-gray-100 text-gray-700 font-lekton w-max">
-                                    <button className="text-lg font-semibold px-2">−</button>
+                                    <button className="text-lg font-semibold px-2" onClick={() => handleQuantityChange(item.id_producto, -1)}>−</button>
                                     <span className="mx-4 text-lg">{item.cantidad_compra}</span>
-                                    <button className="text-lg font-semibold px-2">+</button>
+                                    <button className="text-lg font-semibold px-2" onClick={() => handleQuantityChange(item.id_producto, 1)}>+</button>
                                 </div>
                             </div>
                             <div id="precio" className="mt-8 flex flex-col flex-nowrap justify-start items-end content-stretch">
