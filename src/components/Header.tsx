@@ -48,7 +48,7 @@ export default function Header() {
 
   const handleCarritoClick = () => {
     if (!correo) {
-      setMensajeAdvertencia('Debes iniciar sesión para ver el carrito.');
+      setMensajeAdvertencia('Inicia Sesion para acceder');
       setTimeout(() => setMensajeAdvertencia(null), 3000); // Limpiar el mensaje después de 3 segundos
     } else {
       router.push('/checkout/shop-cart'); // Redirigir al carrito si está logueado
@@ -93,9 +93,12 @@ export default function Header() {
 
           {/* Mostrar mensaje de advertencia si no está logueado */}
           {mensajeAdvertencia && (
-            <div className="fixed top-5 right-5 bg-red-500 text-white px-4 py-2 rounded-lg z-50">
-              {mensajeAdvertencia}
-            </div>
+             <div className="text-lg items-center w-1/4 flex justify-center font-koulen fixed bottom-5 right-5 bg-gray-200 opacity-90 text-purple-600 px-4 py-2 rounded-lg z-50">
+            {mensajeAdvertencia}
+            <svg className={"ml-6 size-6 text-blue-500"} xmlns="http://www.w3.org/2000/svg" strokeWidth={2} width="2em" height="1em" viewBox="0 0 32 32">
+              <path fill="currentColor" d="m15.875 4l-.094.031l-8 1.875L7 6.094v20.25l.813.125l8 1.5l.093.031H18V4zM20 6v2h3v16h-3v2h5V6zm-4 .031V26l-7-1.313V7.657zM14.344 15c-.367 0-.688.45-.688 1s.32 1 .688 1s.656-.45.656-1s-.29-1-.656-1"></path>
+            </svg>
+           </div>
           )}
         </div>
       </div>

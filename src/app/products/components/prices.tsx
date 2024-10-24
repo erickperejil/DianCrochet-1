@@ -50,10 +50,16 @@ export default function Prices({
       
       if (name == "max_price") {
         setMaxPrice(Number(value)); // Actualizar el valor de maxPrice
+        if(Number(value)>99999){
+          setMaxPrice(0)
+        }
       }
   
       if (name == "min_price") {
-        setMinPrice(Number(value)); // Actualizar el valor de minPrice
+        setMinPrice(Number(value)); 
+        if(Number(value)>99999){
+          setMinPrice(0)
+        }// Actualizar el valor de minPrice
       }
 
     }
