@@ -9,10 +9,12 @@ import { Filtered, FullMaterial } from "@interfaces/product";
 import { getMaterials, FilteredMaterials } from "@services/product";
 import Ordenamiento from "../components/ordenamiento";
 import CategoriasMateriales from "../components/categoriesMaterials";
-import { useRouter } from 'next/navigation'; 
+import { useRouter } from "next/navigation";
+import LoadingSpinner from "../../checkout/components/loadding/LoadingSpinner";
 
 export default function Materials() {
-  const router = useRouter(); 
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
   const [showCategories, setShowCategories] = useState(false);
   const [showPrices, setShowPrices] = useState(false);
   const [showOrder, setShowOrder] = useState(false);
@@ -74,9 +76,10 @@ export default function Materials() {
     console.log(filteredData);
     // Ahora debería mostrar las categorías correcta
     try {
-      console.log("enviando:", filteredData)
-      const res = await FilteredMaterials(filteredData); 
-      console.log("recibiendo:", res)// Llama a la función para obtener los productos filtrados
+      console.log("enviando:", filteredData);
+      const res = await FilteredMaterials(filteredData);
+      console.log("recibiendo:", res);
+      setIsLoading(false); // Llama a la función para obtener los productos filtrados
       setProductos(res); // Limpia productos antes de actualizar
     } catch (error) {
       console.error("Error al traer productos:", error);
@@ -151,6 +154,14 @@ export default function Materials() {
     }
   };
 
+  
+  const deleteFilters = () => {
+    setMinPrice(0)
+    setMaxPrice(0)
+    setCategories([])
+    setOrdenamiento("")
+  }
+
   const totalProducts = productos.length;
 
   // Calculamos x como el número de páginas (o grupos) en base a 16 productos por grupo
@@ -161,7 +172,8 @@ export default function Materials() {
     async function fetchGets() {
       try {
         const res = await getMaterials(); // Llama a la función para obtener los productos
-        setProductos(res); // Actualiza el estado con el resultado
+        setProductos(res);
+        setIsLoading(false); // Actualiza el estado con el resultado
       } catch (error) {
         console.error("Error al traer materiales:", error);
       }
@@ -173,7 +185,6 @@ export default function Materials() {
     setShowCategories((prev) => !prev);
   };
 
-  
   const handleProductClick = (id: number) => {
     // Redirigir a la página de detalle del producto
     router.push(`/product_detail/${id}`);
@@ -277,40 +288,49 @@ export default function Materials() {
               </div>
             )}
 
-            <div className="mr-3 flex items-center px-2 font-lekton text-lg text-[#444343]">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="z-20 size-6"
-                onClick={handleFilter}
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z"
-                />
-              </svg>
-            </div>
-
-            <div className="mr-3 flex items-center px-2 font-lekton text-lg text-[#444343]">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="size-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
-                />
-              </svg>
-            </div>
+            {categories.length > 0 ||
+            minPrice !== 0 ||
+            maxPrice !== 0 ||
+            ordenamiento != "" ? (
+              <>
+                <div className="mr-3 flex items-center px-2 font-lekton text-lg text-[#444343]">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="z-20 size-6 hover:size-7 hover:text-green-600"
+                    onClick={handleFilter}
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z"
+                    />
+                  </svg>
+                </div>
+                <div className="mr-3 flex items-center px-2 font-lekton text-lg text-[#444343]">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="size-6 z-20 hover:size-7 hover:text-red-600"
+                    onClick={deleteFilters}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+                    />
+                  </svg>
+                </div>
+              </>
+            ) : (
+              ""
+            )}
 
             {ordenamiento != "" && (
               <div className="absolute right-[7.5%] mr-3 flex items-center rounded-2xl bg-gray-200 px-2 font-lekton text-lg text-[#444343]">
@@ -339,15 +359,15 @@ export default function Materials() {
           <div className="relative mb-3 flex h-9 w-full items-center pl-6">
             <h2 className="font-lekton text-lg text-[#444343]">Filtros :</h2>
 
-            <div className="relative ml-6 flex items-center font-lekton text-lg text-[#444343]">
-              <h2>Categorias</h2>
+            <div className="relative ml-6 flex cursor-pointer items-center font-lekton text-lg text-[#444343]">
+              <h2 onClick={handleToggleCategories}>Categorias</h2>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth={2.1}
                 stroke="currentColor"
-                className={`size-5 transition-all duration-300 ease-linear rotate${showCategories ? "rotate-180 transform" : ""}`}
+                className={`size-5 transition-all duration-300 ease-linear ${showCategories ? "rotate-180 transform" : ""}`}
                 onClick={handleToggleCategories}
               >
                 <path
@@ -368,7 +388,7 @@ export default function Materials() {
             </div>
 
             <div className="relative ml-6 flex items-center font-lekton text-lg text-[#444343]">
-              <h2>Precio</h2>
+            <h2 onClick={handlePrices}>Precio</h2>
               <svg
                 onClick={handlePrices}
                 xmlns="http://www.w3.org/2000/svg"
@@ -376,7 +396,7 @@ export default function Materials() {
                 viewBox="0 0 24 24"
                 strokeWidth={2.1}
                 stroke="currentColor"
-                className={`size-5 transition-all duration-300 ease-linear rotate${showPrices ? "rotate-180 transform" : ""}`}
+                className={`size-5 transition-all duration-300 ease-linear ${showPrices ? "rotate-180 transform" : ""}`}
               >
                 <path
                   strokeLinecap="round"
@@ -396,16 +416,16 @@ export default function Materials() {
               </div>
             </div>
 
-            <div className="absolute right-[5%] ml-6 flex select-none items-center font-lekton text-lg text-[#444343]">
-              <h2>Ordenar por:</h2>
+            <div className="absolute right-[5%] ml-6 flex cursor-pointer select-none items-center font-lekton text-lg text-[#444343]">
+              <h2 onClick={handleOrder}>Ordenar por:</h2>
               <svg
+                onClick={handleOrder}
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth={2.1}
                 stroke="currentColor"
-                className="size-5"
-                onClick={handleOrder}
+                className={`size-5 transition-all duration-300 ease-linear ${showOrder ? "rotate-180 transform" : ""}`}
               >
                 <path
                   strokeLinecap="round"
@@ -427,13 +447,20 @@ export default function Materials() {
         </div>
 
         <section className="h-full px-[8.32%] py-12">
+        {isLoading ? (
+            <div className="ml-0 h-96 bg-white opacity-50">
+              <LoadingSpinner />{" "}
+            </div>
+          ) : (
+            <></>
+          )}
           <div className="grid grid-cols-4 gap-6">
             {productos
               .slice(productsSplit, productsSplit + 16)
               .map((producto) => (
                 <div
                   key={producto.id_material}
-                  className="h-[364px] w-[260px] text-center cursor-pointer"
+                  className="h-[364px] w-[260px] cursor-pointer text-center"
                   onClick={() => handleProductClick(producto.id_material)}
                 >
                   <Product
@@ -450,12 +477,12 @@ export default function Materials() {
           </div>
         </section>
 
-        <div className="flex h-20 items-start justify-end border border-blue-800 px-[8.32%]">
+        <div className="flex h-20 items-start justify-end px-[8.32%]">
           <div className="flex h-2/3">
             <button
               onClick={handleSplitPrev}
               type="button"
-              className="mb-2 me-2 flex h-full w-20 items-center justify-center bg-pink-500 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-pink-800 focus:outline-none focus:ring-4 focus:ring-transparent"
+              className="mb-2 me-2 flex h-full w-20 items-center justify-center bg-slate-300 px-5 py-2.5 text-center text-sm font-medium text-white transition-colors duration-200 ease-in hover:bg-pink-500 focus:outline-none focus:ring-4 focus:ring-transparent"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -475,138 +502,79 @@ export default function Materials() {
             <div className="flex h-full items-center justify-evenly bg-slate-50 px-1">
               {divNumbers.map((number) =>
                 divNumbers.length > 4 ? (
-                  pageNumber === 1 ? (
-                    // Cuando estamos en el primer número
-                    <div>
-                      {number <= 3 ? (
-                        <div
-                          key={number}
-                          onClick={() => handlePageNumber(number)}
-                          className={`mx-1 flex h-7 w-7 items-center justify-center border border-pink-500 pt-1 font-lekton text-lg ${
-                            pageNumber === number
-                              ? "bg-pink-500 text-white"
-                              : "text-pink-500 hover:bg-pink-500 hover:text-white"
-                          }`}
-                        >
-                          {number}
-                        </div>
-                      ) : number === 4 ? (
-                        <div className="mx-1 flex h-7 w-9 items-end justify-center font-lekton text-lg text-blue-400">
-                          ...
-                        </div>
-                      ) : null}
+                  pageNumber > 2 ? (
+                    number == divNumbers.length - 1 &&
+                    number != pageNumber + 1 &&
+                    number != pageNumber ? (
+                      <div className="mx-1 flex h-7 w-9 items-end justify-center font-lekton text-lg text-blue-400">
+                        ...
+                      </div>
+                    ) : number == divNumbers.length && number != pageNumber ? (
+                      <div
+                        key={number}
+                        onClick={() => handlePageNumber(number)}
+                        className={`mx-1 flex h-7 w-7 items-center justify-center border pt-1 font-lekton text-lg ${
+                          pageNumber === number
+                            ? "bg-pink-500 text-white" // Estilos cuando pageNumber coincide con number
+                            : "bg-slate-300 text-white hover:bg-pink-500 hover:text-white" // Estilos por defecto
+                        }`}
+                      >
+                        {number}
+                      </div>
+                    ) : number >= pageNumber - 1 && number <= pageNumber + 1 ? (
+                      <div
+                        key={number}
+                        onClick={() => handlePageNumber(number)}
+                        className={`mx-1 flex h-7 w-7 items-center justify-center border pt-1 font-lekton text-lg ${
+                          pageNumber === number
+                            ? "bg-pink-500 text-white" // Estilos cuando pageNumber coincide con number
+                            : "bg-slate-300 text-white hover:bg-pink-500 hover:text-white" // Estilos por defecto
+                        }`}
+                      >
+                        {number}
+                      </div>
+                    ) : (
+                      ""
+                    )
+                  ) : number == divNumbers.length - 1 ? (
+                    <div className="mx-1 flex h-7 w-9 items-end justify-center font-lekton text-lg text-blue-400">
+                      ...
                     </div>
-                  ) : pageNumber === 2 ? (
-                    // Cuando estamos en el segundo número
-                    <div>
-                      {number <= 3 ? (
-                        <div
-                          key={number}
-                          onClick={() => handlePageNumber(number)}
-                          className={`mx-1 flex h-7 w-7 items-center justify-center border border-pink-500 pt-1 font-lekton text-lg ${
-                            pageNumber === number
-                              ? "bg-pink-500 text-white"
-                              : "text-pink-500 hover:bg-pink-500 hover:text-white"
-                          }`}
-                        >
-                          {number}
-                        </div>
-                      ) : number === 4 ? (
-                        <div className="mx-1 flex h-7 w-9 items-end justify-center font-lekton text-lg text-blue-400">
-                          ...
-                        </div>
-                      ) : number === divNumbers.length ? (
-                        <div
-                          key={number}
-                          onClick={() => handlePageNumber(number)}
-                          className={`mx-1 flex h-7 w-7 items-center justify-center border border-pink-500 pt-1 font-lekton text-lg ${
-                            pageNumber === number
-                              ? "bg-pink-500 text-white"
-                              : "text-pink-500 hover:bg-pink-500 hover:text-white"
-                          }`}
-                        >
-                          {number}
-                        </div>
-                      ) : null}
-                    </div>
-                  ) : pageNumber === 3 ? (
-                    // Cuando estamos en el tercer número
-                    <div>
-                      {number >= 2 && number <= 4 ? (
-                        <div
-                          key={number}
-                          onClick={() => handlePageNumber(number)}
-                          className={`mx-1 flex h-7 w-7 items-center justify-center border border-pink-500 pt-1 font-lekton text-lg ${
-                            pageNumber === number
-                              ? "bg-pink-500 text-white"
-                              : "text-pink-500 hover:bg-pink-500 hover:text-white"
-                          }`}
-                        >
-                          {number}
-                        </div>
-                      ) : number === 5 ? (
-                        <div className="mx-1 flex h-7 w-9 items-end justify-center font-lekton text-lg text-blue-400">
-                          ...
-                        </div>
-                      ) : null}
-                    </div>
-                  ) : pageNumber === divNumbers.length - 1 ||
-                    pageNumber === divNumbers.length ? (
-                    // Cuando estamos en el penúltimo o último número
-                    <div>
-                      {number === 1 ? (
-                        <div
-                          key={number}
-                          onClick={() => handlePageNumber(number)}
-                          className={`mx-1 flex h-7 w-7 items-center justify-center border border-pink-500 pt-1 font-lekton text-lg ${
-                            pageNumber === number
-                              ? "bg-pink-500 text-white"
-                              : "text-pink-500 hover:bg-pink-500 hover:text-white"
-                          }`}
-                        >
-                          {number}
-                        </div>
-                      ) : number === divNumbers.length - 2 ? (
-                        <div className="mx-1 flex h-7 w-9 items-end justify-center font-lekton text-lg text-blue-400">
-                          ...
-                        </div>
-                      ) : number === divNumbers.length ? (
-                        <div
-                          key={number}
-                          onClick={() => handlePageNumber(number)}
-                          className={`mx-1 flex h-7 w-7 items-center justify-center border border-pink-500 pt-1 font-lekton text-lg ${
-                            pageNumber === number
-                              ? "bg-pink-500 text-white"
-                              : "text-pink-500 hover:bg-pink-500 hover:text-white"
-                          }`}
-                        >
-                          {number}
-                        </div>
-                      ) : null}
-                    </div>
-                  ) : (
-                    // Para cualquier otro número
+                  ) : number == divNumbers.length ? (
                     <div
                       key={number}
                       onClick={() => handlePageNumber(number)}
-                      className={`mx-1 flex h-7 w-7 items-center justify-center border border-pink-500 pt-1 font-lekton text-lg ${
+                      className={`mx-1 flex h-7 w-7 items-center justify-center border pt-1 font-lekton text-lg ${
                         pageNumber === number
-                          ? "bg-pink-500 text-white"
-                          : "text-pink-500 hover:bg-pink-500 hover:text-white"
+                          ? "bg-pink-500 text-white" // Estilos cuando pageNumber coincide con number
+                          : "bg-slate-300 text-white hover:bg-pink-500 hover:text-white" // Estilos por defecto
                       }`}
                     >
                       {number}
                     </div>
+                  ) : number <= 3 ? (
+                    <div
+                      key={number}
+                      onClick={() => handlePageNumber(number)}
+                      className={`mx-1 flex h-7 w-7 items-center justify-center border pt-1 font-lekton text-lg ${
+                        pageNumber === number
+                          ? "bg-pink-500 text-white" // Estilos cuando pageNumber coincide con number
+                          : "bg-slate-700 text-white hover:bg-pink-500 hover:text-white" // Estilos por defecto
+                      }`}
+                    >
+                      {number}
+                    </div>
+                  ) : (
+                    ""
                   )
                 ) : (
-                  // Para menos de 4 elementos
                   <div
                     key={number}
                     onClick={() => handlePageNumber(number)}
-                    className={`mx-1 flex h-7 w-7 items-center justify-center border border-pink-500 pt-1 font-lekton text-lg ${
+                    className={`mx-1 flex h-7 w-7 items-center justify-center border pt-1 font-lekton text-lg ${
                       pageNumber === number
-                        ? "bg-pink-500 text-white"
-                        : "text-pink-500 hover:bg-pink-500 hover:text-white"
+                        ? "bg-pink-500 text-white" // Estilos cuando pageNumber coincide con number
+                        : "bg-slate-300 text-white hover:bg-pink-500 hover:text-white" // Estilos por defecto
                     }`}
                   >
                     {number}
@@ -617,7 +585,7 @@ export default function Materials() {
             <button
               onClick={handleSplitNext}
               type="button"
-              className="mb-2 me-2 flex h-full w-20 items-center justify-center bg-pink-500 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-pink-800 hover:bg-gradient-to-l focus:outline-none focus:ring-4 focus:ring-transparent dark:focus:ring-transparent"
+              className="mb-2 me-2 flex h-full w-20 items-center justify-center bg-slate-300 px-5 py-2.5 text-center text-sm font-medium text-white transition-colors duration-200 ease-in hover:bg-pink-500 hover:bg-gradient-to-l focus:outline-none focus:ring-4 focus:ring-transparent dark:focus:ring-transparent"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
