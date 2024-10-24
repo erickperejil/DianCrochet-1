@@ -37,7 +37,19 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
     }
   }, []);
 
-  
+  // Efecto para establecer la primera talla disponible como valor predeterminado
+  useEffect(() => {
+    if (producto.tallas && producto.tallas.filter(talla => talla !== null).length > 0) {
+      setSelectedTalla(producto.tallas.filter(talla => talla !== null)[0] as string);
+    }
+  }, [producto.tallas]);
+
+  // Efecto para establecer el primer grosor disponible como valor predeterminado
+  useEffect(() => {
+    if (producto.grosores && producto.grosores.filter(grosor => grosor !== null).length > 0) {
+      setSelectedGrosores(producto.grosores.filter(grosor => grosor !== null)[0] as string);
+    }
+  }, [producto.grosores]);
 
   const handleThumbnailClick = (src: string) => {
     setZoomImage(src);
@@ -64,7 +76,6 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
       idProducto,
       cantidadCompra: cantidad.toString(), // Conversión de number a string
       talla: selectedTalla || null,
-
     };
 
     try {
@@ -173,21 +184,23 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
           <div></div>
         )}
 
-      {producto.grosores && producto.grosores.filter(grosor => grosor !== null).length > 0 ? (
+        {producto.grosores && producto.grosores.filter(grosor => grosor !== null).length > 0 ? (
           <div>
-            <h3 className="font-koulen text-[#424242]">GROSORES</h3>
-            <div className="flex space-x-2 mt-2 font-koulen text-[#424242]">
-              {producto.grosores.filter(grosor => grosor !== null).map((grosor) => (
-                <button
-                  key={grosor}
-                  className={`px-11 py-2 border rounded-lg ${
-                    selectedGrosores === grosor ? 'bg-[#C68EFE] text-white' : 'bg-[#D9D9D9]'
-                  }`}
-                  onClick={() => setSelectedGrosores(grosor)}
-                >
-                  {grosor}
-                </button>
-              ))}
+            <h3 className="font-koulen text-[#424242]">GROSOR</h3>
+            <div className="mt-2 font-koulen text-[#D9D9D9] focus:outline-none focus-visible:outline-none focus:ring-0 focus:border-none">
+              <select
+                id="grosorSelect"
+                className="px-11 py-2 border rounded-lg bg-[#D9D9D9] text-[#424242] border-none focus:ring-0"
+                value={selectedGrosores || ""}
+                onChange={(e) => setSelectedGrosores(e.target.value)}
+              >
+                <option value="" disabled>Seleccionar</option>
+                {producto.grosores.filter(grosor => grosor !== null).map((grosor) => (
+                  <option key={grosor} value={grosor}>
+                    {grosor}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
         ) : (
@@ -205,7 +218,7 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
             >
               -
             </button>
-            <span className="mx-6 text-lg font-medium" >{cantidad}</span>
+            <span className="mx-6 text-lg font-medium">{cantidad}</span>
             <button
               onClick={increaseQuantity}
               className="text-xl font-semibold text-[#727171] hover:text-[#C68EFE]"
@@ -213,14 +226,14 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
               +
             </button>
           </div>
-    </div>
-        <div className='flex flex-col items-center'>
-          <button
-            className="mt-4 px-4 py-2 bg-[#C68EFE] text-white rounded-lg hover:bg-purple-600 font-lekton"
-            onClick={handleAddToCart}>
-            Añadir al Carrito
-          </button>
-          </div>
+        </div>
+
+        <button
+          onClick={handleAddToCart}
+          className="px-4 py-2 mt-4 bg-[#C68EFE] text-white font-semibold rounded-lg shadow-md hover:bg-[#b053fe] transition duration-300"
+        >
+          Agregar al Carrito
+        </button>
       </div>
     </div>
   );
