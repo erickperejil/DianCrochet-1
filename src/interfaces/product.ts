@@ -41,7 +41,7 @@ export interface Producto {
     talla: string | null;
   }
   export interface FullMaterial{
-    id_material: number;
+    id_producto: number;
     nombre_prod: string;
     precio_venta: number;
     imagen_principal: string

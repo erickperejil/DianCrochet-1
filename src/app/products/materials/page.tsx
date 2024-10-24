@@ -475,9 +475,9 @@ export default function Materials() {
               .slice(productsSplit, productsSplit + 16)
               .map((producto) => (
                 <div
-                  key={producto.id_material}
+                  key={producto.id_producto}
                   className="h-[364px] w-[260px] cursor-pointer text-center"
-                  onClick={() => handleProductClick(producto.id_material)}
+                  onClick={() => handleProductClick(producto.id_producto)}
                 >
                   <Product
                     nombre={producto.nombre_prod}
