@@ -37,8 +37,9 @@ export interface Producto {
   export interface CarritoRequest {
     correo: string;
     idProducto: string;
-    cantidadCompra: string;
+    cantidadCompra: number;
     talla: string | null;
+    grosor: string | null
   }
   export interface FullMaterial{
     id_producto: number;

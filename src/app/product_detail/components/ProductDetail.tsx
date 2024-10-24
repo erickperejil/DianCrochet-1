@@ -61,6 +61,7 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
 
   const handleAddToCart = async () => {
     // Verifica si el correo está disponible
+    
     if (!correo) {
       console.error('No se encontró el correo del usuario en localStorage');
       setMensajeError('Inicia sesion para comprar'); // Mostrar mensaje de advertencia
@@ -74,11 +75,13 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
     const data = {
       correo,
       idProducto,
-      cantidadCompra: cantidad.toString(), // Conversión de number a string
+      cantidadCompra: cantidad, // Conversión de number a string
       talla: selectedTalla || null,
+      grosor: selectedGrosores || null
     };
 
     try {
+      console.log('data', data)
       const result = await agregarAlCarrito(data);
       console.log('Resultado del POST:', result);
       setMensajeExito('¡Producto agregado al carrito con éxito!');
