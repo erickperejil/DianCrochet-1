@@ -146,9 +146,9 @@ export default function ShopCartForm() {
                 <div id="PRODUCTOS" className="max-h-96 overflow-y-auto">
                 {groupedCarrito.map((item) => (
                     <div key={item.id_prod_fact} id="product" className="bg-white rounded-md flex flex-row flex-nowrap justify-start items-start content-start overflow-hidden mb-5">
-                        <div id="img" className="mr-8 w-1/12 h-auto rounded-none rounded-tl-md rounded-bl-md" title={item.nombre_prod}>
+                        <div id="img" className="mr-8 w-1/12 h-full rounded-none rounded-tl-md rounded-bl-md" title={item.nombre_prod}>
                             {item.url ? (
-                                <img src={item.url} alt={item.nombre_prod} className="w-full h-full object-contain" />
+                                <img src={item.url} alt={item.nombre_prod} className="w-full h-full object-cover" />
                             ) : (
                                 <CiImageOff className="w-full h-full object-contain text-gray-400" />
                             )}

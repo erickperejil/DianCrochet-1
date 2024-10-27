@@ -480,7 +480,7 @@ export default function Products() {
                 >
                   <Product
                     nombre={producto.nombre_prod}
-                    precio={`$${producto.precio_venta.toFixed(2)}`}
+                    precio={`L${producto.precio_venta.toFixed(2)}`}
                     imagen={
                       producto.imagen_principal != null
                         ? producto.imagen_principal
