@@ -16,8 +16,14 @@ export default function CarruselProductoRelacionado() {
 
       if (!isNaN(idNumerico)) { // Validar que la conversión fue exitosa
         const productosSimilares = await GetProductosSimilares(idNumerico);
-        console.log(productosSimilares) // Pasar 'id' numérico
-        setProductos(productosSimilares);
+        
+        // Filter out duplicate products by ID_PRODUCTO
+        const uniqueProductos = productosSimilares.filter(
+          (producto, index, self) =>
+            index === self.findIndex((p) => p.ID_PRODUCTO === producto.ID_PRODUCTO)
+        );
+        
+        setProductos(uniqueProductos);
       }
     };
 
@@ -79,7 +85,7 @@ export default function CarruselProductoRelacionado() {
           <div
             key={producto.ID_PRODUCTO}
             className="cursor-pointer"
-            onClick={() => handleProductClick(producto.ID_PRODUCTO)} // Evento de clic para redirigir
+            onClick={() => handleProductClick(producto.ID_PRODUCTO)}
           >
             <Productx
               nombre={producto.NOMBRE_PROD}
