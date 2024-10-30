@@ -9,6 +9,9 @@ export default function Dashboard() {
             <Navbar />
             <Sidebar />
             {/* <Componente Tuyo va aqui /> */}
+            <div className="flex-grow">
+                {/* Aquí puedes agregar el contenido principal del Dashboard */}
+            </div>
         </div>
     );
 }
