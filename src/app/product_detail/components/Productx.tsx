@@ -1,5 +1,5 @@
 import React from 'react';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 
 export default function Product({ nombre, precio, imagen }: { nombre: string; precio: string; imagen: string }) {
   return (

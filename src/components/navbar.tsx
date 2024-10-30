@@ -1,7 +1,7 @@
 "use client";
 import Link from 'next/link';
 import { FaUserCircle, FaShoppingCart, FaSearch } from 'react-icons/fa';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -62,7 +62,7 @@ export default function Navbar() {
   };
 
   return (
-    <header className="bg-white shadow-md font-koulen flex fixed w-full z-50">
+    (<header className="bg-white shadow-md font-koulen flex fixed w-full z-50">
       <div className="container mx-auto flex items-center justify-between py-4 px-6">
         {/* Logo */}
         <div className="flex items-center space-x-4">
@@ -90,21 +90,21 @@ export default function Navbar() {
         </div>
 
         {/* Iconos */}
-        <div className="flex items-center space-x-6 relative">
+        <div className="flex items-center space-x-6 relative ">
           {/* Perfil */}
           <div className="relative flex items-center" ref={profileRef}>
-            <button onClick={toggleProfileMenu} className="w-[40px] h-[40px] focus:outline-none" title='iconos'>
+            <button onClick={toggleProfileMenu} className="w-[40px] h-[40px] focus:outline-none flex relative" title='iconos'>
               {profileImageUrl ? (
                 // Si la URL de la imagen está disponible, mostrar la imagen de perfil
-                <Image
+                (<Image
                   src={profileImageUrl}
                   alt="Imagen de Perfil"
                   layout="fill" // Esto hace que la imagen ocupe todo el espacio disponible
                   className="object-cover rounded-full" 
-                />
+                />)
               ) : (
                 // Si no hay imagen disponible, mostrar el icono por defecto
-                <FaUserCircle className="text-gray-700 text-2xl" />
+                (<FaUserCircle className="text-gray-700 text-2xl" />)
               )}
             </button>
 
@@ -140,6 +140,6 @@ export default function Navbar() {
 
         </div>
       </div>
-    </header>
+    </header>)
   );
 }

@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import Image from "next/legacy/image";
 import { useState, useEffect } from 'react';
 import { ProductoDetalle } from '@interfaces/product';
 import { agregarAlCarrito } from '../post/agregarAlCarrito'; // Importa la función del POST

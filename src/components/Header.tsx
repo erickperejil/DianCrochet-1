@@ -1,6 +1,6 @@
 "use client";
 import { FaUserCircle, FaShoppingCart } from 'react-icons/fa';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';

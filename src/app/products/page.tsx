@@ -2,7 +2,7 @@
 import Product from "../landing/components/Product";
 import Footer from "components/Footer";
 import Navbar from "components/navbar";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import Categorias from "./components/categories";
 import { useEffect, useState } from "react";
 import Prices from "./components/prices";
