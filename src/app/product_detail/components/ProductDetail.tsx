@@ -9,20 +9,20 @@ interface ProductDetailProps {
 
 const ProductDetail = ({ producto }: ProductDetailProps) => {
   const [selectedTalla, setSelectedTalla] = useState<string | null>(null);
-  const [cantidad] = useState<number>(1);
+  const [selectedGrosores, setSelectedGrosores] = useState<string | null>(null);
   const [zoomImage, setZoomImage] = useState<string | null>(null);
   const [mensajeExito, setMensajeExito] = useState<string | null>(null);
   const [mensajeError, setMensajeError] = useState<string | null>(null); // Estado para mensaje de error
   const [correo, setCorreo] = useState<string>(''); // Estado para almacenar el correo
-  const [quantity, setQuantity] = useState(1);
+  const [cantidad, setCantidad] = useState<number>(1);
 
   const increaseQuantity = () => {
-    setQuantity((prev) => prev + 1);
+    setCantidad((prev) => prev + 1);
   };
 
   const decreaseQuantity = () => {
-    if (quantity > 1) {
-      setQuantity((prev) => prev - 1);
+    if (cantidad > 1) {
+      setCantidad((prev) => prev - 1);
     }
   };
 
@@ -37,7 +37,19 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
     }
   }, []);
 
-  
+  // Efecto para establecer la primera talla disponible como valor predeterminado
+  useEffect(() => {
+    if (producto.tallas && producto.tallas.filter(talla => talla !== null).length > 0) {
+      setSelectedTalla(producto.tallas.filter(talla => talla !== null)[0] as string);
+    }
+  }, [producto.tallas]);
+
+  // Efecto para establecer el primer grosor disponible como valor predeterminado
+  useEffect(() => {
+    if (producto.grosores && producto.grosores.filter(grosor => grosor !== null).length > 0) {
+      setSelectedGrosores(producto.grosores.filter(grosor => grosor !== null)[0] as string);
+    }
+  }, [producto.grosores]);
 
   const handleThumbnailClick = (src: string) => {
     setZoomImage(src);
@@ -49,9 +61,10 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
 
   const handleAddToCart = async () => {
     // Verifica si el correo está disponible
+    
     if (!correo) {
       console.error('No se encontró el correo del usuario en localStorage');
-      setMensajeError('Debes iniciar sesión para poder agregar productos al carrito.'); // Mostrar mensaje de advertencia
+      setMensajeError('Inicia sesion para comprar'); // Mostrar mensaje de advertencia
       setTimeout(() => setMensajeError(null), 3000); // Ocultar mensaje después de 3 segundos
       return;
     }
@@ -62,11 +75,13 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
     const data = {
       correo,
       idProducto,
-      cantidadCompra: cantidad.toString(), // Conversión de number a string
+      cantidadCompra: cantidad, // Conversión de number a string
       talla: selectedTalla || null,
+      grosor: selectedGrosores || null
     };
 
     try {
+      console.log('data', data)
       const result = await agregarAlCarrito(data);
       console.log('Resultado del POST:', result);
       setMensajeExito('¡Producto agregado al carrito con éxito!');
@@ -99,11 +114,16 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
         </div>
       )}
 
-      {mensajeError && (
-        <div className="fixed top-5 right-5 bg-red-500 text-white px-4 py-2 rounded-lg z-50">
-          {mensajeError}
-        </div>
-      )}
+{mensajeError && (
+             <div className="text-lg items-center w-1/4 flex justify-center font-koulen fixed bottom-5 right-5 bg-gray-200 opacity-70 text-purple-900 px-4 py-2 rounded-lg z-50">
+            {mensajeError}
+            <svg className={"ml-6 size-6 text-blue-500"} xmlns="http://www.w3.org/2000/svg" strokeWidth={2} width="2em" height="1em" viewBox="0 0 32 32">
+              <path fill="currentColor" d="m15.875 4l-.094.031l-8 1.875L7 6.094v20.25l.813.125l8 1.5l.093.031H18V4zM20 6v2h3v16h-3v2h5V6zm-4 .031V26l-7-1.313V7.657zM14.344 15c-.367 0-.688.45-.688 1s.32 1 .688 1s.656-.45.656-1s-.29-1-.656-1"></path>
+            </svg>
+           </div>
+
+)}
+
 
       <div className="flex flex-col space-y-4">
         <div className="flex justify-center">
@@ -167,6 +187,29 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
           <div></div>
         )}
 
+        {producto.grosores && producto.grosores.filter(grosor => grosor !== null).length > 0 ? (
+          <div>
+            <h3 className="font-koulen text-[#424242]">GROSOR</h3>
+            <div className="mt-2 font-koulen text-[#D9D9D9] focus:outline-none focus-visible:outline-none focus:ring-0 focus:border-none">
+              <select
+                id="grosorSelect"
+                className="px-11 py-2 border rounded-lg bg-[#D9D9D9] text-[#424242] border-none focus:ring-0"
+                value={selectedGrosores || ""}
+                onChange={(e) => setSelectedGrosores(e.target.value)}
+              >
+                <option value="" disabled>Seleccionar</option>
+                {producto.grosores.filter(grosor => grosor !== null).map((grosor) => (
+                  <option key={grosor} value={grosor}>
+                    {grosor}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+        ) : (
+          <div></div>
+        )}
+
         <div>
           <h3 className="font-robotoMono text-[#727171]">Cantidad</h3>
         </div>
@@ -178,7 +221,7 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
             >
               -
             </button>
-            <span className="mx-6 text-lg font-medium" >{quantity}</span>
+            <span className="mx-6 text-lg font-medium">{cantidad}</span>
             <button
               onClick={increaseQuantity}
               className="text-xl font-semibold text-[#727171] hover:text-[#C68EFE]"
@@ -186,14 +229,14 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
               +
             </button>
           </div>
-    </div>
-        <div className='flex flex-col items-center'>
-          <button
-            className="mt-4 px-4 py-2 bg-[#C68EFE] text-white rounded-lg hover:bg-purple-600 font-lekton"
-            onClick={handleAddToCart}>
-            Añadir al Carrito
-          </button>
-          </div>
+        </div>
+
+        <button
+          onClick={handleAddToCart}
+          className="px-4 py-2 mt-4 bg-[#C68EFE] text-white font-semibold rounded-lg shadow-md hover:bg-[#b053fe] transition duration-300"
+        >
+          Agregar al Carrito
+        </button>
       </div>
     </div>
   );

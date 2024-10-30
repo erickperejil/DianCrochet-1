@@ -9,11 +9,11 @@ import Prices from "./components/prices";
 import { Filtered, FullProduct } from "@interfaces/product";
 import { FilteredProducts, getProducts } from "@services/product";
 import Ordenamiento from "./components/ordenamiento";
-import { useRouter } from 'next/navigation'; 
-
+import { useRouter } from "next/navigation";
+import LoadingSpinner from "../checkout/components/loadding/LoadingSpinner";
 
 export default function Products() {
-  const router = useRouter(); 
+  const router = useRouter();
   const [showCategories, setShowCategories] = useState(false);
   const [showPrices, setShowPrices] = useState(false);
   const [showOrder, setShowOrder] = useState(false);
@@ -22,6 +22,7 @@ export default function Products() {
   const [productsSplit, setProductsSplit] = useState(0);
 
   const [pageNumber, setPageNumber] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [, setPricesData] = useState<Filtered>({
     categorias: [],
@@ -38,20 +39,18 @@ export default function Products() {
   const [orden, setOrden] = useState("");
 
   const nombresFiltros: { [key: string]: string } = {
-    "NOMBRE_PROD_ASC": "Alfabético A-Z",
-    "NOMBRE_PROD_DESC": "Alfabético Z-A",
-    "FECHA_CREACION_ASC": "Lo más antiguo",
-    "FECHA_CREACION_DESC": "Lo más nuevo",
-    "PRECIO_VENTA_ASC": "Precio menor primero",
-    "PRECIO_VENTA_DESC": "Precio mayor primero",
+    NOMBRE_PROD_ASC: "Alfabético A-Z",
+    NOMBRE_PROD_DESC: "Alfabético Z-A",
+    FECHA_CREACION_ASC: "Lo más antiguo",
+    FECHA_CREACION_DESC: "Lo más nuevo",
+    PRECIO_VENTA_ASC: "Precio menor primero",
+    PRECIO_VENTA_DESC: "Precio mayor primero",
   };
 
-  const deleteFilter = () =>{
+  const deleteFilter = () => {
     setOrdenamiento("");
     setOrden("");
-  }
-  
-  
+  };
 
   const deleteCategory = (index: number) => {
     setCategories((prevCategories) =>
@@ -74,13 +73,14 @@ export default function Products() {
       direccion_ordenamiento: orden != "" ? orden : null,
     };
 
-    console.log(filteredData);
     // Ahora debería mostrar las categorías correcta
     try {
-      const res = await FilteredProducts(filteredData); // Llama a la función para obtener los productos filtrados
+      setIsLoading(true);
+      const res = await FilteredProducts(filteredData);
+      setIsLoading(false); // Llama a la función para obtener los productos filtrados
       setProductos(res); // Limpia productos antes de actualizar
-      console.log("Enviando: ", filteredData); // Asegúrate de que envías los datos correctos
-      console.log("Recibiendo: ", res); // Imprime los resultados de los productos filtrados
+      //console.log("Enviando: ", filteredData); // Asegúrate de que envías los datos correctos
+      // console.log("Recibiendo: ", res); // Imprime los resultados de los productos filtrados
       // setProductos(res); // Actualiza el estado con los nuevos productos
     } catch (error) {
       console.error("Error al traer productos:", error);
@@ -89,15 +89,32 @@ export default function Products() {
 
   const handleFilter = () => {
     setShowPrices(false); // Oculta precios
-    console.log("padre:", categories);
+    setPricesData((prevState) => ({
+      ...prevState,
+      categorias: categories,
+      min_precio: minPrice,
+      max_precio: maxPrice,
+      columna_ordenamiento: ordenamiento,
+      direccion_ordenamiento: orden,
+    }));
+    handleSendCategories(categories);
+  };
+
+  useEffect(() => {
+    // Actualiza el estado de precios con los nuevos valores de categoría
     setPricesData((prevState) => ({
       ...prevState,
       categorias: categories,
       min_precio: null,
       max_precio: null,
     }));
-    handleSendCategories(categories);
-  };
+  
+    // Llama a la función para enviar categorías
+    if(!showPrices){
+      handleSendCategories(categories);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [categories, minPrice, maxPrice, ordenamiento, orden, showPrices]);
 
   const handleOrder = () => {
     setShowPrices(false);
@@ -132,6 +149,13 @@ export default function Products() {
       });
     }
   };
+
+  const deleteFilters = () => {
+    setMinPrice(0)
+    setMaxPrice(0)
+    setCategories([])
+    setOrdenamiento("")
+  }
 
   const handleSplitNext = () => {
     if (productos.length >= productsSplit + 16) {
@@ -170,7 +194,8 @@ export default function Products() {
     async function fetchGets() {
       try {
         const res = await getProducts(); // Llama a la función para obtener los productos
-        setProductos(res); // Actualiza el estado con el resultado
+        setProductos(res);
+        setIsLoading(false); // Actualiza el estado con el resultado
       } catch (error) {
         console.error("Error al traer productos:", error);
       }
@@ -204,12 +229,13 @@ export default function Products() {
             className="pointer-events-none ml-2 mt-4 mix-blend-multiply"
           />
         </div>
-        <div className="flex h-32 flex-col-reverse -mt-4">
-          <div className="mb-3 flex h-9 w-full items-center pl-6">
+        <div className="-mt-4 flex h-32 flex-col-reverse">
+          <div className="mb-3 flex h-9 w-full items-center pl-6 ">
+           <div className=" flex w-[78%] flex-wrap items-center">
             {categories.map((category, index) => (
               <div
                 key={index}
-                className="mr-3 flex items-center rounded-2xl bg-gray-200 px-2 font-lekton text-lg text-[#444343] "
+                className="mr-3 mt-2 flex items-center rounded-2xl bg-gray-200 px-2 font-lekton text-lg text-[#444343]"
               >
                 <h2>{category}</h2>
                 <svg
@@ -278,42 +304,50 @@ export default function Products() {
               </div>
             )}
 
-            <div className="mr-3 flex items-center px-2 font-lekton text-lg text-[#444343]">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="z-20 size-6"
-                onClick={handleFilter}
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z"
-                />
-              </svg>
-            </div>
+            {(categories.length > 0 || minPrice !== 0 || maxPrice !== 0 || ordenamiento != "")? (
+              <>
+                <div className="mr-3 flex items-center px-2 font-lekton text-lg text-[#444343]">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="z-20 size-6 hover:size-7 hover:text-green-600"
+                    onClick={handleFilter}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z"
+                    />
+                  </svg>
+                </div>
+                <div className="mr-3 flex items-center px-2 font-lekton text-lg text-[#444343]">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="size-6 z-20 hover:size-7 hover:text-red-600"
+                    onClick={deleteFilters}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+                    />
+                  </svg>
+                </div>
+              </>
+            ) : (
+              ""
+            )}
+           </div>  
 
-            <div className="mr-3 flex items-center px-2 font-lekton text-lg text-[#444343]">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="size-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
-                />
-              </svg>
-            </div>
-
-            {ordenamiento != "" &&
+            <div className="h-full  flex items-center ">
+            {ordenamiento != "" && (
                 <div className="absolute right-[7.5%] mr-3 flex items-center rounded-2xl bg-gray-200 px-2 font-lekton text-lg text-[#444343]">
                   <>
                     <h2>{nombresFiltros[`${ordenamiento}_${orden}`] || ""}</h2>
@@ -334,24 +368,24 @@ export default function Products() {
                     </svg>
                   </>
                 </div>
-            }
+              )}
+            </div>  
 
-              
           </div>
 
           <div className="relative mb-3 flex h-9 w-full items-center pl-6">
             <h2 className="font-lekton text-lg text-[#444343]">Filtros :</h2>
 
-            <div className="relative ml-6 flex items-center font-lekton text-lg text-[#444343]">
-              <h2>Categorias</h2>
+            <div className="relative ml-6 flex cursor-pointer items-center font-lekton text-lg text-[#444343]">
+              <h2 onClick={handleToggleCategories}>Categorias</h2>
               <svg
+                onClick={handleToggleCategories}
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth={2.1}
                 stroke="currentColor"
-                className={`size-5 transition-all duration-300 ease-linear rotate${showCategories ? "rotate-180 transform" : ""}`}
-                onClick={handleToggleCategories}
+                className={`size-5 transition-all duration-300 ease-linear ${showCategories ? "rotate-180 transform" : ""}`}
               >
                 <path
                   strokeLinecap="round"
@@ -370,8 +404,8 @@ export default function Products() {
               </div>
             </div>
 
-            <div className="relative ml-6 flex items-center font-lekton text-lg text-[#444343]">
-              <h2>Precio</h2>
+            <div className="relative ml-6 flex cursor-pointer select-none items-center font-lekton text-lg text-[#444343]">
+              <h2 onClick={handlePrices}>Precio</h2>
               <svg
                 onClick={handlePrices}
                 xmlns="http://www.w3.org/2000/svg"
@@ -379,7 +413,7 @@ export default function Products() {
                 viewBox="0 0 24 24"
                 strokeWidth={2.1}
                 stroke="currentColor"
-                className={`size-5 transition-all duration-300 ease-linear rotate${showPrices ? "rotate-180 transform" : ""}`}
+                className={`size-5 transition-all duration-300 ease-linear ${showPrices ? "rotate-180 transform" : ""}`}
               >
                 <path
                   strokeLinecap="round"
@@ -399,16 +433,16 @@ export default function Products() {
               </div>
             </div>
 
-            <div className="absolute right-[5%] ml-6 flex select-none items-center font-lekton text-lg text-[#444343]">
-              <h2>Ordenar por:</h2>
+            <div className="absolute right-[5%] ml-6 flex cursor-pointer select-none items-center font-lekton text-lg text-[#444343]">
+              <h2 onClick={handleOrder}>Ordenar por:</h2>
               <svg
+                onClick={handleOrder}
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth={2.1}
                 stroke="currentColor"
-                className="size-5"
-                onClick={handleOrder}
+                className={`size-5 transition-all duration-300 ease-linear ${showOrder ? "rotate-180 transform" : ""}`}
               >
                 <path
                   strokeLinecap="round"
@@ -429,19 +463,24 @@ export default function Products() {
           </div>
         </div>
 
-        <section className="h-full px-[8.32%] py-12">
-          <div className="grid grid-cols-4 gap-6">
+        <section className="relative h-full px-[8.32%] py-12">
+          {isLoading ? (
+            <div className="ml-0 h-96 bg-white opacity-50">
+              <LoadingSpinner />{" "}
+            </div>
+          ) : (
+            <div className="grid select-none grid-cols-4 gap-6">
             {productos
               .slice(productsSplit, productsSplit + 16)
               .map((producto) => (
                 <div
                   key={producto.id_producto}
-                  className="h-[364px] w-[260px] text-center cursor-pointer"
-                  onClick={()=>handleProductClick(producto.id_producto)}
+                  className="h-[364px] w-[260px] cursor-pointer text-center"
+                  onClick={() => handleProductClick(producto.id_producto)}
                 >
                   <Product
                     nombre={producto.nombre_prod}
-                    precio={`$${producto.precio_venta.toFixed(2)}`}
+                    precio={`L${producto.precio_venta.toFixed(2)}`}
                     imagen={
                       producto.imagen_principal != null
                         ? producto.imagen_principal
@@ -451,14 +490,16 @@ export default function Products() {
                 </div>
               ))}
           </div>
+          )}
+
         </section>
 
-        <div className="flex h-20 items-start justify-end border border-blue-800 px-[8.32%]">
+        <div className="flex h-20 items-start justify-end px-[8.32%]">
           <div className="flex h-2/3">
             <button
               onClick={handleSplitPrev}
               type="button"
-              className="mb-2 me-2 flex h-full w-20 items-center justify-center bg-pink-500 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-pink-800 focus:outline-none focus:ring-4 focus:ring-transparent"
+              className="mb-2 me-2 flex h-full w-20 items-center justify-center bg-slate-300 px-5 py-2.5 text-center text-sm font-medium text-white transition-colors duration-200 ease-in hover:bg-pink-500 focus:outline-none focus:ring-4 focus:ring-transparent"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -469,8 +510,8 @@ export default function Products() {
                 className="size-6"
               >
                 <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                   d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
                 />
               </svg>
@@ -482,17 +523,17 @@ export default function Products() {
                     number == divNumbers.length - 1 &&
                     number != pageNumber + 1 &&
                     number != pageNumber ? (
-                      <div className="mx-1 flex h-7 w-9 items-end justify-center font-lekton text-lg text-blue-400">
+                      <div key={number} className="mx-1 flex h-7 w-9 items-end justify-center font-lekton text-lg text-blue-400">
                         ...
                       </div>
                     ) : number == divNumbers.length && number != pageNumber ? (
                       <div
                         key={number}
                         onClick={() => handlePageNumber(number)}
-                        className={`mx-1 flex h-7 w-7 items-center justify-center border border-pink-500 pt-1 font-lekton text-lg ${
+                        className={`mx-1 flex h-7 w-7 items-center justify-center border pt-1 font-lekton text-lg ${
                           pageNumber === number
                             ? "bg-pink-500 text-white" // Estilos cuando pageNumber coincide con number
-                            : "text-pink-500 hover:bg-pink-500 hover:text-white" // Estilos por defecto
+                            : "bg-slate-300 text-white hover:bg-pink-500 hover:text-white" // Estilos por defecto
                         }`}
                       >
                         {number}
@@ -501,10 +542,10 @@ export default function Products() {
                       <div
                         key={number}
                         onClick={() => handlePageNumber(number)}
-                        className={`mx-1 flex h-7 w-7 items-center justify-center border border-pink-500 pt-1 font-lekton text-lg ${
+                        className={`mx-1 flex h-7 w-7 items-center justify-center border pt-1 font-lekton text-lg ${
                           pageNumber === number
                             ? "bg-pink-500 text-white" // Estilos cuando pageNumber coincide con number
-                            : "text-pink-500 hover:bg-pink-500 hover:text-white" // Estilos por defecto
+                            : "bg-slate-300 text-white hover:bg-pink-500 hover:text-white" // Estilos por defecto
                         }`}
                       >
                         {number}
@@ -513,17 +554,17 @@ export default function Products() {
                       ""
                     )
                   ) : number == divNumbers.length - 1 ? (
-                    <div className="mx-1 flex h-7 w-9 items-end justify-center font-lekton text-lg text-blue-400">
+                    <div key={number} className="mx-1 flex h-7 w-9 items-end justify-center font-lekton text-lg text-blue-400">
                       ...
                     </div>
                   ) : number == divNumbers.length ? (
                     <div
                       key={number}
                       onClick={() => handlePageNumber(number)}
-                      className={`mx-1 flex h-7 w-7 items-center justify-center border border-pink-500 pt-1 font-lekton text-lg ${
+                      className={`mx-1 flex h-7 w-7 items-center justify-center border pt-1 font-lekton text-lg ${
                         pageNumber === number
                           ? "bg-pink-500 text-white" // Estilos cuando pageNumber coincide con number
-                          : "text-pink-500 hover:bg-pink-500 hover:text-white" // Estilos por defecto
+                          : "bg-slate-300 text-white hover:bg-pink-500 hover:text-white" // Estilos por defecto
                       }`}
                     >
                       {number}
@@ -532,10 +573,10 @@ export default function Products() {
                     <div
                       key={number}
                       onClick={() => handlePageNumber(number)}
-                      className={`mx-1 flex h-7 w-7 items-center justify-center border border-pink-500 pt-1 font-lekton text-lg ${
+                      className={`mx-1 flex h-7 w-7 items-center justify-center border pt-1 font-lekton text-lg ${
                         pageNumber === number
                           ? "bg-pink-500 text-white" // Estilos cuando pageNumber coincide con number
-                          : "text-pink-500 hover:bg-pink-500 hover:text-white" // Estilos por defecto
+                          : "bg-slate-300 text-white hover:bg-pink-500 hover:text-white" // Estilos por defecto
                       }`}
                     >
                       {number}
@@ -547,10 +588,10 @@ export default function Products() {
                   <div
                     key={number}
                     onClick={() => handlePageNumber(number)}
-                    className={`mx-1 flex h-7 w-7 items-center justify-center border border-pink-500 pt-1 font-lekton text-lg ${
+                    className={`mx-1 flex h-7 w-7 items-center justify-center border pt-1 font-lekton text-lg ${
                       pageNumber === number
                         ? "bg-pink-500 text-white" // Estilos cuando pageNumber coincide con number
-                        : "text-pink-500 hover:bg-pink-500 hover:text-white" // Estilos por defecto
+                        : "bg-slate-300 text-white hover:bg-pink-500 hover:text-white" // Estilos por defecto
                     }`}
                   >
                     {number}
@@ -561,7 +602,7 @@ export default function Products() {
             <button
               onClick={handleSplitNext}
               type="button"
-              className="mb-2 me-2 flex h-full w-20 items-center justify-center bg-pink-500 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-pink-800 hover:bg-gradient-to-l focus:outline-none focus:ring-4 focus:ring-transparent dark:focus:ring-transparent"
+              className="mb-2 me-2 flex h-full w-20 items-center justify-center bg-slate-300 px-5 py-2.5 text-center text-sm font-medium text-white transition-colors duration-200 ease-in hover:bg-pink-500 hover:bg-gradient-to-l focus:outline-none focus:ring-4 focus:ring-transparent dark:focus:ring-transparent"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -572,8 +613,8 @@ export default function Products() {
                 className="size-6 -scale-x-90"
               >
                 <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                   d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
                 />
               </svg>

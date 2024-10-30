@@ -1,23 +1,28 @@
 import { useEffect, useRef, useState } from 'react';
 import { GetProductosSimilares } from '@services/product'; 
 import { ProductoSimilar } from '@interfaces/product';
-import { useRouter } from 'next/navigation'; 
+import { useParams, useRouter } from 'next/navigation'; 
 import Productx from './Productx';
 
 export default function CarruselProductoRelacionado() {
   const [productos, setProductos] = useState<ProductoSimilar[]>([]);
   const carruselRef = useRef<HTMLDivElement>(null);
   const router = useRouter(); 
+  const { id } = useParams();
 
   useEffect(() => {
     const obtenerProductos = async () => {
-      const productosSimilares = await GetProductosSimilares();
-      setProductos(productosSimilares);
+      const idNumerico = Number(id); // Convertir el 'id' a número
+
+      if (!isNaN(idNumerico)) { // Validar que la conversión fue exitosa
+        const productosSimilares = await GetProductosSimilares(idNumerico);
+        console.log(productosSimilares) // Pasar 'id' numérico
+        setProductos(productosSimilares);
+      }
     };
 
     obtenerProductos();
-  }, []);
-
+  }, [id]);
   
   const scrollLeft = () => {
     if (carruselRef.current) {

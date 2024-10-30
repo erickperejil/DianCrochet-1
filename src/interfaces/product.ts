@@ -17,6 +17,7 @@ export interface Producto {
     tallas: string[];
     imagen_principal: string;
     imagenes_extra: string[];
+    grosores: (string | null)[];
   }
 
   export interface ProductoSimilar {
@@ -36,11 +37,12 @@ export interface Producto {
   export interface CarritoRequest {
     correo: string;
     idProducto: string;
-    cantidadCompra: string;
+    cantidadCompra: number;
     talla: string | null;
+    grosor: string | null
   }
   export interface FullMaterial{
-    id_material: number;
+    id_producto: number;
     nombre_prod: string;
     precio_venta: number;
     imagen_principal: string
@@ -57,4 +59,28 @@ export interface Producto {
   export interface Categories{
     ID_CATEGORIA:number;
     CATEGORIA: string
+  }
+
+  export interface DetalleMaterial {
+    id_producto: number;
+    nombre_prod: string;
+    precio_venta: number;
+    descripcion: string;
+    cantidad_disp: number;
+    tipo_prod: string;
+    color: string;
+    tallas: (string | null)[];
+    imagen_principal: string;
+    imagenes_extra: string[];
+    grosores: (string | null)[];
+    cantidad_por_grosor: number[];
+    nombre_marca: string;
+  }
+
+  export interface CarritoRequestMaterial {
+    correo: string;
+    idProducto: string;
+    cantidadCompra: string;
+    grosores: string | null;
+    tallas: string | null;
   }

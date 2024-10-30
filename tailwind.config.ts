@@ -18,9 +18,9 @@ const config: Config = {
       lekton: ['var(--lekton)'],
       koulen: ['var(--koulen)'],
       inter: ['var(--inter)'],
-      crimson: ['Crimson Text', 'serif'],
-      roboto:['Roboto'],
-      robotoMono:['Roboto Mono']
+      crimson: ['var(--crimson)'],
+      roboto:['var(--roboto)'],
+      robotoMono:['var(--robotoMono)']
     },
   },
   plugins: [forms],

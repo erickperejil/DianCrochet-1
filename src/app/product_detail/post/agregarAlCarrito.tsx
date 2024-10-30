@@ -1,6 +1,7 @@
 import { CarritoRequest } from "@interfaces/product";
 
 export const agregarAlCarrito = async (data: CarritoRequest) => {
+  console.log('antes de enviar al carrito:', data)
     try {
       const response = await fetch('http://localhost:4000/factura/carrito/insertar', {
         method: 'POST',
@@ -11,7 +12,7 @@ export const agregarAlCarrito = async (data: CarritoRequest) => {
       });
   
       if (!response.ok) {
-        throw new Error('Error al agregar al carrito');
+        throw new Error('Error al agregar al carrito service');
       }
   
       const result = await response.json();
