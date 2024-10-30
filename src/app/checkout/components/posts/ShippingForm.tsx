@@ -1,11 +1,103 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { IoRemoveOutline } from "react-icons/io5";
 import PhoneNumberInput from "../inputs/PhoneNumberInput";
 import { FaAngleLeft } from "react-icons/fa6";
+import { useRouter } from 'next/navigation';
+import { CarritoItem , Departamento } from "@interfaces/invoice";
+import axios from 'axios';
 
 
 export default function ShippingForm() {
+    const router = useRouter();
+    const [subtotal, setSubtotal] = useState(0);
+    const [impuestos, setImpuestos] = useState(0);
+    const [total, setTotal] = useState(0);
+    const [carrito, setCarrito] = useState<CarritoItem[]>([]);
+    const [correo, setCorreo] = useState('');
+
+const handleBackClick = () => {
+  router.back();
+};
+
+useEffect(() => {
+    // Obtener el correo desde el local storage
+    const storedData = localStorage.getItem('loginResponse');
+    if (storedData) {
+        const parsedData = JSON.parse(storedData);
+        const storedCorreo = parsedData.query_result.CORREO;
+        console.log('Correo almacenado:', storedCorreo); // Verifica el correo almacenado
+        setCorreo(storedCorreo);
+    }
+}, []);
+
+useEffect(() => {
+    if (correo) {
+        const fetchCarrito = async () => {
+            try {
+                const response = await fetch(`http://localhost:4000/factura/carrito/${correo}`);
+                const data = await response.json();
+                console.log('Datos del carrito:', data); // Verifica los datos recibidos
+                setCarrito(data.carrito);
+            } catch (error) {
+                console.error('Error al obtener el carrito:', error);
+            }
+        };
+
+        fetchCarrito();
+    }
+}, [correo]);
+
+useEffect(() => {
+    // Calcular el subtotal
+    const newSubtotal = carrito.reduce((acc, item) => acc + (item.subtotal || 0), 0);
+    setSubtotal(newSubtotal);
+
+    // Calcular los impuestos (por ejemplo, 15% del subtotal)
+    const newImpuestos = newSubtotal * 0.15;
+    setImpuestos(newImpuestos);
+
+    // Calcular el total
+    const newTotal = newSubtotal + newImpuestos;
+    setTotal(newTotal);
+}, [carrito]);
+
+// Agrupar productos por id_producto y sumar cantidades
+const groupedCarrito = carrito.reduce((acc, item) => {
+    const existingItem = acc.find(i => i.id_producto === item.id_producto);
+    if (existingItem) {
+        existingItem.cantidad_compra += item.cantidad_compra;
+        existingItem.subtotal = (existingItem.subtotal ?? 0) + (item.subtotal ?? 0);
+    } else {
+        acc.push({ ...item });
+    }
+    return acc;
+}, [] as CarritoItem[]);
+
+//obtener deptos
+const DepartmentSelect = () => {
+    const [departments, setDepartments] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(''); // Inicializa como cadena vacía
+  
+    useEffect(() => {
+      const fetchDepartments = async () => {
+        try {
+          const response = await axios.get('http://localhost:4000/factura/departamentos');
+          setDepartments(response.data.Departamentos);
+          setLoading(false);
+        } catch (error) {
+          setError('Error fetching departments');
+          setLoading(false);
+        }
+      };
+  
+      fetchDepartments();
+    }, []);
+  
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>{error}</p>;
+
     return (
         <div className="flex justify-between font-koulen w-full p-8">
             <div title="detalle envio" className="m-2 p-2 rounded-md bg-gray-200 w-1/2 flex-grow py-5 px-40 ">
@@ -23,28 +115,13 @@ export default function ShippingForm() {
                 </div>
 
                 {/* Depto */}
-                <div id="product" className=" flex flex-col flex-nowrap justify-start items-stretch content-stretch mb-5">
+                <div id="product" className="flex flex-col flex-nowrap justify-start items-stretch content-stretch mb-5">
                     <h1 className="text-gray-900">Departamento</h1>
-                    <select name="" id="" aria-label="depto" className="rounded-md bg-gray-300 border-none h-12 font-lekton text-gray-700">
-                        <option value="" className="placeholder-slate-400" disabled selected>Elegir departamento</option>
-                        <option value="atlantida">Atlántida</option>
-                        <option value="colon">Colón</option>
-                        <option value="comayagua">Comayagua</option>
-                        <option value="copan">Copán</option>
-                        <option value="cortes">Cortés</option>
-                        <option value="choluteca">Choluteca</option>
-                        <option value="el_paraiso">El Paraíso</option>
-                        <option value="francisco_morazan">Francisco Morazán</option>
-                        <option value="gracias_a_dios">Gracias a Dios</option>
-                        <option value="intibuca">Intibucá</option>
-                        <option value="islas_de_la_bahia">Islas de la Bahía</option>
-                        <option value="la_paz">La Paz</option>
-                        <option value="lempira">Lempira</option>
-                        <option value="ocotepeque">Ocotepeque</option>
-                        <option value="olancho">Olancho</option>
-                        <option value="santa_barbara">Santa Bárbara</option>
-                        <option value="valle">Valle</option>
-                        <option value="yoro">Yoro</option>
+                    <select name="depto" id="depto" aria-label="depto" className="rounded-md bg-gray-300 border-none h-12 font-lekton text-gray-700">
+                    <option value="" className="placeholder-slate-400" disabled selected>Elegir departamento</option>
+                    {departments.map((dept) => (
+                    <option key={dept.ID_DEPARTAMENTO} value={dept.DEPARTAMENTO}>{dept.DEPARTAMENTO}</option>
+                    ))}
                     </select>
                 </div>
                 
@@ -89,7 +166,7 @@ export default function ShippingForm() {
 
                 {/* BOTONES */}
                 <div id="but" className="flex flex-row flex-nowrap justify-start items-stretch content-start">
-                    <button title="decline" type="button" className="text-gray-800 p-4 flex items-center">
+                    <button title="decline" type="button" className="text-gray-800 p-4 flex items-center transition-all duration-300 ease-in-out hover:shadow-lg hover:translate-y-[-5px] rounded-md" onClick={handleBackClick}>
                       <FaAngleLeft className="mr-1"/> Volver
                     </button>
                 </div>      
@@ -98,19 +175,22 @@ export default function ShippingForm() {
             </div>
 
             <div title="orden" className="m-2 p-10 rounded-md bg-gray-200 flex flex-col flex-nowrap justify-between items-stretch content-stretch">
-                <div id="hd1" className="flex flex-row flex-nowrap justify-between items-start content-start">
-                <div id="orden" className="mr-64 text-gray-800">
-                    <h1 className="mb-3">Resumen de la orden</h1>
-                    <h2 className="mb-3">1 x Producto</h2>
-                    <h2 className="mb-3">1 x Producto</h2>
-                    <h2 className="mb-3">1 x Producto</h2>
-                    <h2 className="mb-3">1 x Producto</h2>
-                </div>
-                <div id="pago" className="text-gray-800">
-                    <h1>Pagos con</h1>
-                    <img title="paypal" src="/img/paypal-logo-0.png" className=" w-16 border-blue-900 rounded-md border-2 px-3"  />
-                </div>
-                </div> 
+            <div id="hd1" className="flex flex-row flex-nowrap justify-between items-start content-start">
+                 <div id="orden" className="mr-64 text-gray-800">
+                     <h1 className="mb-3">Resumen de la orden</h1>
+                     <div id="cantprod" className="max-h-52 overflow-y-auto w-auto">
+                         {groupedCarrito.map((item) => (
+                             <h2 key={item.id_prod_fact} className="mb-3">{item.cantidad_compra} x {item.nombre_prod}</h2>
+                         ))}
+                     </div>
+                 </div>
+                 <div id="pago" className="text-gray-800">
+                     <h1>Pagos con</h1>
+                     <button className="w-16 border-blue-900 rounded-md border-2 px-3 transition-all duration-300 ease-in-out hover:shadow-lg hover:translate-y-[-5px]">
+                        <img title="paypal" src="/img/paypal-logo-0.png"  />
+                    </button>
+                 </div>
+            </div>
 
                 {/* 
                 <div id="hd2" className="flex flex-col space-y-2">
@@ -123,19 +203,19 @@ export default function ShippingForm() {
                 */}
 
                 <div id="hd3" className="flex flex-row flex-nowrap justify-between items-start content-start mt-2 font-inter text-sm">
-                <div id="orden" className="mr-64 text-gray-800">
-                    <h2 className="mb-3">Subtotal</h2>
-                    <h2 className="mb-3">Impuestos</h2>
-                    <h2 className="mb-3">Envio</h2>
-                    <h2 className="mb-3">Total</h2>
-                </div>
-                <div id="pago" className="text-gray-800">
-                    <h3 className="mb-3">L. 316.00</h3>
-                    <h3 className="mb-3">L. 3.00</h3>
-                    <h3 className="mb-3">...</h3>
-                    <h3 className="mb-3">L. 319.00</h3>
-                </div>
-                </div> 
+                    <div id="orden" className="mr-64 text-gray-800">
+                        <h2 className="mb-3">Subtotal</h2>
+                        <h2 className="mb-3">Impuestos</h2>
+                        <h2 className="mb-3">Envio</h2>
+                        <h2 className="mb-3">Total</h2>
+                    </div>
+                    <div id="pago" className="text-gray-800">
+                        <h3 className="mb-3" id="subtotal">L. {subtotal.toFixed(2)}</h3>
+                        <h3 className="mb-3" id="impuestos">L. {impuestos.toFixed(2)}</h3>
+                        <h3 className="mb-3">...</h3>
+                        <h3 className="mb-3" id="total">L. {total.toFixed(2)}</h3>
+                    </div>
+                 </div>
 
                 {/* BOTONES */}
                 <div id="but" className="flex flex-row flex-nowrap justify-end items-end content-start">
@@ -146,4 +226,4 @@ export default function ShippingForm() {
             </div>
         </div>
     );
-}
+}}

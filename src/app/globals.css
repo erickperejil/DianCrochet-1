@@ -49,10 +49,28 @@ body {
   border: 2px solid red;
 }
 
-
+.textoDescripcion{
+  font-family:'Crimson Text' ;
+  src: url('/src/public/fonts/CrimsonText-Regular.ttf');
+  font-weight: 400;
+  font-style: normal;
+}
 .textoRegistro{
   font-family: var(--koulen);
     line-height: 116%;
+}
+.textoPrecioCantidad{
+  font-family: 'Roboto';
+  src: url('/src/public/fonts/Roboto-Light.ttf');
+  font-weight: 400;
+  font-style: normal;
+}
+
+.textoPrecioCantidaduwu{
+  font-family: 'RobotoMono';
+  src: url('/src/public/fonts/RobotoMono-Italic-VariableFont_wght.ttf');
+  font-weight: 400;
+  font-style: normal;
 }
 
 .sombra{
@@ -65,3 +83,11 @@ body {
 
   
 }
+
+
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+

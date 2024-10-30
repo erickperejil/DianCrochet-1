@@ -1,5 +1,5 @@
 'use client';
-import VideoPage from './components/video';
+import VideoPage from './components/video'; 
 import Navbar from 'components/navbar';
 import Footer from 'components/Footer';
 
@@ -11,7 +11,6 @@ export default function Dashboard() {
         <div className="flex  justify-center items-center mt-[40px]">
         <VideoPage/>
         </div>
-    
       </main>
 
       <Footer />

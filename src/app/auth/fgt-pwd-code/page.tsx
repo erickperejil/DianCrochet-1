@@ -12,7 +12,7 @@ export default function PswCode() {
   return (
     <main className="flex h-screen w-full flex-col bg-slate-50 overflow-hidden">
       <Header />
-      <section className="imagen relative flex h-[92%] w-full items-center justify-center">
+      <section className="imagen relative flex h-[92%] w-full items-center justify-center mt-16">
         <PswdCodeForm email={email || ""} />
         <LoginBG />
       </section>

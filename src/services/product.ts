@@ -17,9 +17,9 @@ export const GetProductosPopulares = async (): Promise<Producto[]> => {
   }
 };
 
-export const GetProductosSimilares = async (): Promise<ProductoSimilar[]> => {
+export const GetProductosSimilares = async (id: number): Promise<ProductoSimilar[]> => {
   try {
-    const response = await fetch('http://localhost:4000/producto/similares/21');
+    const response = await fetch(`http://localhost:4000/producto/similares/${id}`);
     const data = await response.json();
     return data.productosSimilares; 
   } catch (error) {
@@ -43,7 +43,7 @@ export function useProducto() {
         }
 
         const data = await response.json();
-
+      
         if (data.DetalleProducto && data.DetalleProducto.length > 0) {
           setProducto(data.DetalleProducto[0]);
         } else {
@@ -59,6 +59,7 @@ export function useProducto() {
     }
   }, [id]);
   console.log(producto)
+  
   return producto;
   
 }
@@ -116,6 +117,7 @@ export const getMaterials = async(): Promise<FullMaterial[]> =>{
     throw new Error("Error al traer productos");
   }
   const data = await res.json();
+  console.log(data)
   return data.productosRandom;
 }
 
@@ -135,3 +137,4 @@ export const FilteredMaterials = async (data: Filtered)=> {
   const datos = await response.json();
   return datos.productos;
 };
+

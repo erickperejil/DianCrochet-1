@@ -54,15 +54,15 @@ export default function Navbar() {
 
   const handleCarritoClick = () => {
     if (!correo) {
-      setMensajeAdvertencia('Debes iniciar sesión para ver el carrito.');
-      setTimeout(() => setMensajeAdvertencia(null), 3000); // Limpiar el mensaje después de 3 segundos
+      setMensajeAdvertencia('Inicia sesion para acceder.');
+      setTimeout(() => setMensajeAdvertencia(null), 3000); // Limpiar el mensaje después de 1 segundos
     } else {
       router.push('/checkout/shop-cart'); // Redirigir al carrito si está logueado
     }
   };
 
   return (
-    <header className="bg-white shadow-md font-koulen flex fixed w-full z-50 ">
+    <header className="bg-white shadow-md font-koulen flex fixed w-full z-50">
       <div className="container mx-auto flex items-center justify-between py-4 px-6">
         {/* Logo */}
         <div className="flex items-center space-x-4">
@@ -71,6 +71,7 @@ export default function Navbar() {
           </Link>
           <nav className="hidden md:flex space-x-8">
             <a onClick={() => router.push('/products')} href="#" className="text-gray-700 hover:text-purple-500">PRODUCTOS</a>
+            <a onClick={() => router.push('/products/materials')} href="#" className="text-gray-700 hover:text-purple-500">MATERIALES</a>
             <a href="#" className="text-gray-700 hover:text-purple-500">KITS</a>
             <a href="#" className="text-gray-700 hover:text-purple-500">TUTORIALES</a>
           </nav>
@@ -92,15 +93,14 @@ export default function Navbar() {
         <div className="flex items-center space-x-6 relative">
           {/* Perfil */}
           <div className="relative flex items-center" ref={profileRef}>
-            <button onClick={toggleProfileMenu} className="focus:outline-none" title='iconos'>
+            <button onClick={toggleProfileMenu} className="w-[40px] h-[40px] focus:outline-none" title='iconos'>
               {profileImageUrl ? (
                 // Si la URL de la imagen está disponible, mostrar la imagen de perfil
                 <Image
                   src={profileImageUrl}
                   alt="Imagen de Perfil"
-                  width={40}
-                  height={40}
-                  className="rounded-full"
+                  layout="fill" // Esto hace que la imagen ocupe todo el espacio disponible
+                  className="object-cover rounded-full" 
                 />
               ) : (
                 // Si no hay imagen disponible, mostrar el icono por defecto
@@ -117,7 +117,7 @@ export default function Navbar() {
                   href="#"
                   className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
                 >
-                  {correo ? "Cerrar Sesión" : "Iniciar Sesión"}  {/* Mostrar "Cerrar Sesión" o "Iniciar Sesión" según el estado del correo */}
+                  {correo ? "Cerrar Sesion" : "Iniciar Sesion"}  {/* Mostrar "Cerrar Sesión" o "Iniciar Sesión" según el estado del correo */}
                 </a>
               </div>
             )}
@@ -130,10 +130,14 @@ export default function Navbar() {
 
           {/* Mostrar mensaje de advertencia si no está logueado */}
           {mensajeAdvertencia && (
-            <div className="fixed top-5 right-5 bg-red-500 text-white px-4 py-2 rounded-lg z-50">
-              {mensajeAdvertencia}
-            </div>
+             <div className="text-lg items-center w-1/4 flex justify-center font-koulen fixed bottom-5 right-5 bg-gray-200 opacity-75 text-purple-800 px-1 py-2 rounded-lg z-50">
+            {mensajeAdvertencia}
+            <svg className={"ml-6 size-6 text-purple-900"} xmlns="http://www.w3.org/2000/svg" strokeWidth={2} width="2em" height="1em" viewBox="0 0 32 32">
+              <path fill="currentColor" d="m15.875 4l-.094.031l-8 1.875L7 6.094v20.25l.813.125l8 1.5l.093.031H18V4zM20 6v2h3v16h-3v2h5V6zm-4 .031V26l-7-1.313V7.657zM14.344 15c-.367 0-.688.45-.688 1s.32 1 .688 1s.656-.45.656-1s-.29-1-.656-1"></path>
+            </svg>
+           </div>
           )}
+
         </div>
       </div>
     </header>
