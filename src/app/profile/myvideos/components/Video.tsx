@@ -1,9 +1,7 @@
-import { faFaceFlushed, faFaceLaughWink } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
 import Image from 'next/image';
+import Sheep from './sheepIcon';
 export default function Video({ nombre, dificultad, imagen }: { nombre: string; dificultad: string; imagen: string }) {
-    const dificultadNumber = 2;
+    const dificultadNumber = 4;
     return (
       <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 w-full h-full">
         <div className='w-full h-[75%] relative overflow-hidden'>
@@ -19,10 +17,23 @@ export default function Video({ nombre, dificultad, imagen }: { nombre: string; 
           <div className="flex items-center">
             <h3 className="text-sm font-koulen text-gray-500 mt-1">Dificultad: {dificultad}</h3>
             {dificultadNumber<2.5?(
-               <Image src={'/img/sheep.svg'} alt={'Oveja Crochet'} width={20} height={20} className='ml-2 text-yellow-500'/>
+              <div className='ml-2'>
+               <Sheep
+               color="#E1C700"
+               />
+               </div>
             ):(dificultadNumber<4)?(
-                <FontAwesomeIcon className='ml-2' icon={faFaceLaughWink} style={{color: "#61F556",}} />
-            ):(<FontAwesomeIcon className='ml-2' icon={faFaceFlushed} style={{color: "#ec1818",}} />)}
+              <div className='ml-2'>
+              <Sheep
+              color="#4CAF50"
+              />
+              </div>
+            ):(
+              <div className='ml-2'>
+              <Sheep
+              color="#ec1818"
+              />
+              </div>)}
           </div>
           
         </div>
