@@ -1,5 +1,6 @@
-import { faFaceFlushed, faFaceLaugh, faFaceLaughWink } from '@fortawesome/free-solid-svg-icons';
+import { faFaceFlushed, faFaceLaughWink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import Image from 'next/image';
 export default function Video({ nombre, dificultad, imagen }: { nombre: string; dificultad: string; imagen: string }) {
     const dificultadNumber = 2;
@@ -18,7 +19,7 @@ export default function Video({ nombre, dificultad, imagen }: { nombre: string; 
           <div className="flex items-center">
             <h3 className="text-sm font-koulen text-gray-500 mt-1">Dificultad: {dificultad}</h3>
             {dificultadNumber<2.5?(
-                <FontAwesomeIcon className='ml-2' icon={faFaceLaugh} style={{color: "#FFD43B",}}/>
+               <Image src={'/img/sheep.svg'} alt={'Oveja Crochet'} width={20} height={20} className='ml-2 text-yellow-500'/>
             ):(dificultadNumber<4)?(
                 <FontAwesomeIcon className='ml-2' icon={faFaceLaughWink} style={{color: "#61F556",}} />
             ):(<FontAwesomeIcon className='ml-2' icon={faFaceFlushed} style={{color: "#ec1818",}} />)}
