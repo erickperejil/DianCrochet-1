@@ -1,7 +1,7 @@
 import Image from 'next/image';
 export default function Sidebar() { 
     return (
-        <div className="w-[25%] border border-red-500 h-screen relative flex flex-col items-center">
+        <div className="w-[25%] shadow-xl h-screen relative flex flex-col items-center">
             <div className="relative rounded-full mt-32 h-28 w-28 object-contain">
                 <Image
                   src="https://ik.imagekit.io/diancrochet/Fotos/GORROCUERNOS.jpg?updatedAt=1728867304044"

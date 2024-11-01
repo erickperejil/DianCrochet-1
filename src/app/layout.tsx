@@ -29,7 +29,7 @@ const inter = localFont({
 });
 
 const robotoMono = localFont({
-  src: "../public/fonts/RobotoMono-Italic-VariableFont_wght.ttf",
+  src: "../public/fonts/RobotoMono-VariableFont_wght.ttf",
   variable: "--robotoMono",
   weight: "400",
 });
