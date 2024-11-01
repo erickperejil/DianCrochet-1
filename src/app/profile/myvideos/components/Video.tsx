@@ -31,7 +31,7 @@ export default function Video({ nombre, dificultad, imagen }: { nombre: string; 
             ):(
               <div className='ml-2'>
               <Sheep
-              color="#ec1818"
+              color="#FF6F61"
               />
               </div>)}
           </div>
