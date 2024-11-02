@@ -8,7 +8,8 @@ export default function Product({ nombre, precio, imagen }: { nombre: string; pr
         <Image
           src={imagen}
           alt={nombre}
-          layout="fill" // Esto hace que la imagen ocupe todo el espacio disponible
+          layout="fill"
+          sizes="260px" // Esto hace que la imagen ocupe todo el espacio disponible
           className="rounded-t-lg object-cover" // Ajusta la imagen al contenedor sin distorsionar
         />
       </div>

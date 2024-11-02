@@ -1,9 +1,8 @@
 import Image from 'next/image';
 import Sheep from './sheepIcon';
 export default function Video({ nombre, dificultad, imagen }: { nombre: string; dificultad: string; imagen: string }) {
-    const dificultadNumber = 4;
     return (
-      <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 w-full h-full">
+      <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 w-full h-full cursor-pointer">
         <div className='w-full h-[75%] relative overflow-hidden'>
           <Image
             src={imagen}
@@ -16,13 +15,13 @@ export default function Video({ nombre, dificultad, imagen }: { nombre: string; 
           <h3 className="text-sm font-koulen text-[#424242]">{nombre}</h3>
           <div className="flex items-center">
             <h3 className="text-sm font-koulen text-gray-500 mt-1">Dificultad: {dificultad}</h3>
-            {dificultadNumber<2.5?(
+            {dificultad=="Principiante"?(
               <div className='ml-2'>
                <Sheep
                color="#E1C700"
                />
                </div>
-            ):(dificultadNumber<4)?(
+            ):(dificultad=="Intermedio")?(
               <div className='ml-2'>
               <Sheep
               color="#4CAF50"
