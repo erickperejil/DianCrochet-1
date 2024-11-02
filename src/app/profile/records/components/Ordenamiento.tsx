@@ -35,28 +35,12 @@ export default function OrdenamientoFacturas({ open, setOpen, setOrdenamiento, s
     setOpen(false);
     switch (id) {
       case 1:
-        setOrdenamiento("FECHA_CREACION")
-        setAscendente("DESC")
+        setOrdenamiento("FECHA_FACT")
+        setAscendente("desc")
         break;
       case 2:
-        setOrdenamiento("FECHA_CREACION")
-        setAscendente("ASC")
-        break;
-      case 3:
-        setOrdenamiento("PRECIO_VENTA")
-        setAscendente("ASC")
-        break;
-      case 4:
-        setOrdenamiento("PRECIO_VENTA")
-        setAscendente("DESC")
-        break;
-      case 5:
-        setOrdenamiento("NOMBRE_PROD")
-        setAscendente("ASC")
-        break;
-      case 6:
-        setOrdenamiento("NOMBRE_PROD")
-        setAscendente("DESC")
+        setOrdenamiento("FECHA_FACT")
+        setAscendente("asc")
         break;
       default:
         // 
@@ -74,18 +58,6 @@ export default function OrdenamientoFacturas({ open, setOpen, setOrdenamiento, s
           </div>
           <div onClick={()=>handleSelection(2)} className="mb-[2px] flex items-center hover:bg-blue-500 hover:text-slate-50 px-3 transition duration-0">
             <h2>Lo más antiguo</h2>
-          </div>
-          <div onClick={()=>handleSelection(3)} className="mb-[2px] flex items-center hover:bg-blue-500 hover:text-slate-50 px-3 transition duration-0">
-            <h2>Precio menor primero</h2>
-          </div>
-          <div onClick={()=>handleSelection(4)} className="mb-[2px] flex items-center hover:bg-blue-500 hover:text-slate-50 px-3 transition duration-0">
-            <h2>Precio mayor primero</h2>
-          </div>
-          <div onClick={()=>handleSelection(5)} className="mb-[2px] flex items-center hover:bg-blue-500 hover:text-slate-50 px-3 transition duration-0">
-            <h2>Alfabetico a-Z</h2>
-          </div>
-          <div onClick={()=>handleSelection(6)} className="mb-[2px] flex items-center hover:bg-blue-500 hover:text-slate-50 px-3 transition duration-0">
-            <h2>Alfabetico z-A</h2>
           </div>
       </div>
     ) : null

@@ -10,8 +10,8 @@ import { useRouter } from 'next/navigation';
 export default function Historial() {
   const router = useRouter();
   const [showOrder, setShowOrder] = useState(false);
-  const [, setOrdenamiento] = useState("");
-  const [, setOrden] = useState("");
+  const [ordenamiento, setOrdenamiento] = useState("FECHA_FACT");
+  const [orden, setOrden] = useState("asc");
   const [openFactura, setOpenFactura] = useState(false);
   const [idFactura, setIdFactura] = useState(0);
 
@@ -38,9 +38,8 @@ export default function Historial() {
         const fetchGets = async () => {
           setIsLoading(true); // Activa la carga antes de la solicitud
           try {
-            const res = await getFacturas(userCorreo); // Llama a la función para obtener las facturas
+            const res = await getFacturas(userCorreo,ordenamiento, orden); // Llama a la función para obtener las facturas
             setFacturas(res.FacturasUsuario); // Actualiza el estado con el resultado
-            console.log(res); // Muestra la respuesta en consola
           } catch (error) {
             console.error("Error al traer facturas:", error);
           } finally {
@@ -55,7 +54,7 @@ export default function Historial() {
     } else {
       router.push('/auth/sign-in'); // Redirige si no hay respuesta guardada
     }
-  }, [router]);
+  }, [orden, ordenamiento, router]);
   
   
 
@@ -83,7 +82,7 @@ export default function Historial() {
             />
           </svg>
 
-          <div className="absolute right-[2.5%] top-7 w-auto">
+          <div className="absolute right-[2.5%] top-7 w-[180%]">
             <OrdenamientoFacturas
               open={showOrder}
               setOpen={setShowOrder}

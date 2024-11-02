@@ -93,13 +93,14 @@ export default function Navbar() {
         <div className="flex items-center space-x-6 relative">
           {/* Perfil */}
           <div className="relative flex items-center" ref={profileRef}>
-            <button onClick={toggleProfileMenu} className="w-[40px] h-[40px] focus:outline-none" title='iconos'>
+            <button onClick={toggleProfileMenu} className="relative w-[40px] h-[40px] focus:outline-none" title='iconos'>
               {profileImageUrl ? (
                 // Si la URL de la imagen está disponible, mostrar la imagen de perfil
                 <Image
                   src={profileImageUrl}
                   alt="Imagen de Perfil"
-                  layout="fill" // Esto hace que la imagen ocupe todo el espacio disponible
+                  fill 
+                  sizes="40px"// Esto hace que la imagen ocupe todo el espacio disponible
                   className="object-cover rounded-full" 
                 />
               ) : (

@@ -18,13 +18,12 @@ export default function FacturaFull({ open, setOpen, idFactura}: FacturaProps) {
         const res = await getFacturaFull(idFactura); // Llama a la función para obtener los facturas
         setFactura(res.DetalleProducto);
         setIsLoading(false);
-        console.log(res); // Actualiza el estado con el resultado
       } catch (error) {
         console.error("Error al traer facturas:", error);
       }
     }
     fetchGets();
-  }, []);
+  }, [idFactura]);
 
 
   const ref = useRef<HTMLDivElement>(null);
