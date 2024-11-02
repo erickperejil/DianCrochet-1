@@ -8,7 +8,7 @@ const API_URL = "http://localhost:4000/producto";
 
 export const GetProductosPopulares = async (): Promise<Producto[]> => {
   try {
-    const response = await fetch('http://localhost:4000/producto/filtro/popularidad/1');
+    const response = await fetch(`${API_URL}/filtro/popularidad/1`);
     const data = await response.json();
     return data.populares; 
   } catch (error) {
@@ -19,7 +19,7 @@ export const GetProductosPopulares = async (): Promise<Producto[]> => {
 
 export const GetProductosSimilares = async (id: number): Promise<ProductoSimilar[]> => {
   try {
-    const response = await fetch(`http://localhost:4000/producto/similares/${id}`);
+    const response = await fetch(`${API_URL}/similares/${id}`);
     const data = await response.json();
     return data.productosSimilares; 
   } catch (error) {
@@ -35,7 +35,7 @@ export function useProducto() {
   useEffect(() => {
     const obtenerDetallesProducto = async () => {
       try {
-        const response = await fetch(`http://localhost:4000/producto/detalle/${id}`);
+        const response = await fetch(`${API_URL}/detalle/${id}`);
         
 
         if (!response.ok) {
@@ -66,7 +66,7 @@ export function useProducto() {
   
 
 export const getProducts = async(): Promise<FullProduct[]> =>{
-  const res = await fetch("http://localhost:4000/producto/Producto");
+  const res = await fetch(`${API_URL}/Producto`);
   if (!res.ok) {
     throw new Error("Error al traer productos");
   }
@@ -112,7 +112,7 @@ export const getCategoriesMaterials = async()=>{
 }
 
 export const getMaterials = async(): Promise<FullMaterial[]> =>{
-  const res = await fetch("http://localhost:4000/producto/Material");
+  const res = await fetch(`${API_URL}/Material`);
   if (!res.ok) {
     throw new Error("Error al traer productos");
   }
