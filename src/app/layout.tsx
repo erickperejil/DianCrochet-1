@@ -29,7 +29,7 @@ const inter = localFont({
 });
 
 const robotoMono = localFont({
-  src: "../public/fonts/RobotoMono-Italic-VariableFont_wght.ttf",
+  src: "../public/fonts/RobotoMono-VariableFont_wght.ttf",
   variable: "--robotoMono",
   weight: "400",
 });
@@ -57,8 +57,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning={true}>
       <body
+        suppressHydrationWarning={true}
         className={`${geistSans.variable} ${geistMono.variable} ${crimsom.variable}  ${robotoMono.variable} ${roboto.variable}  ${lekton.variable} ${koulen.variable} ${inter.variable} antialiased`}
       >
         {children}
