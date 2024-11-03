@@ -43,3 +43,22 @@ export const updateUser = async (correo: string, formData: ActualizarUser): Prom
         return null;
     }
 };
+
+// Restablecer la contraseña
+export const resetPwd = async (correo: string, nuevaContrasena: string) => {
+  const response = await fetch(`${correo}/restablecer/contrasena`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ correo, nuevaContrasena }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Error al restablecer la contraseña");
+  }
+
+  return response.json();
+};
+

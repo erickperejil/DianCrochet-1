@@ -1,4 +1,4 @@
-import { loginData, RegisterData, verifyCode } from "@interfaces/user";
+import { loginData, RegisterData, ResetPwdResponse, verifyCode } from "@interfaces/user";
 
 const API_URL = "http://localhost:4000/user";
 
@@ -123,7 +123,7 @@ export const validarCorreo = async (correo: string, codigoVeri: string) => {
 
 
 // Restablecer la contraseña
-export const resetPwd = async (correo: string, nuevaContrasena: string) => {
+export const resetPwd = async (correo: string, nuevaContrasena: string): Promise<ResetPwdResponse> => {
   const response = await fetch(`${API_URL}/restablecer/contrasena`, {
     method: "PUT",
     headers: {
@@ -137,6 +137,5 @@ export const resetPwd = async (correo: string, nuevaContrasena: string) => {
     throw new Error(errorData.message || "Error al restablecer la contraseña");
   }
 
-  return response.json();
+  return response.json() as Promise<ResetPwdResponse>;
 };
-

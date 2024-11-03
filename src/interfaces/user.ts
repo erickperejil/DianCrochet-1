@@ -47,3 +47,15 @@ export interface ActualizarUser{
   Nuevo_telefono: string;
   Nuevo_fechaNacimiento: string;
 }
+
+export interface resetPsw{
+  
+    correo: string;
+    nuevaContrasena:string;
+  
+}
+
+export interface ResetPwdResponse {
+  codigo: number;
+  mensaje: string;
+}

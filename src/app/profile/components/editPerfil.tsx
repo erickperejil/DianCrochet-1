@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { User } from '@interfaces/user';
+import { useRouter } from 'next/navigation';
 import { fetchUser, updateUser } from '@services/UserEdit/useredit';
 import { ActualizarUser } from '@interfaces/user';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -42,6 +43,11 @@ const UserProfile: React.FC = () => {
     loadUser();
   }, []);
 
+  const router = useRouter();
+  const GotoChangePasswd = () => {
+    router.push('/auth/change-pwd')
+  }
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({
@@ -75,6 +81,8 @@ const UserProfile: React.FC = () => {
       });
     }
   };
+
+
 
   return (
     <div className="bg-gray-50 p-6 rounded-lg w-[711px] mx-auto space-y-4 shadow-lg">
@@ -209,7 +217,7 @@ const UserProfile: React.FC = () => {
                 Editar Informacion
               </button>
               <button
-                onClick={() => alert('Función de cambiar contraseña')}
+                onClick={GotoChangePasswd}
                 className="flex items-center justify-center border border-gray-500 text-gray-700 px-4 py-2 rounded-full shadow hover:bg-gray-100"
               >
                 <FontAwesomeIcon icon={faLock} className="mr-2" />
