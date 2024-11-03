@@ -52,6 +52,10 @@ export default function Navbar() {
     router.push('/auth/sign-in');  // Redirige al usuario a la página de inicio de sesión
   };
 
+  const GotoProfile = () => {
+    router.push('/profile')
+  }
+
   const handleCarritoClick = () => {
     if (!correo) {
       setMensajeAdvertencia('Inicia sesion para acceder.');
@@ -111,7 +115,9 @@ export default function Navbar() {
             {/* Menú de Perfil */}
             {isProfileOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md overflow-hidden z-20">
-                <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Mi Perfil</a>
+                <a 
+                onClick={GotoProfile}
+                href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Mi Perfil</a>
                 <a
                   onClick={correo ? handleLogout : () => router.push('/auth/sign-in')}  // Llama a handleLogout si hay correo, si no redirige a iniciar sesión
                   href="#"
