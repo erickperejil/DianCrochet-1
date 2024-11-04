@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import Image from "next/legacy/image";
 import { useState, useEffect } from 'react';
 import { ProductoDetalle } from '@interfaces/product';
 import { agregarAlCarrito } from '../post/agregarAlCarrito'; // Importa la función del POST
@@ -60,37 +60,43 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
   };
 
   const handleAddToCart = async () => {
-    // Verifica si el correo está disponible
-    
     if (!correo) {
       console.error('No se encontró el correo del usuario en localStorage');
-      setMensajeError('Inicia sesion para comprar'); // Mostrar mensaje de advertencia
-      setTimeout(() => setMensajeError(null), 3000); // Ocultar mensaje después de 3 segundos
+      setMensajeError('Inicia sesion para comprar'); 
+      setTimeout(() => setMensajeError(null), 3000); 
       return;
     }
-
+  
     const idProducto = producto.id_producto.toString();
-
-    // Convertir la cantidad a string antes de enviarla
+  
     const data = {
       correo,
       idProducto,
-      cantidadCompra: cantidad, // Conversión de number a string
+      cantidadCompra: cantidad,
       talla: selectedTalla || null,
       grosor: selectedGrosores || null
     };
-
+  
     try {
-      console.log('data', data)
+      console.log('data', data);
       const result = await agregarAlCarrito(data);
       console.log('Resultado del POST:', result);
-      setMensajeExito('¡Producto agregado al carrito con éxito!');
-      setTimeout(() => setMensajeExito(null), 3000);
+  
+      if (result.carrito && result.carrito.codigo === 4) {
+        // Mostrar mensaje de error específico de inventario
+        setMensajeError(result.carrito.mensaje);
+        setTimeout(() => setMensajeError(null), 3000);
+      } else {
+        // Mostrar mensaje de éxito
+        setMensajeExito('¡Producto agregado al carrito con éxito!');
+        setTimeout(() => setMensajeExito(null), 3000);
+      }
     } catch (error) {
       console.error('Error al agregar al carrito:', error);
+      setMensajeError('Hubo un problema con la solicitud'); 
+      setTimeout(() => setMensajeError(null), 3000); 
     }
   };
-
   return (
     <div className="relative w-max grid grid-cols-1 md:grid-cols-2 gap-[15%] p-8 ">
       {zoomImage && (
@@ -109,17 +115,14 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
       )}
 
       {mensajeExito && (
-        <div className="fixed top-5 right-5 bg-[#C68EFE] text-white px-4 py-2 rounded-lg z-50">
-          {mensajeExito}
-        </div>
+        <div className="text-lg items-center w-1/4 flex justify-center font-lekton fixed bottom-5 right-5 bg-gray-200 opacity-70 text-purple-900 px-4 py-2 rounded-lg z-50">
+            {mensajeExito}
+           </div>
       )}
 
 {mensajeError && (
-             <div className="text-lg items-center w-1/4 flex justify-center font-koulen fixed bottom-5 right-5 bg-gray-200 opacity-70 text-purple-900 px-4 py-2 rounded-lg z-50">
+             <div className="text-lg items-center w-1/4 flex justify-center font-lekton fixed bottom-5 right-5 bg-gray-200 opacity-70 text-purple-900 px-4 py-2 rounded-lg z-50">
             {mensajeError}
-            <svg className={"ml-6 size-6 text-blue-500"} xmlns="http://www.w3.org/2000/svg" strokeWidth={2} width="2em" height="1em" viewBox="0 0 32 32">
-              <path fill="currentColor" d="m15.875 4l-.094.031l-8 1.875L7 6.094v20.25l.813.125l8 1.5l.093.031H18V4zM20 6v2h3v16h-3v2h5V6zm-4 .031V26l-7-1.313V7.657zM14.344 15c-.367 0-.688.45-.688 1s.32 1 .688 1s.656-.45.656-1s-.29-1-.656-1"></path>
-            </svg>
            </div>
 
 )}
@@ -142,7 +145,7 @@ const ProductDetail = ({ producto }: ProductDetailProps) => {
           )}
         </div>
 
-        <div className="overflow-x-auto flex space-x-2 scrollbar-hide justify-center">
+        <div className="overflow-x-auto flex space-x-2 scrollbar-hide justify-center sp">
           {(producto.imagenes_extra || []).map((thumbnailSrc, index) => (
             <Image
               key={index}

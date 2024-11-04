@@ -1,5 +1,5 @@
 import React from 'react';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 
 export default function Product({ nombre, precio, imagen }: { nombre: string; precio: string; imagen: string }) {
   return (
@@ -8,7 +8,7 @@ export default function Product({ nombre, precio, imagen }: { nombre: string; pr
         <Image
           src={imagen}
           alt={nombre}
-          fill
+          layout='fill'
           sizes="260px" // Esto hace que la imagen ocupe todo el espacio disponible
           className="rounded-t-lg object-cover"
           priority // Ajusta la imagen al contenedor sin distorsionar

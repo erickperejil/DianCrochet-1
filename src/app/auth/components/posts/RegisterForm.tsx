@@ -144,7 +144,7 @@ export function RegisterForm() {
   };
 
   return (
-    <div className="relative z-20 flex h-[80.4%] w-[25.7%] items-center justify-center">
+    (<div className="relative z-20 flex h-[80.4%] w-[25.7%] items-center justify-center">
       {loading && (
         <div className="absolute z-50 flex h-full w-full items-center justify-center">
           <LoadingPage />
@@ -152,7 +152,7 @@ export function RegisterForm() {
       )}
       {showEmailVerification ? (
         // Contenido que deseas mostrar cuando `loading` es false
-        <div className="z-10 h-full w-full">
+        (<div className="z-10 h-full w-full">
           <form
             onSubmit={handleSubmit1}
             className={`relative z-10 h-full w-full rounded-3xl bg-white opacity-90 shadow-2xl ${
@@ -289,7 +289,6 @@ export function RegisterForm() {
               </h1>
             </div>
           </form>
-
           <form
             onSubmit={handleSubmit}
             className={`relative z-10 h-full w-full rounded-3xl bg-white opacity-90 shadow-2xl ${
@@ -496,15 +495,14 @@ export function RegisterForm() {
               </h1>
             </div>
           </form>
-        </div>
+        </div>)
       ) : (
         // Componente que se renderiza cuando `showEmailVerification` es false
-        <CodeRegister
+        (<CodeRegister
           mail={formData.correo}
           setShowEmailVerification={setShowEmailVerification}
-        />
+        />)
       )}
-
       {showModal ? (
         <Modal
           title={modalTitle}
@@ -516,6 +514,6 @@ export function RegisterForm() {
       ) : (
         ""
       )}
-    </div>
+    </div>)
   );
 }

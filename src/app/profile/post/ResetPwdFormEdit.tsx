@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { resetPwd } from "@services/UserAuth/user"; // Importa la función desde user.ts
-import Modal from "../modals/Modal";
+import ModalEdit from "../modal/Modal";
 import { useRouter } from 'next/navigation';
 
-export default function ResetPswForm() {
+export default function ResetPswFormEdit() {
   const [correo, setCorreo] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
@@ -72,7 +72,7 @@ export default function ResetPswForm() {
         setModalMessage("Contraseña cambiada con éxito");
         setModalType(1);
       } else {
-        setModalTitle("Ocurrió un error");
+        setModalTitle("Eres la cabra");
         setModalMessage(response.mensaje);
         setModalType(2);
       }
@@ -87,7 +87,7 @@ export default function ResetPswForm() {
   };
 
   const GotoProfile = () => {
-    router.push('/auth/sign-in');
+    router.push('/profile');
   };
 
   const GotoPage = () => {
@@ -131,7 +131,7 @@ export default function ResetPswForm() {
           Volver
         </a>
       </div>
-      <Modal
+      <ModalEdit
         title={modalTitle}
         type={modalType}
         message={modalMessage}

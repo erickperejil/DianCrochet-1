@@ -1,7 +1,7 @@
 "use client";
 import Link from 'next/link';
 import { FaUserCircle, FaShoppingCart, FaSearch } from 'react-icons/fa';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -61,8 +61,17 @@ export default function Navbar() {
     }
   };
 
+  const handleMiperfilClick = () => {
+    if (!correo) {
+      setMensajeAdvertencia('Inicia sesion para acceder.');
+      setTimeout(() => setMensajeAdvertencia(null), 3000); // Limpiar el mensaje después de 1 segundos
+    } else {
+      router.push('/profile'); // Redirigir al carrito si está logueado
+    }
+  };
+
   return (
-    <header className="bg-white shadow-md font-koulen flex fixed w-full z-50">
+    (<header className="bg-white shadow-md font-koulen flex fixed w-full z-50">
       <div className="container mx-auto flex items-center justify-between py-4 px-6">
         {/* Logo */}
         <div className="flex items-center space-x-4">
@@ -90,29 +99,31 @@ export default function Navbar() {
         </div>
 
         {/* Iconos */}
-        <div className="flex items-center space-x-6 relative">
+        <div className="flex items-center space-x-6 relative ">
           {/* Perfil */}
           <div className="relative flex items-center" ref={profileRef}>
             <button onClick={toggleProfileMenu} className="relative w-[40px] h-[40px] focus:outline-none" title='iconos'>
               {profileImageUrl ? (
                 // Si la URL de la imagen está disponible, mostrar la imagen de perfil
-                <Image
+                (<Image
                   src={profileImageUrl}
                   alt="Imagen de Perfil"
-                  fill 
+                  layout='fill'
                   sizes="40px"// Esto hace que la imagen ocupe todo el espacio disponible
                   className="object-cover rounded-full" 
-                />
+                />)
               ) : (
                 // Si no hay imagen disponible, mostrar el icono por defecto
-                <FaUserCircle className="text-gray-700 text-2xl" />
+                (<FaUserCircle className="text-gray-700 text-2xl" />)
               )}
             </button>
 
             {/* Menú de Perfil */}
             {isProfileOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md overflow-hidden z-20">
-                <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Mi Perfil</a>
+                <a 
+                onClick={handleMiperfilClick}
+                href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Mi Perfil</a>
                 <a
                   onClick={correo ? handleLogout : () => router.push('/auth/sign-in')}  // Llama a handleLogout si hay correo, si no redirige a iniciar sesión
                   href="#"
@@ -141,6 +152,6 @@ export default function Navbar() {
 
         </div>
       </div>
-    </header>
+    </header>)
   );
 }
