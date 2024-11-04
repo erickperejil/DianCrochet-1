@@ -16,11 +16,11 @@ export default function SliderVideo() {
     },
     {
         videoId: 'ybI8iNp7u2g',
-        url: 'https://img.youtube.com/vi/ybI8iNp7u2g/hqdefault.jpg',
+        url: 'https://images.unsplash.com/photo-1475578749612-705fc64d0574?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     },
     {
       videoId: 'd4q75eeq_rw',
-      url: 'https://img.youtube.com/vi/kXYiU_JCYtU/maxresdefault.jpg',
+      url: 'https://images.unsplash.com/photo-1530396333989-24c5b8f805dd?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     },
     {
       videoId: 'ywthKNqI7uI',
