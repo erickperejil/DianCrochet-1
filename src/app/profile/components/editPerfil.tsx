@@ -45,7 +45,7 @@ const UserProfile: React.FC = () => {
 
   const router = useRouter();
   const GotoChangePasswd = () => {
-    router.push('/auth/change-pwd')
+    router.push('/profile/change-psw')
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {

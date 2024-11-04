@@ -52,16 +52,21 @@ export default function Navbar() {
     router.push('/auth/sign-in');  // Redirige al usuario a la página de inicio de sesión
   };
 
-  const GotoProfile = () => {
-    router.push('/profile')
-  }
-
   const handleCarritoClick = () => {
     if (!correo) {
       setMensajeAdvertencia('Inicia sesion para acceder.');
       setTimeout(() => setMensajeAdvertencia(null), 3000); // Limpiar el mensaje después de 1 segundos
     } else {
       router.push('/checkout/shop-cart'); // Redirigir al carrito si está logueado
+    }
+  };
+
+  const handleMiperfilClick = () => {
+    if (!correo) {
+      setMensajeAdvertencia('Inicia sesion para acceder.');
+      setTimeout(() => setMensajeAdvertencia(null), 3000); // Limpiar el mensaje después de 1 segundos
+    } else {
+      router.push('/profile'); // Redirigir al carrito si está logueado
     }
   };
 
@@ -103,7 +108,7 @@ export default function Navbar() {
                 (<Image
                   src={profileImageUrl}
                   alt="Imagen de Perfil"
-                  fill 
+                  layout='fill'
                   sizes="40px"// Esto hace que la imagen ocupe todo el espacio disponible
                   className="object-cover rounded-full" 
                 />)
@@ -117,7 +122,7 @@ export default function Navbar() {
             {isProfileOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md overflow-hidden z-20">
                 <a 
-                onClick={GotoProfile}
+                onClick={handleMiperfilClick}
                 href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Mi Perfil</a>
                 <a
                   onClick={correo ? handleLogout : () => router.push('/auth/sign-in')}  // Llama a handleLogout si hay correo, si no redirige a iniciar sesión

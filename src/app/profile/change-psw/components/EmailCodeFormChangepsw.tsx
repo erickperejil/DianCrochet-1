@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { resetPassword } from "@services/UserAuth/user";
-import Modal from "../modals/Modal";
+import Modal from "../../../auth/components/modals/Modal";
 import Link from "next/link";
 
 interface AuthFormProps {
@@ -42,7 +42,7 @@ export default function EmailAuthFormChangePSW({ title }: AuthFormProps) {
   useEffect(() => {
     if (showModal && launcher) {
       const timer = setTimeout(() => {
-        window.location.href = `/auth/fgt-pwd-code?email=${email}`;
+        window.location.href = `/profile/fgt-psw-code-edit?email=${email}`;
       }, 1000); // Redirigir después de 2 segundos
 
       return () => clearTimeout(timer); // Limpiar el temporizador si el componente se desmonta
