@@ -1,7 +1,10 @@
+// UploadModal.tsx 
 'use client';
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { uploadImage } from '@services/User/user';
+import { updateProfilePic } from '@services/User/user'; 
 
 interface UploadModalProps {
   isOpen: boolean;
@@ -19,7 +22,6 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose }) => {
     if (storedData) {
       const parsedData = JSON.parse(storedData);
       const storedCorreo = parsedData?.query_result?.CORREO;
-      console.log('Correo almacenado:', storedCorreo);
       setCorreo(storedCorreo || '');
     }
   }, []);
@@ -36,52 +38,26 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose }) => {
       return;
     }
 
-    const formData = new FormData();
-    formData.append('file', file);
-
     try {
-      const response = await fetch('http://localhost:4000/admin/upload', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error('File upload failed');
-      }
-
-      const data = await response.json();
-      console.log('URL de la imagen cargada:', data.imageUrl);
-      setImageUrl(data.imageUrl);
-    } catch (error) {
-      console.error('Error uploading file:', error);
+      const imageUrl = await uploadImage(file);
+      setImageUrl(imageUrl);
+    } catch (err) {
+      console.error(err); // Log the error
       setError('Error uploading file');
     }
   };
 
-  const actualizarFotoPerfil = async () => {
+  const handleUpdateProfilePic = async () => {
     if (!correo || !imageUrl) {
       console.error('Correo o URL de la imagen no disponible');
       return;
     }
-    
+
     try {
-      const response = await fetch(`http://localhost:4000/user/actualizar/foto/${correo}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ nueva_url_imagen: imageUrl }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to update profile picture');
-      }
-
-      const result = await response.json();
-      console.log('Resultado de la actualización:', result);
+      await updateProfilePic(correo, imageUrl);
       onClose(); // Cerrar el modal después de confirmar
-    } catch (error) {
-      console.error('Error al actualizar la foto de perfil:', error);
+    } catch (err) {
+      console.error(err); // Log the error
       setError('Error al actualizar la foto de perfil');
     }
   };
@@ -97,7 +73,7 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose }) => {
         >
           ✕
         </button>
-        <h1 className="text-3xl font-koulen items-center text-gray-800 mb-6">Sube una Imagen </h1>
+        <h1 className="text-3xl font-koulen items-center text-gray-800 mb-6">Sube una Imagen</h1>
 
         {error && <p className="text-red-500 mb-4">{error}</p>}
 
@@ -131,16 +107,16 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose }) => {
             />
             <div className="flex justify-end space-x-4">
               <button 
-                onClick={actualizarFotoPerfil}
+                onClick={handleUpdateProfilePic}
                 className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400"
               >
-                Confirm
+                Confirmar
               </button>
               <button 
                 onClick={onClose} 
                 className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400"
               >
-                Cancel
+                Cancelar
               </button>
             </div>
           </div>
