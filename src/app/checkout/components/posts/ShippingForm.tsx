@@ -50,7 +50,7 @@ export default function ShippingForm() {
         if (correo) {
             const fetchCarrito = async () => {
                 try {
-                    const response = await fetch(`http://localhost:4000/factura/carrito/${correo}`);
+                    const response = await fetch(`https://deploybackenddiancrochet.onrender.com/factura/carrito/${correo}`);
                     const data = await response.json();
                     console.log('Datos del carrito:', data);
                     setCarrito(data.carrito);

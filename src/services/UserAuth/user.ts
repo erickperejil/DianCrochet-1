@@ -1,6 +1,6 @@
 import { loginData, RegisterData, ResetPwdResponse, verifyCode } from "@interfaces/user";
 
-const API_URL = "http://localhost:4000/user";
+const API_URL = "https://deploybackenddiancrochet.onrender.com/user";
 
 // Función para hacer el POST del login
 export const login = async (data: loginData) => {
@@ -106,7 +106,7 @@ export const resetPassword = async (correo: string) => {
 
 
 export const validarCorreo = async (correo: string, codigoVeri: string) => {
-    const response = await fetch("http://localhost:4000/user/validar/correo", {
+    const response = await fetch(`${API_URL}/validar/correo`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

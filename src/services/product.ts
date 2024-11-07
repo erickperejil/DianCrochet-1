@@ -3,7 +3,7 @@ import { Filtered, FullMaterial, ProductoDetalle } from "@interfaces/product";
 import { useParams } from 'next/navigation';
 import { FullProduct, Producto, ProductoSimilar } from "@interfaces/product";
 
-const API_URL = "http://localhost:4000/producto";
+const API_URL = "https://deploybackenddiancrochet.onrender.com/producto";
 
 
 export const GetProductosPopulares = async (): Promise<Producto[]> => {

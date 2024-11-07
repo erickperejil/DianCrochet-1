@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:4000/user";
+const API_URL = "https://deploybackenddiancrochet.onrender.com";
 
 export const getFacturas = async(correo:string, col: string, dir: string)=>{
     const response = await fetch(`${API_URL}/facturas/${correo}`, {
