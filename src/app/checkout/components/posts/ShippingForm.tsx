@@ -234,6 +234,21 @@ export default function ShippingForm() {
     };   
     
 
+    //Formatear el numero de telefono para que no tenga espacios
+    const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        let value = e.target.value;
+    
+        // Eliminar todos los caracteres no numéricos
+        value = value.replace(/\D/g, '');
+    
+        // Insertar guiones después de cada bloque de 4 dígitos
+        if (value.length > 4) {
+            value = value.slice(0, 4) + '-' + value.slice(4, 8);
+        }
+    
+        setTelefono(value); // Actualiza el estado con el número formateado
+    };
+
     
     return (
         <div className="flex justify-between font-koulen w-full p-8">
@@ -291,9 +306,9 @@ export default function ShippingForm() {
                 <div className="mb-5">
                     <h1 className="text-gray-900">Numero</h1>
                     <input
-                        type="number"
+                        type="tel" // Cambiar a "tel" para mejor compatibilidad con números
                         value={telefono}
-                        onChange={(e) => setTelefono(e.target.value)}
+                        onChange={handlePhoneChange} // Solo llamar a handlePhoneChange aquí
                         placeholder="Ingresa tu teléfono"
                         className="rounded-md bg-gray-300 border-none h-12 font-lekton text-gray-700"
                     />
