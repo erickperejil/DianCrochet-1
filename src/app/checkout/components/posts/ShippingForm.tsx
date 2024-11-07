@@ -24,7 +24,7 @@ export default function ShippingForm() {
     const [telefonoError, setTelefonoError] = useState<string>(''); 
     const [idFactura, setIdFactura] = useState<number | null>(null);
     const [total, setTotal] = useState<number | string>('No disponible');
-
+    const [envioGuardado, setEnvioGuardado] = useState<boolean>(false);
 
 
     const handleBackClick = () => {
@@ -209,6 +209,7 @@ export default function ShippingForm() {
             console.log('Respuesta del servidor:', response);
    
             if (response.status === 201) {
+                setEnvioGuardado(true); // Marca el envío como guardado
                 const envioData = response.data.envio;
                 const envio = envioData?.envio ?? 0;
                 const total = envioData?.total ?? 'No disponible'; // Aquí obtienes el total desde la respuesta
@@ -239,7 +240,14 @@ export default function ShippingForm() {
             <div title="detalle envio" className="m-2 p-2 rounded-md bg-gray-200 w-1/2 flex-grow py-5 px-40 ">
             <div id="header" className="text-gray-700 flex flex-row flex-nowrap justify-center items-baseline content-stretch">
                     <div><h4 className="m-2 flex flex-row flex-nowrap justify-start items-baseline content-stretch text-purple-400">Resumen <IoRemoveOutline className="ml-2"/> <FaCheckCircle className="text-purple-800" /> <IoRemoveOutline /></h4></div>
-                    <div><h4 className="m-2 flex flex-row flex-nowrap justify-start items-baseline content-stretch text-purple-400">Envio <IoRemoveOutline className="ml-2"/> <FaCheckCircle className="text-gray-800" /> <IoRemoveOutline /></h4></div>
+                    <div>
+                        <h4 className="m-2 flex flex-row flex-nowrap justify-start items-baseline content-stretch text-purple-400">
+                            Envio 
+                            <IoRemoveOutline className="ml-2"/> 
+                            <FaCheckCircle className={`text-${envioGuardado ? 'purple-800' : 'gray-800'}`} /> 
+                            <IoRemoveOutline />
+                        </h4>
+                    </div>
                     <div><h4 className="m-2 flex flex-row flex-nowrap justify-start items-baseline content-stretch">Pago <IoRemoveOutline className="ml-2"/> <FaCheckCircle className="text-gray-800" /> <IoRemoveOutline /></h4></div>
                 </div>
 
@@ -338,7 +346,7 @@ export default function ShippingForm() {
                         <h3 className="mb-3" id="impuestos">L. {carrito.length === 0 ? "0.00" : impuestos.toFixed(2)}</h3>
                         <h3 className="mb-3">L. {envio && !isNaN(envio) ? envio.toFixed(2) : "0.00"}</h3>
                         <h3 className="mb-3" id="total">
-                            L. {total === 'No disponible' ? total : (subtotal + impuestos + (envio && !isNaN(envio) ? envio : 0)).toFixed(2)}
+                            L. {total === '00.00' ? total : (subtotal + impuestos + (envio && !isNaN(envio) ? envio : 0)).toFixed(2)}
                         </h3>
                     </div>
                  </div>
