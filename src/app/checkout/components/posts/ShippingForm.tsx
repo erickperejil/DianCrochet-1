@@ -365,7 +365,7 @@ export default function ShippingForm() {
                  <div id="pago" className="text-gray-800">
                      <h1>Pagos con</h1>
                      <button className="w-16 border-blue-900 rounded-md border-2 px-3 transition-all duration-300 ease-in-out hover:shadow-lg hover:translate-y-[-5px]">
-                        <Image alt="paypal" src="/img/paypal-logo-0.png"  />
+                        <Image alt="paypal" src="/img/paypal-logo-0.png" width={100} height={100} />
                     </button>
                  </div>
             </div>
