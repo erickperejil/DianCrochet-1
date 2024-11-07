@@ -6,6 +6,7 @@ import { FaAngleLeft } from "react-icons/fa6";
 import { useRouter } from 'next/navigation';
 import { CarritoItem, Departamento, PayPalResponse } from "@interfaces/invoice";
 import axios from 'axios';
+import Image from "next/image";
 
 export default function ShippingForm() {
     const router = useRouter();
@@ -66,7 +67,7 @@ export default function ShippingForm() {
     // Función para obtener el subtotal e impuestos
     const fetchSubtotal = async () => {
         try {
-            const response = await fetch('http://localhost:4000/factura/carrito/subtotal', {
+            const response = await fetch('https://deploybackenddiancrochet.onrender.com/factura/carrito/subtotal', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -90,6 +91,7 @@ export default function ShippingForm() {
         if (correo) {
             fetchSubtotal();  // Llama a fetchSubtotal cuando el correo esté disponible
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [correo]);  // Dependencia en correo
     
 
@@ -109,7 +111,7 @@ export default function ShippingForm() {
         const fetchCiudades = async () => {
             if (selectedDepartamento) {
                 try {
-                    const response = await axios.get(`http://localhost:4000/factura/ciudad/${selectedDepartamento}`);
+                    const response = await axios.get(`https://deploybackenddiancrochet.onrender.com/factura/ciudad/${selectedDepartamento}`);
                     setCiudades(response.data.Ciudades);
                 } catch (error) {
                     console.error("Error al obtener las ciudades:", error);
@@ -130,7 +132,7 @@ export default function ShippingForm() {
         useEffect(() => {
             const fetchDepartments = async () => {
                 try {
-                    const response = await axios.get('http://localhost:4000/factura/departamentos');
+                    const response = await axios.get('https://deploybackenddiancrochet.onrender.com/factura/departamentos');
                     setDepartments(response.data.Departamentos);
                     setLoading(false);
                 } catch (error) {
@@ -199,7 +201,7 @@ export default function ShippingForm() {
         }
    
         try {
-            const response = await axios.post('http://localhost:4000/factura/envio', {
+            const response = await axios.post('https://deploybackenddiancrochet.onrender.com/factura/envio', {
                 id_factura: idFactura,
                 direccion,
                 ciudad: selectedCiudad,
@@ -258,7 +260,7 @@ export default function ShippingForm() {
             }
         
             try {
-                const response = await axios.post<PayPalResponse>('http://localhost:4000/pago/crear', {
+                const response = await axios.post<PayPalResponse>('https://deploybackenddiancrochet.onrender.com/pago/crear', {
                     total_pago: Number(total), // Convertir el total a número si es necesario
                     id_factura: idFactura,
                 });
@@ -363,7 +365,7 @@ export default function ShippingForm() {
                  <div id="pago" className="text-gray-800">
                      <h1>Pagos con</h1>
                      <button className="w-16 border-blue-900 rounded-md border-2 px-3 transition-all duration-300 ease-in-out hover:shadow-lg hover:translate-y-[-5px]">
-                        <img title="paypal" src="/img/paypal-logo-0.png"  />
+                        <Image alt="paypal" src="/img/paypal-logo-0.png"  />
                     </button>
                  </div>
             </div>

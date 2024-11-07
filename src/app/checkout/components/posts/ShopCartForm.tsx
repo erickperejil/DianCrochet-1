@@ -45,7 +45,7 @@ export default function ShopCartForm() {
         if (correo) {
             const fetchCarrito = async () => {
                 try {
-                    const response = await fetch(`http://localhost:4000/factura/carrito/${correo}`);
+                    const response = await fetch(`https://deploybackenddiancrochet.onrender.com/factura/carrito/${correo}`);
                     const data = await response.json();
                     console.log('Datos del carrito:', data); // Verifica los datos recibidos
                     setCarrito(data.carrito);
@@ -62,6 +62,7 @@ export default function ShopCartForm() {
     
             fetchCarrito();
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [correo]);
 
     useEffect(() => {
@@ -76,7 +77,7 @@ export default function ShopCartForm() {
      // Función para obtener el subtotal e impuestos
      const fetchSubtotal = async () => {
         try {
-            const response = await fetch('http://localhost:4000/factura/carrito/subtotal', {
+            const response = await fetch('https://deploybackenddiancrochet.onrender.com/factura/carrito/subtotal', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -99,7 +100,7 @@ export default function ShopCartForm() {
     // Eliminar producto carrito
     const handleDelete = async (idProducto: number) => {
         try {
-            const response = await fetch('http://localhost:4000/factura/carrito/producto/eliminar', {
+            const response = await fetch('https://deploybackenddiancrochet.onrender.com/factura/carrito/producto/eliminar', {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -124,7 +125,7 @@ export default function ShopCartForm() {
         if (!facturaId) return; // Verificar que existe un id_factura
 
         try {
-            const response = await fetch(`http://localhost:4000/factura/eliminar/carrito/${facturaId}`, {
+            const response = await fetch(`https://deploybackenddiancrochet.onrender.com/factura/eliminar/carrito/${facturaId}`, {
                 method: 'DELETE',
             });
 
@@ -158,7 +159,7 @@ export default function ShopCartForm() {
         setCarrito(updatedCarrito);
 
         try {
-            const response = await fetch('http://localhost:4000/factura/carrito/actualizar', {
+            const response = await fetch('https://deploybackenddiancrochet.onrender.com/factura/carrito/actualizar', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -190,7 +191,7 @@ export default function ShopCartForm() {
     return (
         <div className="flex justify-between font-koulen w-full p-8">
             {loading && <LoadingSpinner />}
-            <div title="Articulos" className="m-2 p-2 rounded-md bg-gray-200 w-1/2 flex-grow p-5 px-10 ">
+            <div title="Articulos" className="m-2 rounded-md bg-gray-200 w-1/2 flex-grow p-5 px-10 ">
                 <div id="header" className="text-gray-700 flex flex-row flex-nowrap justify-center items-baseline content-stretch">
                     <div><h4 className="m-2 flex flex-row flex-nowrap justify-start items-baseline content-stretch text-purple-400">Resumen <IoRemoveOutline className="ml-2"/> <FaCheckCircle className="text-gray-800" /> <IoRemoveOutline /></h4></div>
                     <div><h4 className="m-2 flex flex-row flex-nowrap justify-start items-baseline content-stretch">Envio <IoRemoveOutline className="ml-2"/> <FaCheckCircle className="text-gray-800" /> <IoRemoveOutline /></h4></div>
@@ -248,7 +249,7 @@ export default function ShopCartForm() {
                  <div id="pago" className="text-gray-800">
                      <h1>Pagos con</h1>
                      <button className="w-16 border-blue-900 rounded-md border-2 px-3 transition-all duration-300 ease-in-out hover:shadow-lg hover:translate-y-[-5px]">
-                        <img title="paypal" src="/img/paypal-logo-0.png"  />
+                        <Image alt="paypal" src="/img/paypal-logo-0.png"  />
                     </button>
                  </div>
             </div>
