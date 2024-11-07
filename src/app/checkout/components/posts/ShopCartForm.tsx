@@ -6,21 +6,28 @@ import { CiImageOff } from "react-icons/ci";
 import { CarritoItem } from "@interfaces/invoice";
 import { useRouter } from 'next/navigation';
 import LoadingSpinner from "../loadding/LoadingSpinnerSob";
+import Image from 'next/image';
 
 
 export default function ShopCartForm() {
     const [carrito, setCarrito] = useState<CarritoItem[]>([]);
     const [correo, setCorreo] = useState('');
-    const [subtotal, setSubtotal] = useState(0);
-    const [impuestos, setImpuestos] = useState(0);
-    const [total, setTotal] = useState(0);
     const router = useRouter();
     const [loading, setLoading] = useState(false);
+    const [facturaId, setFacturaId] = useState<number | null>(null);
+    const [subtotal, setSubtotal] = useState<number>(0); // Iniciar con 0, no null
+    const [impuestos, setImpuestos] = useState<number>(0); // Iniciar con 0, no null
+    const [mensajeAdvertencia, setMensajeAdvertencia] = useState<string | null>(null); // Mensaje de advertencia
 
-
+    // Función para manejar el clic en detalles de envío
     const handleShippingDetailsClick = () => {
-      setLoading(true);
-      router.push('/checkout/shipping');
+        if (carrito.length === 0) {
+            setMensajeAdvertencia('Agrega productos al carrito para continuar');
+            setTimeout(() => setMensajeAdvertencia(null), 3000); // Limpiar el mensaje después de 1 segundos
+        } else {
+            setLoading(true);
+            router.push('/checkout/shipping');
+        }
     };
     
     useEffect(() => {
@@ -42,28 +49,52 @@ export default function ShopCartForm() {
                     const data = await response.json();
                     console.log('Datos del carrito:', data); // Verifica los datos recibidos
                     setCarrito(data.carrito);
+                    await fetchSubtotal();
+                    if (data.carrito.length > 0) {
+                        const facturaId = data.carrito[0].id_factura;
+                        setFacturaId(facturaId);
+                        localStorage.setItem('facturaId', facturaId.toString()); // Guardamos el id_factura en localStorage
+                    }
                 } catch (error) {
                     console.error('Error al obtener el carrito:', error);
                 }
             };
-
+    
             fetchCarrito();
         }
     }, [correo]);
 
     useEffect(() => {
-        // Calcular el subtotal
-        const newSubtotal = carrito.reduce((acc, item) => acc + (item.subtotal || 0), 0);
-        setSubtotal(newSubtotal);
+        // Recuperamos el id_factura al cargar la vista
+        const storedFacturaId = localStorage.getItem('facturaId');
+        if (storedFacturaId) {
+            setFacturaId(Number(storedFacturaId));
+            console.log('Factura ID recuperada:', storedFacturaId);
+        }
+    }, []);
 
-        // Calcular los impuestos (por ejemplo, 15% del subtotal)
-        const newImpuestos = newSubtotal * 0.15;
-        setImpuestos(newImpuestos);
+     // Función para obtener el subtotal e impuestos
+     const fetchSubtotal = async () => {
+        try {
+            const response = await fetch('http://localhost:4000/factura/carrito/subtotal', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ correo })
+            });
 
-        // Calcular el total
-        const newTotal = newSubtotal + newImpuestos;
-        setTotal(newTotal);
-    }, [carrito]);
+            if (response.ok) {
+                const data = await response.json();
+                setSubtotal(data.subtotal);
+                setImpuestos(data.impuesto);
+            } else {
+                console.error('Error al obtener el subtotal e impuestos desde el backend');
+            }
+        } catch (error) {
+            console.error('Error al intentar obtener el subtotal e impuestos:', error);
+        }
+    };
 
     // Eliminar producto carrito
     const handleDelete = async (idProducto: number) => {
@@ -79,11 +110,34 @@ export default function ShopCartForm() {
             if (response.ok) {
                 // Eliminar el producto del estado local
                 setCarrito(carrito.filter(item => item.id_producto !== idProducto));
+                 await fetchSubtotal();
             } else {
                 console.error('Error al eliminar el producto del carrito');
             }
         } catch (error) {
             console.error('Error al eliminar el producto del carrito:', error);
+        }
+    };
+
+    // Método para eliminar todo el carrito / eliminar orden
+    const handleCancelOrder = async () => {
+        if (!facturaId) return; // Verificar que existe un id_factura
+
+        try {
+            const response = await fetch(`http://localhost:4000/factura/eliminar/carrito/${facturaId}`, {
+                method: 'DELETE',
+            });
+
+            if (response.ok) {
+                setCarrito([]); // Limpiar carrito en frontend
+                setSubtotal(0); // Reiniciar subtotal
+                setImpuestos(0); // Reiniciar impuestos
+                alert("Orden cancelada y carrito eliminado");
+            } else {
+                console.error('Error al eliminar todos los productos del carrito');
+            }
+        } catch (error) {
+            console.error('Error en la eliminación del carrito:', error);
         }
     };
 
@@ -132,6 +186,7 @@ export default function ShopCartForm() {
         return acc;
     }, [] as CarritoItem[]);
 
+
     return (
         <div className="flex justify-between font-koulen w-full p-8">
             {loading && <LoadingSpinner />}
@@ -146,12 +201,9 @@ export default function ShopCartForm() {
                 <div id="PRODUCTOS" className="max-h-96 overflow-y-auto">
                 {groupedCarrito.map((item) => (
                     <div key={item.id_prod_fact} id="product" className="bg-white rounded-md flex flex-row flex-nowrap justify-start items-start content-start overflow-hidden mb-5">
-                        <div id="img" className="mr-8 w-1/12 h-full rounded-none rounded-tl-md rounded-bl-md" title={item.nombre_prod}>
-                            {item.url ? (
-                                <img src={item.url} alt={item.nombre_prod} className="w-full h-full object-cover" />
-                            ) : (
-                                <CiImageOff className="w-full h-full object-contain text-gray-400" />
-                            )}
+                        <div id="img" className="mr-8 w-24 h-24 rounded-none rounded-tl-md rounded-bl-md" title={item.nombre_prod}>
+                            {item.url ? (<Image src={item.url} alt={item.nombre_prod} width={100} height={100} objectFit="cover" className="w-full h-full"/>) : (
+                            <CiImageOff className="w-full h-full object-contain text-gray-400" />)}
                         </div>
                         <div id="detalle" className="flex flex-grow justify-between mr-8">
                             <div id="det" className="">
@@ -216,10 +268,10 @@ export default function ShopCartForm() {
                         <h2 className="mb-3">Total</h2>
                     </div>
                     <div id="pago" className="text-gray-800">
-                        <h3 className="mb-3" id="subtotal">L. {subtotal.toFixed(2)}</h3>
-                        <h3 className="mb-3" id="impuestos">L. {impuestos.toFixed(2)}</h3>
+                        <h3 className="mb-3" id="subtotal">L. {carrito.length === 0 ? "0.00" : subtotal.toFixed(2)}</h3>
+                        <h3 className="mb-3" id="impuestos">L. {carrito.length === 0 ? "0.00" : impuestos.toFixed(2)}</h3>
                         <h3 className="mb-3">...</h3>
-                        <h3 className="mb-3" id="total">L. {total.toFixed(2)}</h3>
+                        <h3 className="mb-3" id="total">L.</h3>
                     </div>
                  </div>
 
@@ -227,11 +279,16 @@ export default function ShopCartForm() {
 
                 {/* BOTONES */}
                 <div id="but" className="flex flex-row flex-nowrap justify-end items-end content-start">
-                    <button title="decline" type="button" className="mr-8 text-gray-800 p-4 transition-all duration-300 ease-in-out hover:shadow-lg hover:translate-y-[-5px] rounded-md">Cancelar Orden</button>
+                    <button title="decline" type="button" className="mr-8 text-gray-800 p-4 transition-all duration-300 ease-in-out hover:shadow-lg hover:translate-y-[-5px] rounded-md"  onClick={handleCancelOrder}>Cancelar Orden</button>
                     <button title="sending" type="button" className="bg-purple-400 py-4 px-9 rounded-md transition-all duration-300 ease-in-out hover:shadow-lg hover:translate-y-[-5px]" onClick={handleShippingDetailsClick}>Detalles de envio</button>
                 </div>
- 
             </div>
+            
+            {mensajeAdvertencia && (
+             <div className="text-lg items-center w-1/4 flex justify-center font-koulen fixed bottom-5 right-5 bg-gray-200 opacity-75 text-purple-800 px-1 py-2 rounded-lg z-50">
+            {mensajeAdvertencia}
+           </div>
+          )}
         </div>
     );
 }

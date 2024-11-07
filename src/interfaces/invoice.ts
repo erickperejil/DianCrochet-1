@@ -6,6 +6,7 @@ export interface Producto {
 }
 
 export interface CarritoItem {
+    id_factura: number;
     id_prod_fact: number;
     id_producto: number;
     nombre_prod: string;
@@ -18,8 +19,14 @@ export interface Carrito {
     carrito: CarritoItem[];
 }
 
-interface Departamento {
+export interface Departamento {
     ID_DEPARTAMENTO: number;
     DEPARTAMENTO: string;
+  }
+  
+  export interface PhoneNumberInputProps {
+    value: string; // Este es el valor del número de teléfono
+    onChange: (phone: string) => void; // Esta es la función para manejar el cambio del teléfono
+    error?: string; // Opcionalmente, para manejar errores de validación
   }
   
