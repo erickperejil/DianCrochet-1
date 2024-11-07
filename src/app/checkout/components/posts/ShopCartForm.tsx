@@ -208,7 +208,11 @@ export default function ShopCartForm() {
                         <div id="detalle" className="flex flex-grow justify-between mr-8">
                             <div id="det" className="">
                                 <h1 id="nombre" className="text-gray-700 text-lg">{item.nombre_prod}</h1>
-                                <h4 id="cantidad" className="font-lekton text-gray-400">Cantidad: {item.cantidad_compra}</h4>
+                                <div className="flex flex-row flex-nowrap justify-around items-stretch content-stretch">
+                                    <h4 id="cantidad" className="font-lekton text-gray-400 mr-5">Cantidad: {item.cantidad_compra}</h4>
+                                    <h4 id="talla" className="font-lekton text-gray-400 mr-5">Talla: {item.talla ?? ''} </h4>
+                                    <h4 id="color" className="font-lekton text-gray-400">Grosor:{item.grosor ?? ''} </h4>
+                                </div>
                                 <div className="flex items-center border border-black rounded-full bg-gray-100 text-gray-700 font-lekton w-max">
                                     <button className="text-lg font-semibold px-2" onClick={() => handleQuantityChange(item.id_producto, -1)}>−</button>
                                     <span className="mx-4 text-lg">{item.cantidad_compra}</span>
