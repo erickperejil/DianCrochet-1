@@ -31,4 +31,18 @@ export interface Departamento {
     onChange: (phone: string) => void; // Esta es la función para manejar el cambio del teléfono
     error?: string; // Opcionalmente, para manejar errores de validación
   }
-  
+
+  // Definir interfaces para la respuesta
+export interface PayPalLink {
+    href: string;
+    rel: string;
+    method: string;
+}
+
+export interface PayPalResponse {
+    data: {
+        id: string;
+        status: string;
+        links: PayPalLink[];
+    };
+}

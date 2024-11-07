@@ -4,7 +4,7 @@ import { IoRemoveOutline } from "react-icons/io5";
 import { RiErrorWarningFill } from "react-icons/ri";
 import { FaAngleLeft } from "react-icons/fa6";
 import { useRouter } from 'next/navigation';
-import { CarritoItem, Departamento } from "@interfaces/invoice";
+import { CarritoItem, Departamento, PayPalResponse } from "@interfaces/invoice";
 import axios from 'axios';
 
 export default function ShippingForm() {
@@ -249,6 +249,36 @@ export default function ShippingForm() {
         setTelefono(value); // Actualiza el estado con el número formateado
     };
 
+    // Función para manejar el pago
+        const handlePayment = async () => {
+            if (!idFactura || total === 'No disponible' || typeof total === 'string') {
+                console.error('No se puede procesar el pago: falta el ID de la factura o el total no está disponible.');
+                alert('Hubo un problema al iniciar el pago. Por favor, revisa la información e inténtalo de nuevo.');
+                return;
+            }
+        
+            try {
+                const response = await axios.post<PayPalResponse>('http://localhost:4000/pago/crear', {
+                    total_pago: Number(total), // Convertir el total a número si es necesario
+                    id_factura: idFactura,
+                });
+        
+                const data = response.data;
+                const approvalLink = data?.data?.links.find((link) => link.rel === "approve")?.href;
+        
+                if (approvalLink) {
+                    window.location.href = approvalLink; // Redirigir al enlace de aprobación de PayPal
+                } else {
+                    console.error('No se encontró el enlace de aprobación en la respuesta:', data);
+                    alert('No se pudo iniciar el pago. Intenta de nuevo más tarde.');
+                }
+            } catch (error) {
+                console.error('Error al procesar el pago:', error);
+                alert('Hubo un error al procesar el pago.');
+            }
+        };
+    
+
     
     return (
         <div className="flex justify-between font-koulen w-full p-8">
@@ -367,7 +397,8 @@ export default function ShippingForm() {
                  </div>
 
                 <div className="flex justify-end">
-                    <button onClick={handleSaveShipping} className="bg-purple-400 py-4 px-9 rounded-md">Guardar envio</button>
+                    <button onClick={handleSaveShipping} className="bg-purple-400 py-4 px-9 rounded-md mr-5">Guardar envio</button>
+                    <button title="decline" type="button" onClick={handlePayment} className="mr-8 text-gray-800 p-4 transition-all duration-300 ease-in-out hover:shadow-lg hover:translate-y-[-5px] rounded-md">Pagar</button>
                 </div>
             </div>
         </div>
