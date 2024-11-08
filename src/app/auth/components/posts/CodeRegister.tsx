@@ -53,7 +53,7 @@ export default function CodeRegister({ mail, setShowEmailVerification }: AuthFor
         setModalTitle("Registro Exitoso");
         setModalMessage("");
         setModalType(1);
-        router.push("http://localhost:3000");
+        router.push("http://dian-crochet-8ii.vercel.app");
       } else {
         setModalTitle("Ocurrió un error");
         setModalMessage(response.user.mensaje);

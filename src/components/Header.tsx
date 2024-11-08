@@ -60,7 +60,7 @@ export default function Header() {
       <div className="container mx-auto flex items-center justify-between py-4 px-6">
         {/* Logo */}
         <div className="flex items-center space-x-4">
-          <Link href="http://localhost:3000/">
+          <Link href="http://dian-crochet-8ii.vercel.app/">
             <Image src="/img/logo.svg" alt="Logo" width={40} height={40} />
           </Link>
           <nav className="hidden md:flex space-x-8">

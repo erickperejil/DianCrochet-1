@@ -55,7 +55,7 @@ export default function SliderVideo() {
       <div className="ml-2">
         <h1 className="font-koulen text-black">Novedades</h1>
       </div>
-      <Link href="http://localhost:3000/videos">
+      <Link href="http://dian-crochet-8ii.vercel.app/videos">
           <div
             style={{ backgroundImage: `url(${slides[currentIndex].url})` }}
             className="w-full h-full rounded-2xl bg-center bg-cover duration-500 cursor-pointer"

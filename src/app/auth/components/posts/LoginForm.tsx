@@ -49,7 +49,7 @@ export default function LoginForm() {
          // Guarda el objeto 'response' en el localStorage
         localStorage.setItem('loginResponse', JSON.stringify(response));
         setCodigo(1);
-        router.push("http://localhost:3000/");
+        router.push("http://dian-crochet-8ii.vercel.app/");
         //beep boop, aqui se implementa el cambio cuando se hace login
       } else if (response.codigo == 2) {
         setCodigo(2);
