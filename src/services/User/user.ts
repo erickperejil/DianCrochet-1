@@ -55,7 +55,7 @@ export const getFacturas = async(correo:string, col: string, dir: string)=>{
     formData.append('file', file);
   
     try {
-      const response = await fetch('http://localhost:4000/admin/upload', {
+      const response = await fetch('https://deploybackenddiancrochet.onrender.com/admin/upload', {
         method: 'POST',
         body: formData,
       });
@@ -74,7 +74,7 @@ export const getFacturas = async(correo:string, col: string, dir: string)=>{
 
   export const updateProfilePic = async (correo: string, imageUrl: string) => {
     try {
-      const response = await fetch(`http://localhost:4000/user/actualizar/foto/${correo}`, {
+      const response = await fetch(`https://deploybackenddiancrochet.onrender.com/user/actualizar/foto/${correo}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
