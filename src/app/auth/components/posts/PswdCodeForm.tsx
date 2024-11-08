@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect } from "react";
 import { validarCorreo } from "@services/UserAuth/user";
 import Modal from "../modals/Modal";
