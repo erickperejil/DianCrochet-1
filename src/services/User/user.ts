@@ -1,4 +1,4 @@
-const API_URL = "https://deploybackenddiancrochet.onrender.com";
+const API_URL = "https://deploybackenddiancrochet.onrender.com/user";
 
 export const getFacturas = async(correo:string, col: string, dir: string)=>{
     const response = await fetch(`${API_URL}/facturas/${correo}`, {

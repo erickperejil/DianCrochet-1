@@ -11,7 +11,7 @@ export default function Historial() {
   const router = useRouter();
   const [showOrder, setShowOrder] = useState(false);
   const [ordenamiento, setOrdenamiento] = useState("FECHA_FACT");
-  const [orden, setOrden] = useState("asc");
+  const [orden, setOrden] = useState("DESC");
   const [openFactura, setOpenFactura] = useState(false);
   const [idFactura, setIdFactura] = useState(0);
 
@@ -35,11 +35,13 @@ export default function Historial() {
       const userCorreo = parsedResponse?.query_result?.CORREO || '';
 
       if (userCorreo) {
+        console.log(userCorreo)
         const fetchGets = async () => {
           setIsLoading(true); // Activa la carga antes de la solicitud
           try {
             const res = await getFacturas(userCorreo,ordenamiento, orden); // Llama a la función para obtener las facturas
-            setFacturas(res.FacturasUsuario); // Actualiza el estado con el resultado
+            setFacturas(res.FacturasUsuario);
+            console.log(res) // Actualiza el estado con el resultado
           } catch (error) {
             console.error("Error al traer facturas:", error);
           } finally {
