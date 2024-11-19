@@ -9,8 +9,8 @@ export default function LoginBG() {
       <Image
         src="/img/CrochetTree.png"
         alt="Background Image"
-        width={500}
-        height={300}
+        width={380}
+        height={450}
         priority
         className="absolute pointer-events-none bottom-1 right-0 mix-blend-multiply"
         style={{ width: 'auto', height: 'auto' }}
@@ -30,7 +30,7 @@ export default function LoginBG() {
         alt="Background Image"
         width={100}
         height={100}
-        className="absolute pointer-events-none bottom-48 right-[390px] scale-x-[-1] mix-blend-multiply"
+        className="absolute pointer-events-none bottom-48 right-[23%] scale-x-[-1] mix-blend-multiply"
       />
 
       <Image
@@ -38,7 +38,7 @@ export default function LoginBG() {
         alt="Background Image"
         width={100}
         height={100}
-        className="absolute pointer-events-none right-[160px] bottom-[470px] scale-x-[-1] mix-blend-multiply"
+        className="absolute pointer-events-none right-[8%] bottom-[70%] scale-x-[-1] mix-blend-multiply"
       />
 
       <Image
@@ -72,7 +72,7 @@ export default function LoginBG() {
         alt="Background Image"
         width={180}
         height={140}
-        className="absolute pointer-events-none left-10 bottom-[320px] scale-x-[-1] mix-blend-multiply object-contain"
+        className="absolute pointer-events-none left-10 bottom-[25%] scale-x-[-1] mix-blend-multiply object-contain"
         style={{ width: 'auto', height: 'auto' }}
       />
     </div>
