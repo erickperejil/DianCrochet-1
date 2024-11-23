@@ -79,8 +79,12 @@ export default function Materials() {
       console.log("enviando:", filteredData);
       const res = await FilteredMaterials(filteredData);
       console.log("recibiendo:", res);
+      setPageNumber(1);
+      setProductsSplit(0);
       setIsLoading(false); // Llama a la función para obtener los productos filtrados
-      setProductos(res); // Limpia productos antes de actualizar
+      setProductos(res); 
+
+      // Limpia productos antes de actualizar
     } catch (error) {
       console.error("Error al traer productos:", error);
     }
@@ -163,8 +167,7 @@ export default function Materials() {
       max_precio: null,
     }));
 
-    setPageNumber(1);
-    setProductsSplit(0);
+
   
     // Llama a la función para enviar categorías
     if(!showPrices){

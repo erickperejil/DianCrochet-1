@@ -79,6 +79,8 @@ export default function Products() {
     try {
       setIsLoading(true);
       const res = await FilteredProducts(filteredData);
+            setPageNumber(1);
+      setProductsSplit(0);
       setIsLoading(false); // Llama a la función para obtener los productos filtrados
       setProductos(res); // Limpia productos antes de actualizar
       //console.log("Enviando: ", filteredData); // Asegúrate de que envías los datos correctos
@@ -111,8 +113,7 @@ export default function Products() {
       max_precio: null,
     }));
 
-    setPageNumber(1);
-    setProductsSplit(0);
+
   
     // Llama a la función para enviar categorías
     if(!showPrices){
