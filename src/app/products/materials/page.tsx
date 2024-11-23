@@ -162,6 +162,9 @@ export default function Materials() {
       min_precio: null,
       max_precio: null,
     }));
+
+    setPageNumber(1);
+    setProductsSplit(0);
   
     // Llama a la función para enviar categorías
     if(!showPrices){
@@ -176,6 +179,8 @@ export default function Materials() {
     setMaxPrice(0)
     setCategories([])
     setOrdenamiento("")
+    setPageNumber(1);
+    setProductsSplit(0);
   }
 
   const totalProducts = productos.length;
