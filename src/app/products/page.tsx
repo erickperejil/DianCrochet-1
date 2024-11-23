@@ -50,6 +50,8 @@ export default function Products() {
   const deleteFilter = () => {
     setOrdenamiento("");
     setOrden("");
+    setPageNumber(1);
+    setProductsSplit(0);
   };
 
   const deleteCategory = (index: number) => {
@@ -108,6 +110,9 @@ export default function Products() {
       min_precio: null,
       max_precio: null,
     }));
+
+    setPageNumber(1);
+    setProductsSplit(0);
   
     // Llama a la función para enviar categorías
     if(!showPrices){
@@ -155,6 +160,7 @@ export default function Products() {
     setMaxPrice(0)
     setCategories([])
     setOrdenamiento("")
+    setPageNumber(1);
   }
 
   const handleSplitNext = () => {
@@ -195,7 +201,8 @@ export default function Products() {
       try {
         const res = await getProducts(); // Llama a la función para obtener los productos
         setProductos(res);
-        setIsLoading(false); // Actualiza el estado con el resultado
+        setIsLoading(false);
+        setPageNumber(1); // Actualiza el estado con el resultado
       } catch (error) {
         console.error("Error al traer productos:", error);
       }
