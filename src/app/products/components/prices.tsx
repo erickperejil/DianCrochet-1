@@ -8,6 +8,7 @@ interface PricesProps {
   maxPrice: number;
   setMinPrice: (price: number) => void;
   setMaxPrice: (price: number) => void;
+  setPricesChanges: (value: boolean) => void;
 }
 
 export default function Prices({
@@ -17,6 +18,7 @@ export default function Prices({
   maxPrice,
   setMinPrice,
   setMaxPrice,
+  setPricesChanges,
 }: PricesProps) {
   const ref = useRef<HTMLDivElement>(null);
   const maxInputRef = useRef<HTMLInputElement>(null);
@@ -61,7 +63,8 @@ export default function Prices({
   const HandleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    if (/^\d*\.?\d*$/.test(value)) { // Actualiza el estado de cambios al cambiar el valor
+    if (/^\d*\.?\d*$/.test(value)) {
+      setPricesChanges(true); // Actualiza el estado de cambios al cambiar el valor
       if (name === "max_price") {
         setMaxPrice(Number(value));
         if (Number(value) > 99999) {

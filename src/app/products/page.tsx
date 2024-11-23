@@ -37,6 +37,7 @@ export default function Products() {
   const [categories, setCategories] = useState<string[]>([]);
   const [ordenamiento, setOrdenamiento] = useState("");
   const [orden, setOrden] = useState("");
+  const [priceChanges, setPricesChanges] = useState(false);
 
   const nombresFiltros: { [key: string]: string } = {
     NOMBRE_PROD_ASC: "Alfabético A-Z",
@@ -52,9 +53,11 @@ export default function Products() {
     setOrden("");
     setPageNumber(1);
     setProductsSplit(0);
+    setPricesChanges(true);
   };
 
   const deleteCategory = (index: number) => {
+    setPricesChanges(true)
     setCategories((prevCategories) =>
       prevCategories.filter((_, i) => i !== index),
     );
@@ -82,7 +85,8 @@ export default function Products() {
             setPageNumber(1);
       setProductsSplit(0);
       setIsLoading(false); // Llama a la función para obtener los productos filtrados
-      setProductos(res); // Limpia productos antes de actualizar
+      setProductos(res);
+      setPricesChanges(false); // Limpia productos antes de actualizar
       //console.log("Enviando: ", filteredData); // Asegúrate de que envías los datos correctos
       // console.log("Recibiendo: ", res); // Imprime los resultados de los productos filtrados
       // setProductos(res); // Actualiza el estado con los nuevos productos
@@ -101,7 +105,9 @@ export default function Products() {
       columna_ordenamiento: ordenamiento,
       direccion_ordenamiento: orden,
     }));
+    setPricesChanges(true);
     handleSendCategories(categories);
+    
   };
 
   useEffect(() => {
@@ -113,10 +119,8 @@ export default function Products() {
       max_precio: null,
     }));
 
-
-  
     // Llama a la función para enviar categorías
-    if(!showPrices){
+    if(!showPrices && priceChanges || showCategories){
       handleSendCategories(categories);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -126,11 +130,13 @@ export default function Products() {
     setShowPrices(false);
     setShowCategories(false);
     setShowOrder(!showOrder);
+    setPricesChanges(true);
   };
 
   const deletePrice = () => {
     setMinPrice(0);
     setMaxPrice(0);
+    setPricesChanges(true);
   };
 
   const handlePrices = () => {
@@ -162,6 +168,7 @@ export default function Products() {
     setCategories([])
     setOrdenamiento("")
     setPageNumber(1);
+    setPricesChanges(true)
   }
 
   const handleSplitNext = () => {
@@ -437,6 +444,7 @@ export default function Products() {
                   maxPrice={maxPrice}
                   setMinPrice={setMinPrice}
                   setMaxPrice={setMaxPrice}
+                  setPricesChanges={setPricesChanges}
                 />
               </div>
             </div>

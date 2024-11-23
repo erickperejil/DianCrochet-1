@@ -37,6 +37,7 @@ export default function Materials() {
   const [categories, setCategories] = useState<string[]>([]);
   const [ordenamiento, setOrdenamiento] = useState("");
   const [orden, setOrden] = useState("");
+  const [priceChanges, setPricesChanges] = useState(false)
 
   const nombresFiltros: { [key: string]: string } = {
     NOMBRE_PROD_ASC: "Alfabético A-Z",
@@ -53,6 +54,7 @@ export default function Materials() {
   };
 
   const deleteCategory = (index: number) => {
+    setPricesChanges(true)
     setCategories((prevCategories) =>
       prevCategories.filter((_, i) => i !== index),
     );
@@ -81,6 +83,7 @@ export default function Materials() {
       console.log("recibiendo:", res);
       setPageNumber(1);
       setProductsSplit(0);
+      setPricesChanges(false);
       setIsLoading(false); // Llama a la función para obtener los productos filtrados
       setProductos(res); 
 
@@ -92,7 +95,7 @@ export default function Materials() {
 
   const handleFilter = () => {
     setShowPrices(false); // Oculta precios
-    console.log("padre:", categories);
+    // console.log("padre:", categories);
     setPricesData((prevState) => ({
       ...prevState,
       categorias: categories,
@@ -106,11 +109,13 @@ export default function Materials() {
     setShowPrices(false);
     setShowCategories(false);
     setShowOrder(!showOrder);
+    setPricesChanges(true);
   };
 
   const deletePrice = () => {
     setMinPrice(0);
     setMaxPrice(0);
+    setPricesChanges(true)
   };
 
   const handlePrices = () => {
@@ -167,10 +172,8 @@ export default function Materials() {
       max_precio: null,
     }));
 
-
-  
     // Llama a la función para enviar categorías
-    if(!showPrices){
+    if(!showPrices && priceChanges || showCategories){
       handleSendCategories(categories);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -184,6 +187,7 @@ export default function Materials() {
     setOrdenamiento("")
     setPageNumber(1);
     setProductsSplit(0);
+    setPricesChanges(true);
   }
 
   const totalProducts = productos.length;
@@ -438,6 +442,7 @@ export default function Materials() {
                   maxPrice={maxPrice}
                   setMinPrice={setMinPrice}
                   setMaxPrice={setMaxPrice}
+                  setPricesChanges={setPricesChanges}
                 />
               </div>
             </div>
