@@ -41,22 +41,29 @@ export default function ShopCartForm() {
         }
     }, []);
 
-    const fetchCarrito = async () => {
-        try {
-            const response = await fetch(`https://deploybackenddiancrochet.onrender.com/factura/carrito/${correo}`);
-            const data = await response.json();
-            console.log('Datos del carrito:', data); // Verifica los datos recibidos
-            setCarrito(data.carrito);
-            await fetchSubtotal();
-            if (data.carrito.length > 0) {
-                const facturaId = data.carrito[0].id_factura;
-                setFacturaId(facturaId);
-                localStorage.setItem('facturaId', facturaId.toString()); // Guardamos el id_factura en localStorage
-            }
-        } catch (error) {
-            console.error('Error al obtener el carrito:', error);
+    useEffect(() => {
+        if (correo) {
+            const fetchCarrito = async () => {
+                try {
+                    const response = await fetch(`https://deploybackenddiancrochet.onrender.com/factura/carrito/${correo}`);
+                    const data = await response.json();
+                    console.log('Datos del carrito:', data); // Verifica los datos recibidos
+                    setCarrito(data.carrito);
+                    await fetchSubtotal();
+                    if (data.carrito.length > 0) {
+                        const facturaId = data.carrito[0].id_factura;
+                        setFacturaId(facturaId);
+                        localStorage.setItem('facturaId', facturaId.toString()); // Guardamos el id_factura en localStorage
+                    }
+                } catch (error) {
+                    console.error('Error al obtener el carrito:', error);
+                }
+            };
+    
+            fetchCarrito();
         }
-    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [correo]);
 
     useEffect(() => {
         // Recuperamos el id_factura al cargar la vista
@@ -222,15 +229,11 @@ const handleQuantityChange = async (
             console.error('Error al actualizar la cantidad del producto en el carrito');
         } else {
             console.log("Respuesta exitosa al actualizar el carrito.");
-            // Recuperar el carrito actualizado del backend
-            await fetchCarrito(); // Esto ahora llama a la función que actualiza el carrito desde el backend
         }
     } catch (error) {
         console.error('Error al actualizar la cantidad del producto en el carrito:', error);
     }
 };
-
-
     return (
         <div className="flex justify-between font-koulen w-full p-8">
             {loading && <LoadingSpinner />}
