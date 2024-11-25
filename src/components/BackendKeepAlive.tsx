@@ -18,7 +18,6 @@ const useKeepAlive = (url: string, interval: number = 30000): void => {
     }, [url, interval]);
 };
 
-// Componente que usa el hook pero no renderiza nada
 const BackendKeepAlive: React.FC = () => {
     useKeepAlive("https://deploybackenddiancrochet.onrender.com/", 30000);
     return null;
