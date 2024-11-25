@@ -180,9 +180,10 @@ export default function ShopCartForm() {
             correo,
             nuevaCantidad: updatedCarrito.find((item) => item.id_prod_fact === idProdFact)?.cantidad_compra,
             idProducto,
-            idTalla: tallaNumber,
-            idGrosor: grosorNumber,
+            idTalla: tallaNumber || null,
+            idGrosor: grosorNumber || null,  // Asegúrate de manejar valores null correctamente
         };
+        
     
         console.log('Datos enviados al backend:', requestBody);
     
