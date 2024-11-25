@@ -162,7 +162,6 @@ const groupedCarrito = carrito.reduce((acc, item) => {
 }, [] as CarritoItem[]);
 
 // Actualizar cantidad de productos
-// Actualizar cantidad de productos
 const handleQuantityChange = async (
     idProducto: number,
     delta: number,
@@ -225,8 +224,8 @@ const handleQuantityChange = async (
                 correo,
                 nuevaCantidad: productoActualizado.cantidad_compra,
                 idProducto,
-                idGrosor: grosor !== null ? grosor : null,
-                idTalla: talla !== null ? talla : null,
+                idGrosor: grosor ?? null, // Usar null si no hay grosor
+                idTalla: talla ?? null,   // Usar null si no hay talla
             }),
         });
 
@@ -237,7 +236,6 @@ const handleQuantityChange = async (
         console.error('Error al actualizar la cantidad del producto en el carrito:', error);
     }
 };
-
 
     return (
         <div className="flex justify-between font-koulen w-full p-8">
