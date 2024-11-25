@@ -143,60 +143,70 @@ export default function ShopCartForm() {
 
     //Actualizar cantidad de productos
     // Función para actualizar la cantidad de productos
-const handleQuantityChange = async (
-    idProdFact: number,
-    delta: number
-) => {
-    // Encontrar el producto en el carrito local
-    const updatedCarrito = carrito.map(item => {
-        if (item.id_prod_fact === idProdFact) {
-            const newCantidad = item.cantidad_compra + delta;
-            const finalCantidad = newCantidad > 0 ? newCantidad : 1; // Evitar cantidades menores a 1
-
-            const newSubtotal = (item.subtotal ?? 0) / item.cantidad_compra * finalCantidad;
-
-            return {
-                ...item,
-                cantidad_compra: finalCantidad,
-                subtotal: newSubtotal,
-            };
-        }
-        return item;
-    });
-
-    setCarrito(updatedCarrito);
-
-    // Enviar la actualización al backend
-    try {
-        const productoActualizado = updatedCarrito.find(item => item.id_prod_fact === idProdFact);
-        if (!productoActualizado) {
-            console.error("No se encontró el producto para actualizar");
-            return;
-        }
-
-        const response = await fetch('https://deploybackenddiancrochet.onrender.com/factura/carrito/actualizar', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                correo,
-                idProdFact,
-                nuevaCantidad: productoActualizado.cantidad_compra,
-            }),
+    const handleQuantityChange = async (
+        idProducto: number,
+        delta: number,
+        grosor: string | number | null,
+        talla: string | number | null,
+        idProdFact: number
+    ) => {
+        const grosorNumber = grosor !== null ? grosor : null;
+        const tallaNumber = talla !== null ? talla : null;
+    
+        // Actualizar el carrito localmente
+        const updatedCarrito = carrito.map((item) => {
+            if (item.id_prod_fact === idProdFact) {
+                const newCantidad = item.cantidad_compra + delta;
+                const finalCantidad = newCantidad > 0 ? newCantidad : 1;
+    
+                const newSubtotal =
+                    (item.subtotal ?? 0) / item.cantidad_compra * finalCantidad;
+    
+                return {
+                    ...item,
+                    cantidad_compra: finalCantidad,
+                    subtotal: newSubtotal,
+                };
+            }
+            return item;
         });
-
-        if (!response.ok) {
-            console.error('Error al actualizar la cantidad del producto en el backend');
-        } else {
-            // Recalcular subtotal global
-            await fetchSubtotal();
+    
+        setCarrito(updatedCarrito);
+    
+        // Actualizar en el backend
+        try {
+            const response = await fetch(
+                'https://deploybackenddiancrochet.onrender.com/factura/carrito/actualizar',
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        correo,
+                        nuevaCantidad: updatedCarrito.find((item) => item.id_prod_fact === idProdFact)?.cantidad_compra,
+                        idProducto,
+                        idTalla: tallaNumber,
+                        idGrosor: grosorNumber,
+                    }),
+                }
+            );
+    
+            const data = await response.json();
+            if (response.ok && data.actualizar.codigo === 1) {
+                console.log(data.actualizar.mensaje);
+                await fetchSubtotal(); // Refrescar subtotal e impuestos
+            } else {
+                console.error(
+                    'Error al actualizar el carrito en el backend:',
+                    data.actualizar.mensaje
+                );
+            }
+        } catch (error) {
+            console.error('Error al intentar actualizar el producto:', error);
         }
-    } catch (error) {
-        console.error('Error al actualizar la cantidad del producto en el backend:', error);
-    }
-};
-
+    };
+    
 // Recalcular el subtotal global cada vez que cambia el carrito
 useEffect(() => {
     const calcularSubtotal = () => {
@@ -273,9 +283,19 @@ useEffect(() => {
                                     <h4 id="color" className="font-lekton text-gray-400">Grosor:{item.grosor ?? ''} </h4>
                                 </div>
                                 <div className="flex items-center border border-black rounded-full bg-gray-100 text-gray-700 font-lekton w-max">
-                                    <button className="text-lg font-semibold px-2" onClick={() => handleQuantityChange(item.id_prod_fact, -1)}>−</button>
-                                    <span className="mx-4 text-lg">{item.cantidad_compra}</span>
-                                    <button className="text-lg font-semibold px-2" onClick={() => handleQuantityChange(item.id_prod_fact, 1)}>+</button>
+                                <button
+                                    className="text-lg font-semibold px-2"
+                                    onClick={() => handleQuantityChange(item.id_producto, -1, item.grosor, item.talla, item.id_prod_fact)}
+                                >
+                                    −
+                                </button>
+                                <span className="mx-4 text-lg">{item.cantidad_compra}</span>
+                                <button
+                                    className="text-lg font-semibold px-2"
+                                    onClick={() => handleQuantityChange(item.id_producto, 1, item.grosor, item.talla, item.id_prod_fact)}
+                                >
+                                    +
+                                </button>
                                 </div>
 
                             </div>
