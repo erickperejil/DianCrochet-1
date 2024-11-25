@@ -149,19 +149,20 @@ export default function ShopCartForm() {
         grosor: string | number | null,
         talla: string | number | null
     ) => {
-        // Convertir grosor y talla a números o mantenerlos como null
+        // Convertir grosor y talla a números si no son nulos
         const grosorNumber = grosor !== null ? Number(grosor) : null;
         const tallaNumber = talla !== null ? Number(talla) : null;
     
         const updatedCarrito = carrito.map(item => {
-            // Convertir grosor y talla del carrito también para comparación
+            // Convertir grosor y talla del item para comparación
             const itemGrosor = item.grosor !== null ? Number(item.grosor) : null;
             const itemTalla = item.talla !== null ? Number(item.talla) : null;
     
+            // Identificar el producto exacto por id_producto, grosor y talla
             if (
                 item.id_producto === idProducto &&
-                itemGrosor === grosorNumber && // Comparar grosor convertido
-                itemTalla === tallaNumber // Comparar talla convertida
+                itemGrosor === grosorNumber &&
+                itemTalla === tallaNumber
             ) {
                 const newCantidad = item.cantidad_compra + delta;
                 return {
@@ -176,6 +177,21 @@ export default function ShopCartForm() {
         setCarrito(updatedCarrito);
     
         try {
+            // Encontrar el producto actualizado
+            const productoActualizado = updatedCarrito.find(
+                item =>
+                    item.id_producto === idProducto &&
+                    Number(item.grosor) === grosorNumber &&
+                    Number(item.talla) === tallaNumber
+            );
+    
+            // Validar antes de realizar la solicitud
+            if (!productoActualizado) {
+                console.error("No se encontró el producto para actualizar");
+                return;
+            }
+    
+            // Enviar la solicitud al backend
             const response = await fetch('https://deploybackenddiancrochet.onrender.com/factura/carrito/actualizar', {
                 method: 'PUT',
                 headers: {
@@ -183,15 +199,10 @@ export default function ShopCartForm() {
                 },
                 body: JSON.stringify({
                     correo,
-                    nuevaCantidad: updatedCarrito.find(
-                        item =>
-                            item.id_producto === idProducto &&
-                            Number(item.grosor) === grosorNumber && // Comparar grosor convertido
-                            Number(item.talla) === tallaNumber // Comparar talla convertida
-                    )?.cantidad_compra,
+                    nuevaCantidad: productoActualizado.cantidad_compra,
                     idProducto,
-                    idGrosor: grosorNumber, // Enviar grosor convertido
-                    idTalla: tallaNumber, // Enviar talla convertida
+                    idGrosor: grosorNumber,
+                    idTalla: tallaNumber,
                 }),
             });
     
@@ -202,7 +213,7 @@ export default function ShopCartForm() {
             console.error('Error al actualizar la cantidad del producto en el carrito:', error);
         }
     };
-     
+    
 
     // Agrupar productos por id_producto y sumar cantidades
     // Agrupar productos por id_producto y talla
