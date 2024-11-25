@@ -168,29 +168,23 @@ const handleQuantityChange = async (
     grosor: string | number | null,
     talla: string | number | null
 ) => {
-    // Asegúrate de que tanto grosor como talla estén definidos correctamente
     const grosorValue = grosor !== null ? String(grosor) : 'null';
     const tallaValue = talla !== null ? String(talla) : 'null';
-
-    // Crear un identificador único para cada combinación de producto, grosor y talla
     const productoId = `${idProducto}-${grosorValue}-${tallaValue}`;
 
-    // Actualizamos el carrito
+    // Actualizar carrito localmente
     const updatedCarrito = carrito.map(item => {
-        // Convertir grosor y talla de cada producto a string para asegurar la comparación
         const itemGrosor = item.grosor !== null ? String(item.grosor) : 'null';
         const itemTalla = item.talla !== null ? String(item.talla) : 'null';
         const itemId = `${item.id_producto}-${itemGrosor}-${itemTalla}`;
 
-        // Solo actualizamos el producto que coincida con el idProducto y la combinación de grosor y talla
         if (itemId === productoId) {
             const newCantidad = item.cantidad_compra + delta;
             const updatedItem = {
                 ...item,
-                cantidad_compra: newCantidad > 0 ? newCantidad : 1, // Asegurarnos de que la cantidad no sea negativa
+                cantidad_compra: newCantidad > 0 ? newCantidad : 1,
                 subtotal: (item.subtotal ?? 0) / item.cantidad_compra * (newCantidad > 0 ? newCantidad : 1),
             };
-
             return updatedItem;
         }
         return item;
@@ -198,23 +192,22 @@ const handleQuantityChange = async (
 
     setCarrito(updatedCarrito);
 
-    // Calcular el nuevo subtotal total
+    // Verifica el nuevo subtotal calculado
     const newSubtotal = updatedCarrito.reduce((acc, item) => acc + (item.subtotal ?? 0), 0);
     setSubtotal(newSubtotal);
+    console.log("Nuevo subtotal calculado:", newSubtotal); // Verifica el subtotal
 
     try {
-        // Verificar el producto actualizado en el carrito
         const productoActualizado = updatedCarrito.find(
             item => `${item.id_producto}-${item.grosor ?? 'null'}-${item.talla ?? 'null'}` === productoId
         );
 
-        // Validar antes de enviar la solicitud
         if (!productoActualizado) {
             console.error("No se encontró el producto para actualizar");
             return;
         }
 
-        // Enviar la solicitud al backend
+        // Enviar la actualización al backend
         const response = await fetch('https://deploybackenddiancrochet.onrender.com/factura/carrito/actualizar', {
             method: 'PUT',
             headers: {
@@ -224,13 +217,15 @@ const handleQuantityChange = async (
                 correo,
                 nuevaCantidad: productoActualizado.cantidad_compra,
                 idProducto,
-                idGrosor: grosor ?? null, // Usar null si no hay grosor
-                idTalla: talla ?? null,   // Usar null si no hay talla
+                idGrosor: grosor ?? null,
+                idTalla: talla ?? null,
             }),
         });
 
         if (!response.ok) {
             console.error('Error al actualizar la cantidad del producto en el carrito');
+        } else {
+            console.log("Respuesta exitosa al actualizar el carrito.");
         }
     } catch (error) {
         console.error('Error al actualizar la cantidad del producto en el carrito:', error);
