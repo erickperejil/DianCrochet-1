@@ -95,16 +95,16 @@ export default function ShippingForm() {
     }, [correo]);  // Dependencia en correo
     
 
-    const groupedCarrito = carrito.reduce((acc, item) => {
-        const existingItem = acc.find(i => i.id_producto === item.id_producto);
-        if (existingItem) {
-            existingItem.cantidad_compra += item.cantidad_compra;
-            existingItem.subtotal = (existingItem.subtotal ?? 0) + (item.subtotal ?? 0);
-        } else {
-            acc.push({ ...item });
-        }
-        return acc;
-    }, [] as CarritoItem[]);
+    // const groupedCarrito = carrito.reduce((acc, item) => {
+    //     const existingItem = acc.find(i => i.id_producto === item.id_producto);
+    //     if (existingItem) {
+    //         existingItem.cantidad_compra += item.cantidad_compra;
+    //         existingItem.subtotal = (existingItem.subtotal ?? 0) + (item.subtotal ?? 0);
+    //     } else {
+    //         acc.push({ ...item });
+    //     }
+    //     return acc;
+    // }, [] as CarritoItem[]);
 
     // Fetch ciudades cuando cambia el departamento seleccionado
     useEffect(() => {
@@ -207,7 +207,7 @@ export default function ShippingForm() {
                 ciudad: selectedCiudad,
                 numero: telefono
             });
-            console.log('Selected Ciudad ID:', selectedCiudad);
+   
             console.log('Respuesta del servidor:', response);
    
             if (response.status === 201) {
@@ -357,10 +357,11 @@ export default function ShippingForm() {
                  <div id="orden" className="mr-64 text-gray-800">
                      <h1 className="mb-3">Resumen de la orden</h1>
                      <div id="cantprod" className="max-h-52 overflow-y-auto w-auto">
-                         {groupedCarrito.map((item) => (
-                             <h2 key={item.id_prod_fact} className="mb-3">{item.cantidad_compra} x {item.nombre_prod}</h2>
-                         ))}
-                     </div>
+                        {carrito.map((item) => (
+                            <h2 key={item.id_prod_fact} className="mb-3">{item.cantidad_compra} x {item.nombre_prod}</h2>
+                        ))}
+                    </div>
+
                  </div>
                  <div id="pago" className="text-gray-800">
                      <h1>Pagos con</h1>
