@@ -152,10 +152,14 @@ export default function ShopCartForm() {
         const grosorNumber = grosor !== null && !isNaN(Number(grosor)) ? Number(grosor) : null;
         const tallaNumber = talla !== null && !isNaN(Number(talla)) ? Number(talla) : null;
     
+        // Actualiza el carrito localmente
         const updatedCarrito = carrito.map((item) => {
             if (item.id_prod_fact === idProdFact) {
                 const newCantidad = item.cantidad_compra + delta;
                 const finalCantidad = newCantidad > 0 ? newCantidad : 1;
+    
+                console.log('Delta:', delta, 'Nueva cantidad:', finalCantidad); // Añadido para depurar
+    
                 const newSubtotal = 
                     (item.subtotal ?? 0) / item.cantidad_compra * finalCantidad;
     
