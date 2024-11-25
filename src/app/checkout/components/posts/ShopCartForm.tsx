@@ -159,10 +159,10 @@ export default function ShopCartForm() {
                 const newCantidad = item.cantidad_compra + delta;
                 console.log('Nueva cantidad calculada:', newCantidad); // Debugging de la cantidad
                 const finalCantidad = newCantidad > 0 ? newCantidad : 1;
-    
-                const newSubtotal =
-                    (item.subtotal ?? 0) / item.cantidad_compra * finalCantidad;
-    
+        
+                // Cálculo del subtotal
+                const newSubtotal = (item.subtotal ?? 0) / item.cantidad_compra * finalCantidad;
+        
                 return {
                     ...item,
                     cantidad_compra: finalCantidad,
@@ -171,7 +171,7 @@ export default function ShopCartForm() {
             }
             return item;
         });
-    
+        
         console.log('Carrito actualizado:', updatedCarrito); // Debugging
     
         setCarrito(updatedCarrito);
