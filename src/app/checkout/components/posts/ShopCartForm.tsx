@@ -231,7 +231,6 @@ const handleQuantityChange = async (
         console.error('Error al actualizar la cantidad del producto en el carrito:', error);
     }
 };
-
     return (
         <div className="flex justify-between font-koulen w-full p-8">
             {loading && <LoadingSpinner />}
