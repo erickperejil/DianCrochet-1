@@ -97,27 +97,48 @@ export default function ShopCartForm() {
     
 
     // Eliminar producto carrito
-    const handleDelete = async (idProducto: number) => {
+    const handleDelete = async (correo: string, idProducto: number, talla: string | null, grosor: string | null) => {
+        if (!correo || !idProducto) {
+            alert("Por favor, proporciona la información requerida.");
+            return;
+        }
+    
         try {
             const response = await fetch('https://deploybackenddiancrochet.onrender.com/factura/carrito/producto/eliminar', {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ correo, idProducto }),
+                body: JSON.stringify({
+                    correo,
+                    idProducto,
+                    talla: talla ? talla.toString() : null, // Asegura que talla sea un string
+                    grosor: grosor ? grosor.toString() : null, // Asegura que grosor sea un string
+                }),
             });
-
-            if (response.ok) {
-                // Eliminar el producto del estado local
-                setCarrito(carrito.filter(item => item.id_producto !== idProducto));
-                 await fetchSubtotal();
+    
+            const result = await response.json();
+    
+            if (response.ok && result.eliminar.codigo === 1) {
+                setCarrito((prevCarrito) =>
+                    prevCarrito.filter(
+                        (producto) =>
+                            producto.id_producto !== idProducto ||
+                            producto.talla !== talla ||
+                            producto.grosor !== grosor
+                    )
+                );
+                alert(result.eliminar.mensaje);
             } else {
-                console.error('Error al eliminar el producto del carrito');
+                console.error('Error al eliminar el producto del carrito:', result.eliminar.mensaje || 'Error desconocido');
             }
         } catch (error) {
-            console.error('Error al eliminar el producto del carrito:', error);
+            console.error('Error en la solicitud de eliminación:', error);
         }
     };
+    
+    
+    
 
     // Método para eliminar todo el carrito / eliminar orden
     const handleCancelOrder = async () => {
@@ -142,9 +163,6 @@ export default function ShopCartForm() {
     };
 
     //Actualizar cantidad de productos
-    // Código ajustado
-
-// Cambiar producto
 const handleQuantityChange = async (
     idProducto: number,
     delta: number,
@@ -311,7 +329,7 @@ useEffect(() => {
                             </div>
                             <div id="precio" className="mt-8 flex flex-col flex-nowrap justify-start items-end content-stretch">
                                 <h3 className="text-gray-700">{item.subtotal !== null ? `${item.subtotal} Lps` : 'No disponible'}</h3>
-                                <button title="delete" onClick={() => handleDelete(item.id_producto)}>
+                                <button title="delete" onClick={() => handleDelete(correo, item.id_producto, item.talla, item.grosor)}>
                                     <FaRegTrashAlt className="text-gray-700 hover:text-red-700"/>
                                 </button>
                             </div>
