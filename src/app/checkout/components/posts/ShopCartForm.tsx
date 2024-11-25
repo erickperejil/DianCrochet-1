@@ -142,89 +142,80 @@ export default function ShopCartForm() {
     };
 
     //Actualizar cantidad de productos
-    // Función para actualizar la cantidad de productos
-const handleQuantityChange = async (
-    idProducto: number,
-    delta: number,
-    grosor: string | number | null,
-    talla: string | number | null,
-    idProdFact: number
-) => {
-    const grosorNumber = grosor !== null ? grosor : null;
-    const tallaNumber = talla !== null ? talla : null;
-
-    // Actualizar el carrito localmente
-    const updatedCarrito = carrito.map((item) => {
-        if (item.id_prod_fact === idProdFact) {
-            const newCantidad = item.cantidad_compra + delta;
-            const finalCantidad = newCantidad > 0 ? newCantidad : 1;
-
-            const newSubtotal =
-                (item.subtotal ?? 0) / item.cantidad_compra * finalCantidad;
-
-            return {
-                ...item,
-                cantidad_compra: finalCantidad,
-                subtotal: newSubtotal,
-            };
-        }
-        return item;
-    });
-
-    setCarrito(updatedCarrito);
-
-    // Preparar el cuerpo de la solicitud
-    const requestBody = {
-        correo,
-        nuevaCantidad: updatedCarrito.find((item) => item.id_prod_fact === idProdFact)?.cantidad_compra,
-        idProducto,
-        idTalla: tallaNumber,
-        idGrosor: grosorNumber,
-    };
-
-    console.log('Datos enviados al backend:', requestBody);
-
-    // Actualizar en el backend
-    try {
-        const response = await fetch(
-            'https://deploybackenddiancrochet.onrender.com/factura/carrito/actualizar',
-            {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(requestBody),
+    const handleQuantityChange = async (
+        idProducto: number,
+        delta: number,
+        grosor: string | number | null,
+        talla: string | number | null,
+        idProdFact: number
+    ) => {
+        const grosorNumber = grosor !== null && !isNaN(Number(grosor)) ? Number(grosor) : null;
+        const tallaNumber = talla !== null && !isNaN(Number(talla)) ? Number(talla) : null;
+    
+        const updatedCarrito = carrito.map((item) => {
+            if (item.id_prod_fact === idProdFact) {
+                const newCantidad = item.cantidad_compra + delta;
+                const finalCantidad = newCantidad > 0 ? newCantidad : 1;
+                const newSubtotal = 
+                    (item.subtotal ?? 0) / item.cantidad_compra * finalCantidad;
+    
+                return {
+                    ...item,
+                    cantidad_compra: finalCantidad,
+                    subtotal: newSubtotal,
+                };
             }
-        );
-
-        console.log('Respuesta del backend:', response);
-
-        // Manejar la respuesta
-        if (response.ok) {
-            try {
-                const data = await response.json();
-                console.log('Cuerpo de la respuesta del backend:', data);
-
-                if (data.actualizar && data.actualizar.codigo === 1) {
-                    console.log(data.actualizar.mensaje);
-                    await fetchSubtotal(); // Refrescar subtotal e impuestos
-                } else {
-                    console.error(
-                        'Error en la respuesta del backend:',
-                        data.actualizar?.mensaje || 'Respuesta inesperada'
-                    );
+            return item;
+        });
+    
+        setCarrito(updatedCarrito);
+    
+        const requestBody = {
+            correo,
+            nuevaCantidad: updatedCarrito.find((item) => item.id_prod_fact === idProdFact)?.cantidad_compra,
+            idProducto,
+            idTalla: tallaNumber,
+            idGrosor: grosorNumber,
+        };
+    
+        console.log('Datos enviados al backend:', requestBody);
+    
+        try {
+            const response = await fetch(
+                'https://deploybackenddiancrochet.onrender.com/factura/carrito/actualizar',
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestBody),
                 }
-            } catch (jsonError) {
-                console.error('Error al parsear la respuesta del backend:', jsonError);
+            );
+    
+            console.log('Respuesta del backend:', response);
+    
+            if (response.ok) {
+                try {
+                    const data = await response.json();
+                    console.log('Cuerpo de la respuesta del backend:', data);
+    
+                    if (data.actualizar && data.actualizar.codigo === 1) {
+                        console.log(data.actualizar.mensaje);
+                        await fetchSubtotal(); // Refrescar subtotal e impuestos
+                    } else {
+                        console.error('Error en la respuesta del backend:', data.actualizar?.mensaje || 'Respuesta inesperada');
+                    }
+                } catch (jsonError) {
+                    console.error('Error al parsear la respuesta del backend:', jsonError);
+                }
+            } else {
+                console.error('Error HTTP en la respuesta del backend:', response.status, response.statusText);
             }
-        } else {
-            console.error('Error HTTP en la respuesta del backend:', response.status, response.statusText);
+        } catch (error) {
+            console.error('Error al intentar actualizar el producto:', error);
         }
-    } catch (error) {
-        console.error('Error al intentar actualizar el producto:', error);
-    }
-};
-
+    };
+    
     
 // Recalcular el subtotal global cada vez que cambia el carrito
 useEffect(() => {
