@@ -149,8 +149,8 @@ export default function ShopCartForm() {
                 const newCantidad = item.cantidad_compra + delta;
                 return {
                     ...item,
-                    cantidad_compra: newCantidad > 0 ? newCantidad : 1, // Asegurarte que no sea menor que 1
-                    subtotal: (item.subtotal ?? 0) / item.cantidad_compra * (newCantidad > 0 ? newCantidad : 1) // Actualizar el subtotal
+                    cantidad_compra: newCantidad > 0 ? newCantidad : 1, // Asegúrate de que no sea menor que 1
+                    subtotal: (item.subtotal ?? 0) / item.cantidad_compra * (newCantidad > 0 ? newCantidad : 1) // Actualiza el subtotal
                 };
             }
             return item;
@@ -158,26 +158,29 @@ export default function ShopCartForm() {
     
         setCarrito(updatedCarrito);
     
-        // Recalcular el subtotal directamente
+        // Recalcula el subtotal localmente
         const newSubtotal = updatedCarrito.reduce((total, item) => total + (item.subtotal ?? 0), 0);
         setSubtotal(newSubtotal);
     
+        // Enviar la nueva cantidad al backend
         try {
+            const nuevaCantidad = updatedCarrito.find(item => item.id_producto === idProducto)?.cantidad_compra;
             const response = await fetch('https://deploybackenddiancrochet.onrender.com/factura/carrito/actualizar', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ correo, nuevaCantidad: updatedCarrito.find(item => item.id_producto === idProducto)?.cantidad_compra, idProducto }),
+                body: JSON.stringify({ correo, idProducto, nuevaCantidad }),
             });
     
             if (!response.ok) {
-                console.error('Error al actualizar la cantidad del producto en el carrito');
+                console.error('Error al actualizar la cantidad en el backend');
             }
         } catch (error) {
-            console.error('Error al actualizar la cantidad del producto en el carrito:', error);
+            console.error('Error al realizar la solicitud de actualización:', error);
         }
     };
+    
     
 
     // Agrupar productos por id_producto y sumar cantidades
