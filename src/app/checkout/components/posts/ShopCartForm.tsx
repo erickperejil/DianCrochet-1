@@ -147,19 +147,25 @@ export default function ShopCartForm() {
         const updatedCarrito = carrito.map(item => {
             if (item.id_producto === idProducto) {
                 const newCantidad = item.cantidad_compra + delta;
+    
+                // Evitar que la cantidad sea menor que 1
+                if (newCantidad < 1) return item;
+    
                 return {
                     ...item,
-                    cantidad_compra: newCantidad > 0 ? newCantidad : 1, // Asegúrate de que no sea menor que 1
-                    subtotal: (item.subtotal ?? 0) / item.cantidad_compra * (newCantidad > 0 ? newCantidad : 1) // Actualiza el subtotal
+                    cantidad_compra: newCantidad,
+                    subtotal: (item.subtotal ?? 0) / item.cantidad_compra * newCantidad,
                 };
             }
             return item;
         });
     
+        // Actualizar el estado localmente
         setCarrito(updatedCarrito);
     
-        // Recalcula el subtotal localmente
+        // Recalcular el subtotal general
         const newSubtotal = updatedCarrito.reduce((total, item) => total + (item.subtotal ?? 0), 0);
+
         setSubtotal(newSubtotal);
     
         // Enviar la nueva cantidad al backend
@@ -180,6 +186,7 @@ export default function ShopCartForm() {
             console.error('Error al realizar la solicitud de actualización:', error);
         }
     };
+    
     
     
 
