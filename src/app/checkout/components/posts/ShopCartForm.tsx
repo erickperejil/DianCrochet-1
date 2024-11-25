@@ -143,11 +143,12 @@ export default function ShopCartForm() {
     };
 
     //Actualizar cantidad de productos
+    
     const handleQuantityChange = async (
         idProducto: number, 
         delta: number, 
-        grosor: string | null, 
-        talla: string | null
+        idTalla: string | null,  // Es posible que venga como string
+        idGrosor: string | null  // Es posible que venga como string
     ) => {
         const updatedCarrito = carrito.map(item => {
             if (item.id_producto === idProducto) {
@@ -173,8 +174,8 @@ export default function ShopCartForm() {
                     correo,
                     nuevaCantidad: updatedCarrito.find(item => item.id_producto === idProducto)?.cantidad_compra,
                     idProducto,
-                    grosor: grosor ?? "",  // Si grosor es null, se asigna una cadena vacía
-                    talla: talla ?? ""     // Si talla es null, se asigna una cadena vacía
+                    idTalla: idTalla ? parseInt(idTalla) : null,  // Convertir idTalla a number si es un string
+                    idGrosor: idGrosor ? parseInt(idGrosor) : null // Convertir idGrosor a number si es un string
                 }),
             });
     
@@ -185,7 +186,6 @@ export default function ShopCartForm() {
             console.error('Error al actualizar la cantidad del producto en el carrito:', error);
         }
     };
-    
     
     
     
