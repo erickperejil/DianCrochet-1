@@ -15,7 +15,6 @@ export interface CarritoItem {
     talla: string | null; 
     subtotal: number | null;
     url: string | null;
-    precio: number;
 }
 
 export interface Carrito {
