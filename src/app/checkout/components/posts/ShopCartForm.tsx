@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { IoRemoveOutline } from "react-icons/io5";
 import { FaRegTrashAlt } from "react-icons/fa";
@@ -107,11 +107,10 @@ export default function ShopCartForm() {
                 },
                 body: JSON.stringify({ correo, idProducto }),
             });
-
+   
             if (response.ok) {
-                // Eliminar el producto del estado local
                 setCarrito(carrito.filter(item => item.id_producto !== idProducto));
-                 await fetchSubtotal();
+                await fetchSubtotal(); // Actualizar subtotal
             } else {
                 console.error('Error al eliminar el producto del carrito');
             }
@@ -119,6 +118,7 @@ export default function ShopCartForm() {
             console.error('Error al eliminar el producto del carrito:', error);
         }
     };
+   
 
     // Método para eliminar todo el carrito / eliminar orden
     const handleCancelOrder = async () => {
@@ -143,23 +143,26 @@ export default function ShopCartForm() {
     };
 
     //Actualizar cantidad de productos
-    // Agrupar productos por id_producto, talla y grosor
-const groupedCarrito = carrito.reduce((acc, item) => {
-    const existingItem = acc.find(
-        i =>
-            i.id_producto === item.id_producto &&
-            i.talla === item.talla &&
-            i.grosor === item.grosor // Considera talla y grosor para la comparación
-    );
-
-    if (existingItem) {
-        existingItem.cantidad_compra += item.cantidad_compra; // Sumar cantidades
-        existingItem.subtotal = (existingItem.subtotal ?? 0) + (item.subtotal ?? 0); // Sumar subtotales
-    } else {
-        acc.push({ ...item }); // Agregar como nuevo si no cumple las condiciones de agrupación
-    }
-    return acc;
-}, [] as CarritoItem[]);
+    const groupedCarrito = useMemo(() => {
+        return carrito.reduce<CarritoItem[]>((acc, item) => {
+          const existingItem = acc.find(
+            i =>
+              i.id_producto === item.id_producto &&
+              i.talla === item.talla &&
+              i.grosor === item.grosor
+          );
+      
+          if (existingItem) {
+            existingItem.cantidad_compra += item.cantidad_compra;
+            existingItem.subtotal = (existingItem.subtotal ?? 0) + (item.subtotal ?? 0);
+          } else {
+            acc.push({ ...item });
+          }
+      
+          return acc;
+        }, []); // Empezamos con un arreglo vacío de tipo CarritoItem[]
+      }, [carrito]);
+      
 
 // Actualizar cantidad de productos
 const handleQuantityChange = async (
