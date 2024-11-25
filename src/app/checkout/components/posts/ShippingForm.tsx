@@ -207,7 +207,7 @@ export default function ShippingForm() {
                 ciudad: selectedCiudad,
                 numero: telefono
             });
-   
+            console.log('Selected Ciudad ID:', selectedCiudad);
             console.log('Respuesta del servidor:', response);
    
             if (response.status === 201) {
