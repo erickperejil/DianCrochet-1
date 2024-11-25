@@ -143,49 +143,49 @@ export default function ShopCartForm() {
     };
 
     //Actualizar cantidad de productos
-    const handleQuantityChange = async (idProducto: number, delta: number) => {
+    const handleQuantityChange = async (
+        idProducto: number, 
+        delta: number, 
+        grosor: string | null, 
+        talla: string | null
+    ) => {
         const updatedCarrito = carrito.map(item => {
             if (item.id_producto === idProducto) {
                 const newCantidad = item.cantidad_compra + delta;
-    
-                // Evitar que la cantidad sea menor que 1
-                if (newCantidad < 1) return item;
-    
                 return {
                     ...item,
-                    cantidad_compra: newCantidad,
-                    subtotal: (item.subtotal ?? 0) / item.cantidad_compra * newCantidad,
+                    cantidad_compra: newCantidad > 0 ? newCantidad : 1,
+                    subtotal: (item.subtotal ?? 0) / item.cantidad_compra * (newCantidad > 0 ? newCantidad : 1)
                 };
             }
             return item;
         });
     
-        // Actualizar el estado localmente
         setCarrito(updatedCarrito);
     
-        // Recalcular el subtotal general
-        const newSubtotal = updatedCarrito.reduce((total, item) => total + (item.subtotal ?? 0), 0);
-
-        setSubtotal(newSubtotal);
-    
-        // Enviar la nueva cantidad al backend
         try {
-            const nuevaCantidad = updatedCarrito.find(item => item.id_producto === idProducto)?.cantidad_compra;
             const response = await fetch('https://deploybackenddiancrochet.onrender.com/factura/carrito/actualizar', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ correo, idProducto, nuevaCantidad }),
+                body: JSON.stringify({
+                    correo,
+                    nuevaCantidad: updatedCarrito.find(item => item.id_producto === idProducto)?.cantidad_compra,
+                    idProducto,
+                    grosor: grosor ?? "",  // Si grosor es null, se asigna una cadena vacía
+                    talla: talla ?? ""     // Si talla es null, se asigna una cadena vacía
+                }),
             });
     
             if (!response.ok) {
-                console.error('Error al actualizar la cantidad en el backend');
+                console.error('Error al actualizar la cantidad del producto en el carrito');
             }
         } catch (error) {
-            console.error('Error al realizar la solicitud de actualización:', error);
+            console.error('Error al actualizar la cantidad del producto en el carrito:', error);
         }
     };
+    
     
     
     
@@ -237,9 +237,9 @@ export default function ShopCartForm() {
                                     <h4 id="color" className="font-lekton text-gray-400">Grosor:{item.grosor ?? ''} </h4>
                                 </div>
                                 <div className="flex items-center border border-black rounded-full bg-gray-100 text-gray-700 font-lekton w-max">
-                                    <button className="text-lg font-semibold px-2" onClick={() => handleQuantityChange(item.id_producto, -1)}>−</button>
+                                    <button className="text-lg font-semibold px-2" onClick={() => handleQuantityChange(item.id_producto, -1, item.grosor, item.talla)}>−</button>
                                     <span className="mx-4 text-lg">{item.cantidad_compra}</span>
-                                    <button className="text-lg font-semibold px-2" onClick={() => handleQuantityChange(item.id_producto, 1)}>+</button>
+                                    <button className="text-lg font-semibold px-2" onClick={() => handleQuantityChange(item.id_producto, 1, item.grosor, item.talla)}>+</button>
                                 </div>
                             </div>
                             <div id="precio" className="mt-8 flex flex-col flex-nowrap justify-start items-end content-stretch">
