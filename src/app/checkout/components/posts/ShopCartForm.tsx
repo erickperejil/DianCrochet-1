@@ -149,21 +149,21 @@ export default function ShopCartForm() {
         grosor: string | number | null,
         talla: string | number | null
     ) => {
-        // Convertir grosor y talla a números si no son nulos
+        // Convertir grosor y talla a valores numéricos si no son null
         const grosorNumber = grosor !== null ? Number(grosor) : null;
         const tallaNumber = talla !== null ? Number(talla) : null;
     
+        // Crear un identificador único para cada combinación de producto
+        const productoId = `${idProducto}-${grosorNumber ?? 'null'}-${tallaNumber ?? 'null'}`;
+    
         const updatedCarrito = carrito.map(item => {
-            // Convertir grosor y talla del item para comparación
+            // Crear el mismo identificador único para cada producto en el carrito
             const itemGrosor = item.grosor !== null ? Number(item.grosor) : null;
             const itemTalla = item.talla !== null ? Number(item.talla) : null;
+            const itemId = `${item.id_producto}-${itemGrosor ?? 'null'}-${itemTalla ?? 'null'}`;
     
-            // Identificar el producto exacto por id_producto, grosor y talla
-            if (
-                item.id_producto === idProducto &&
-                itemGrosor === grosorNumber &&
-                itemTalla === tallaNumber
-            ) {
+            // Solo actualizar el producto que coincida con el idProducto y la combinación de grosor y talla
+            if (itemId === productoId) {
                 const newCantidad = item.cantidad_compra + delta;
                 return {
                     ...item,
@@ -177,15 +177,12 @@ export default function ShopCartForm() {
         setCarrito(updatedCarrito);
     
         try {
-            // Encontrar el producto actualizado
+            // Verificar el producto actualizado en el carrito
             const productoActualizado = updatedCarrito.find(
-                item =>
-                    item.id_producto === idProducto &&
-                    Number(item.grosor) === grosorNumber &&
-                    Number(item.talla) === tallaNumber
+                item => `${item.id_producto}-${item.grosor ?? 'null'}-${item.talla ?? 'null'}` === productoId
             );
     
-            // Validar antes de realizar la solicitud
+            // Validar antes de enviar la solicitud
             if (!productoActualizado) {
                 console.error("No se encontró el producto para actualizar");
                 return;
