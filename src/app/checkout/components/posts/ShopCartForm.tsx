@@ -146,7 +146,7 @@ export default function ShopCartForm() {
         idProducto: number,
         delta: number,
         grosor: string | number | null,
-        talla: string | number | null,
+        talla: number | null,
         idProdFact: number
     ) => {
         const grosorNumber = grosor !== null ? grosor : null;
