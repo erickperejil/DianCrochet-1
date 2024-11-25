@@ -148,75 +148,68 @@ export default function ShopCartForm() {
         delta: number,
         grosor: string | number | null,
         talla: string | number | null
-      ) => {
-        // Convertir grosor y talla a valores numéricos si no son null
-        const grosorNumber = grosor !== null ? Number(grosor) : null;
-        const tallaNumber = talla !== null ? Number(talla) : null;
-      
-        // Crear un identificador único para cada combinación de producto
-        const productoId = `${idProducto}-${grosorNumber ?? 'null'}-${tallaNumber ?? 'null'}`;
-      
+    ) => {
+        const grosorValue = grosor !== null ? String(grosor) : 'null';
+        const tallaValue = talla !== null ? String(talla) : 'null';
+        const productoId = `${idProducto}-${grosorValue}-${tallaValue}`; // Crear clave única
+    
+        // Asegurarse de que los productos sean correctamente identificados
         const updatedCarrito = carrito.map(item => {
-          // Crear el mismo identificador único para cada producto en el carrito
-          const itemGrosor = item.grosor !== null ? Number(item.grosor) : null;
-          const itemTalla = item.talla !== null ? Number(item.talla) : null;
-          const itemId = `${item.id_producto}-${itemGrosor ?? 'null'}-${itemTalla ?? 'null'}`;
-      
-          // Solo actualizar el producto que coincida con el idProducto y la combinación de grosor y talla
-          if (itemId === productoId) {
-            const newCantidad = item.cantidad_compra + delta;
-            // Asegurarse de que la cantidad no sea menor a 1
-            const finalCantidad = newCantidad > 0 ? newCantidad : 1;
-      
-            // Recalcular el subtotal
-            const newSubtotal = (item.subtotal ?? 0) / item.cantidad_compra * finalCantidad;
-            
-            return {
-              ...item,
-              cantidad_compra: finalCantidad,
-              subtotal: newSubtotal, // Aquí es donde recalculas el subtotal correctamente
-            };
-          }
-          return item;
+            const itemGrosor = item.grosor !== null ? String(item.grosor) : 'null';
+            const itemTalla = item.talla !== null ? String(item.talla) : 'null';
+            const itemId = `${item.id_producto}-${itemGrosor}-${itemTalla}`; // Crear clave única
+    
+            if (itemId === productoId) {
+                const newCantidad = item.cantidad_compra + delta;
+                const updatedItem = {
+                    ...item,
+                    cantidad_compra: newCantidad > 0 ? newCantidad : 1, // Asegurar que la cantidad no sea menor que 1
+                    subtotal: (item.precio ?? 0) * (newCantidad > 0 ? newCantidad : 1),
+                };
+                return updatedItem;
+            }
+            return item;
         });
-      
+    
         setCarrito(updatedCarrito);
-      
-        // Enviar la solicitud al backend
+    
+        const newSubtotal = updatedCarrito.reduce((acc, item) => acc + (item.subtotal ?? 0), 0);
+        setSubtotal(newSubtotal);
+    
         try {
-          const productoActualizado = updatedCarrito.find(
-            item => `${item.id_producto}-${item.grosor ?? 'null'}-${item.talla ?? 'null'}` === productoId
-          );
-      
-          if (!productoActualizado) {
-            console.error("No se encontró el producto para actualizar");
-            return;
-          }
-      
-          const response = await fetch('https://deploybackenddiancrochet.onrender.com/factura/carrito/actualizar', {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              correo,
-              nuevaCantidad: productoActualizado.cantidad_compra,
-              idProducto,
-              idGrosor: grosorNumber,
-              idTalla: tallaNumber,
-            }),
-          });
-      
-          if (!response.ok) {
-            console.error('Error al actualizar la cantidad del producto en el carrito');
-          } else {
-            // Actualizar el subtotal después de la respuesta
-            await fetchSubtotal();
-          }
+            const productoActualizado = updatedCarrito.find(
+                item => `${item.id_producto}-${item.grosor ?? 'null'}-${item.talla ?? 'null'}` === productoId
+            );
+    
+            if (!productoActualizado) {
+                console.error("No se encontró el producto para actualizar");
+                return;
+            }
+    
+            const response = await fetch('https://deploybackenddiancrochet.onrender.com/factura/carrito/actualizar', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    correo,
+                    nuevaCantidad: productoActualizado.cantidad_compra,
+                    idProducto,
+                    idGrosor: grosor ?? null,
+                    idTalla: talla ?? null,
+                }),
+            });
+    
+            if (!response.ok) {
+                console.error('Error al actualizar la cantidad del producto en el carrito');
+            } else {
+                console.log("Respuesta exitosa al actualizar el carrito.");
+            }
         } catch (error) {
-          console.error('Error al actualizar la cantidad del producto en el carrito:', error);
+            console.error('Error al actualizar la cantidad del producto en el carrito:', error);
         }
-      };
+    };
+    
       
 
     // Agrupar productos por id_producto y talla
