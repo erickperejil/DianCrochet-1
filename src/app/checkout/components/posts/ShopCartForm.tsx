@@ -163,28 +163,27 @@ const groupedCarrito = carrito.reduce((acc, item) => {
 
 // Actualizar cantidad de productos
 // Actualizar cantidad de productos
-// Actualizar cantidad de productos
 const handleQuantityChange = async (
     idProducto: number,
     delta: number,
     grosor: string | number | null,
     talla: string | number | null
 ) => {
-    // Convertir grosor y talla a valores numéricos si no son null
-    const grosorNumber = grosor !== null ? Number(grosor) : null;
-    const tallaNumber = talla !== null ? Number(talla) : null;
+    // Asegúrate de que tanto grosor como talla estén definidos correctamente
+    const grosorValue = grosor !== null ? String(grosor) : 'null';
+    const tallaValue = talla !== null ? String(talla) : 'null';
 
-    // Crear un identificador único para cada combinación de producto
-    const productoId = `${idProducto}-${grosorNumber ?? 'null'}-${tallaNumber ?? 'null'}`;
+    // Crear un identificador único para cada combinación de producto, grosor y talla
+    const productoId = `${idProducto}-${grosorValue}-${tallaValue}`;
 
     // Actualizamos el carrito
     const updatedCarrito = carrito.map(item => {
-        // Crear el mismo identificador único para cada producto en el carrito
-        const itemGrosor = item.grosor !== null ? Number(item.grosor) : null;
-        const itemTalla = item.talla !== null ? Number(item.talla) : null;
-        const itemId = `${item.id_producto}-${itemGrosor ?? 'null'}-${itemTalla ?? 'null'}`;
+        // Convertir grosor y talla de cada producto a string para asegurar la comparación
+        const itemGrosor = item.grosor !== null ? String(item.grosor) : 'null';
+        const itemTalla = item.talla !== null ? String(item.talla) : 'null';
+        const itemId = `${item.id_producto}-${itemGrosor}-${itemTalla}`;
 
-        // Solo actualizar el producto que coincida con el idProducto y la combinación de grosor y talla
+        // Solo actualizamos el producto que coincida con el idProducto y la combinación de grosor y talla
         if (itemId === productoId) {
             const newCantidad = item.cantidad_compra + delta;
             const updatedItem = {
@@ -226,8 +225,8 @@ const handleQuantityChange = async (
                 correo,
                 nuevaCantidad: productoActualizado.cantidad_compra,
                 idProducto,
-                idGrosor: grosorNumber,
-                idTalla: tallaNumber,
+                idGrosor: grosor !== null ? grosor : null,
+                idTalla: talla !== null ? talla : null,
             }),
         });
 
