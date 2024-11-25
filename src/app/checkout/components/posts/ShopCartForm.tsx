@@ -142,83 +142,89 @@ export default function ShopCartForm() {
     };
 
     //Actualizar cantidad de productos
-    const handleQuantityChange = async (
-        idProducto: number,
-        delta: number,
-        grosor: string | number | null,
-        talla: string | number | null
-    ) => {
-        // Asegurarse de que grosor y talla sean valores válidos
-        const grosorNumber = grosor !== null ? grosor : 'null';
-        const tallaNumber = talla !== null ? talla : 'null';
-    
-        // Generar el ID del producto de manera consistente
-        const productoId = `${idProducto}-${grosorNumber}-${tallaNumber}`;
-    
-        console.log('Producto ID generado:', productoId);  // Verifica el ID generado
-    
-        // Actualizar el carrito de forma local
-        const updatedCarrito = carrito.map(item => {
-            const itemGrosor = item.grosor !== null ? item.grosor : 'null';
-            const itemTalla = item.talla !== null ? item.talla : 'null';
-            const itemId = `${item.id_producto}-${itemGrosor}-${itemTalla}`;
-            
-            console.log('ID del item:', itemId);  // Verifica si los IDs coinciden
-    
-            if (itemId === productoId) {
-                const newCantidad = item.cantidad_compra + delta;
-                const finalCantidad = newCantidad > 0 ? newCantidad : 1;
-    
-                const newSubtotal = (item.subtotal ?? 0) / item.cantidad_compra * finalCantidad;
-    
-                return {
-                    ...item,
-                    cantidad_compra: finalCantidad,
-                    subtotal: newSubtotal,
-                };
-            }
-            return item;
+    // Función para actualizar la cantidad de productos
+const handleQuantityChange = async (
+    idProdFact: number,
+    delta: number
+) => {
+    // Encontrar el producto en el carrito local
+    const updatedCarrito = carrito.map(item => {
+        if (item.id_prod_fact === idProdFact) {
+            const newCantidad = item.cantidad_compra + delta;
+            const finalCantidad = newCantidad > 0 ? newCantidad : 1; // Evitar cantidades menores a 1
+
+            const newSubtotal = (item.subtotal ?? 0) / item.cantidad_compra * finalCantidad;
+
+            return {
+                ...item,
+                cantidad_compra: finalCantidad,
+                subtotal: newSubtotal,
+            };
+        }
+        return item;
+    });
+
+    setCarrito(updatedCarrito);
+
+    // Enviar la actualización al backend
+    try {
+        const productoActualizado = updatedCarrito.find(item => item.id_prod_fact === idProdFact);
+        if (!productoActualizado) {
+            console.error("No se encontró el producto para actualizar");
+            return;
+        }
+
+        const response = await fetch('https://deploybackenddiancrochet.onrender.com/factura/carrito/actualizar', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                correo,
+                idProdFact,
+                nuevaCantidad: productoActualizado.cantidad_compra,
+            }),
         });
-    
-        console.log('Carrito actualizado:', updatedCarrito);  // Verifica el carrito actualizado
-    
-        setCarrito(updatedCarrito);
-    
-        // Enviar la actualización al backend
+
+        if (!response.ok) {
+            console.error('Error al actualizar la cantidad del producto en el backend');
+        } else {
+            // Recalcular subtotal global
+            await fetchSubtotal();
+        }
+    } catch (error) {
+        console.error('Error al actualizar la cantidad del producto en el backend:', error);
+    }
+};
+
+// Recalcular el subtotal global cada vez que cambia el carrito
+useEffect(() => {
+    const calcularSubtotal = () => {
+        const nuevoSubtotal = carrito.reduce((acc, item) => acc + (item.subtotal ?? 0), 0);
+        setSubtotal(nuevoSubtotal);
+    };
+    calcularSubtotal();
+}, [carrito]);
+
+// Mantener cambios tras recargar
+useEffect(() => {
+    const fetchCarrito = async () => {
         try {
-            const productoActualizado = updatedCarrito.find(
-                item => `${item.id_producto}-${item.grosor ?? 'null'}-${item.talla ?? 'null'}` === productoId
-            );
-    
-            if (!productoActualizado) {
-                console.error("No se encontró el producto para actualizar");
-                return;
-            }
-    
-            const response = await fetch('https://deploybackenddiancrochet.onrender.com/factura/carrito/actualizar', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    correo,
-                    nuevaCantidad: productoActualizado.cantidad_compra,
-                    idProducto,
-                    idGrosor: grosorNumber,
-                    idTalla: tallaNumber,
-                }),
-            });
-    
-            if (!response.ok) {
-                console.error('Error al actualizar la cantidad del producto en el carrito');
-            } else {
-                await fetchSubtotal();
+            const response = await fetch(`https://deploybackenddiancrochet.onrender.com/factura/carrito/${correo}`);
+            const data = await response.json();
+            setCarrito(data.carrito);
+            if (data.carrito.length > 0) {
+                const facturaId = data.carrito[0].id_factura;
+                setFacturaId(facturaId);
+                localStorage.setItem('facturaId', facturaId.toString());
             }
         } catch (error) {
-            console.error('Error al actualizar la cantidad del producto en el carrito:', error);
+            console.error('Error al obtener el carrito:', error);
         }
     };
-      
+    if (correo) fetchCarrito();
+}, [correo]);
+  
       
 
     // Agrupar productos por id_producto y talla
@@ -267,10 +273,11 @@ export default function ShopCartForm() {
                                     <h4 id="color" className="font-lekton text-gray-400">Grosor:{item.grosor ?? ''} </h4>
                                 </div>
                                 <div className="flex items-center border border-black rounded-full bg-gray-100 text-gray-700 font-lekton w-max">
-                                    <button className="text-lg font-semibold px-2" onClick={() => handleQuantityChange(item.id_producto, -1, item.grosor, item.talla)}>−</button>
+                                    <button className="text-lg font-semibold px-2" onClick={() => handleQuantityChange(item.id_prod_fact, -1)}>−</button>
                                     <span className="mx-4 text-lg">{item.cantidad_compra}</span>
-                                    <button className="text-lg font-semibold px-2" onClick={() => handleQuantityChange(item.id_producto, 1, item.grosor, item.talla)}>+</button>
+                                    <button className="text-lg font-semibold px-2" onClick={() => handleQuantityChange(item.id_prod_fact, 1)}>+</button>
                                 </div>
+
                             </div>
                             <div id="precio" className="mt-8 flex flex-col flex-nowrap justify-start items-end content-stretch">
                                 <h3 className="text-gray-700">{item.subtotal !== null ? `${item.subtotal} Lps` : 'No disponible'}</h3>
