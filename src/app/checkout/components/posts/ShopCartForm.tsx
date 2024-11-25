@@ -162,30 +162,45 @@ const groupedCarrito = carrito.reduce((acc, item) => {
 }, [] as CarritoItem[]);
 
 // Actualizar cantidad de productos
+// Actualizar cantidad de productos
 const handleQuantityChange = async (
     idProducto: number,
     delta: number,
     grosor: string | number | null,
     talla: string | number | null
 ) => {
+    // Convertir grosor y talla a valores numéricos si no son null
+    const grosorNumber = grosor !== null ? Number(grosor) : null;
+    const tallaNumber = talla !== null ? Number(talla) : null;
+
     // Crear un identificador único para cada combinación de producto
-    const productoId = `${idProducto}-${grosor ?? 'null'}-${talla ?? 'null'}`;
+    const productoId = `${idProducto}-${grosorNumber ?? 'null'}-${tallaNumber ?? 'null'}`;
 
     const updatedCarrito = carrito.map(item => {
-        const itemId = `${item.id_producto}-${item.grosor ?? 'null'}-${item.talla ?? 'null'}`;
+        // Crear el mismo identificador único para cada producto en el carrito
+        const itemGrosor = item.grosor !== null ? Number(item.grosor) : null;
+        const itemTalla = item.talla !== null ? Number(item.talla) : null;
+        const itemId = `${item.id_producto}-${itemGrosor ?? 'null'}-${itemTalla ?? 'null'}`;
 
+        // Solo actualizar el producto que coincida con el idProducto y la combinación de grosor y talla
         if (itemId === productoId) {
             const newCantidad = item.cantidad_compra + delta;
-            return {
+            const updatedItem = {
                 ...item,
                 cantidad_compra: newCantidad > 0 ? newCantidad : 1,
                 subtotal: (item.subtotal ?? 0) / item.cantidad_compra * (newCantidad > 0 ? newCantidad : 1),
             };
+
+            return updatedItem;
         }
         return item;
     });
 
     setCarrito(updatedCarrito);
+
+    // Calcular el nuevo subtotal total
+    const newSubtotal = updatedCarrito.reduce((acc, item) => acc + (item.subtotal ?? 0), 0);
+    setSubtotal(newSubtotal);
 
     try {
         // Verificar el producto actualizado en el carrito
@@ -193,6 +208,7 @@ const handleQuantityChange = async (
             item => `${item.id_producto}-${item.grosor ?? 'null'}-${item.talla ?? 'null'}` === productoId
         );
 
+        // Validar antes de enviar la solicitud
         if (!productoActualizado) {
             console.error("No se encontró el producto para actualizar");
             return;
@@ -208,8 +224,8 @@ const handleQuantityChange = async (
                 correo,
                 nuevaCantidad: productoActualizado.cantidad_compra,
                 idProducto,
-                idGrosor: grosor,
-                idTalla: talla,
+                idGrosor: grosorNumber,
+                idTalla: tallaNumber,
             }),
         });
 
