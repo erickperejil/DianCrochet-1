@@ -148,20 +148,20 @@ export default function ShopCartForm() {
         grosor: string | number | null,
         talla: string | number | null
     ) => {
-        // Comprobar si grosor y talla son números válidos
-        const grosorNumber = grosor !== null && !isNaN(Number(grosor)) ? Number(grosor) : null;
-        const tallaNumber = talla !== null && !isNaN(Number(talla)) ? Number(talla) : null;
-        
-        // Identificador único del producto
-        const productoId = `${idProducto}-${grosorNumber ?? 'null'}-${tallaNumber ?? 'null'}`;
+        // Asegurarse de que grosor y talla sean valores válidos
+        const grosorNumber = grosor !== null ? grosor : 'null';
+        const tallaNumber = talla !== null ? talla : 'null';
+    
+        // Generar el ID del producto de manera consistente
+        const productoId = `${idProducto}-${grosorNumber}-${tallaNumber}`;
     
         console.log('Producto ID generado:', productoId);  // Verifica el ID generado
     
         // Actualizar el carrito de forma local
         const updatedCarrito = carrito.map(item => {
-            const itemGrosor = item.grosor !== null && !isNaN(Number(item.grosor)) ? Number(item.grosor) : null;
-            const itemTalla = item.talla !== null && !isNaN(Number(item.talla)) ? Number(item.talla) : null;
-            const itemId = `${item.id_producto}-${itemGrosor ?? 'null'}-${itemTalla ?? 'null'}`;
+            const itemGrosor = item.grosor !== null ? item.grosor : 'null';
+            const itemTalla = item.talla !== null ? item.talla : 'null';
+            const itemId = `${item.id_producto}-${itemGrosor}-${itemTalla}`;
             
             console.log('ID del item:', itemId);  // Verifica si los IDs coinciden
     
@@ -218,7 +218,6 @@ export default function ShopCartForm() {
             console.error('Error al actualizar la cantidad del producto en el carrito:', error);
         }
     };
-    
       
       
 
