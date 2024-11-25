@@ -143,20 +143,31 @@ export default function ShopCartForm() {
     };
 
     //Actualizar cantidad de productos
+    interface RequestBody {
+        correo: string;
+        nuevaCantidad: number;
+        idProducto: number;
+        idGrosor?: number | null;
+        idTalla?: number | null;
+    }
     
     const handleQuantityChange = async (
-        idProducto: number, 
-        delta: number, 
-        idTalla: string | null,  // Es posible que venga como string
-        idGrosor: string | null  // Es posible que venga como string
+        idProducto: number,
+        delta: number,
+        idGrosor: string | number | null,
+        idTalla: string | number | null
     ) => {
+        // Convertir idGrosor e idTalla a número si no son nulos
+        const parsedIdGrosor = idGrosor !== null ? Number(idGrosor) : null;
+        const parsedIdTalla = idTalla !== null ? Number(idTalla) : null;
+    
         const updatedCarrito = carrito.map(item => {
             if (item.id_producto === idProducto) {
                 const newCantidad = item.cantidad_compra + delta;
                 return {
                     ...item,
                     cantidad_compra: newCantidad > 0 ? newCantidad : 1,
-                    subtotal: (item.subtotal ?? 0) / item.cantidad_compra * (newCantidad > 0 ? newCantidad : 1)
+                    subtotal: (item.subtotal ?? 0) / item.cantidad_compra * (newCantidad > 0 ? newCantidad : 1),
                 };
             }
             return item;
@@ -164,19 +175,34 @@ export default function ShopCartForm() {
     
         setCarrito(updatedCarrito);
     
+        // Recalcular subtotal e impuestos directamente
+        const newSubtotal = updatedCarrito.reduce((sum, item) => sum + (item.subtotal ?? 0), 0);
+        const newImpuestos = newSubtotal * 0.15; // Ejemplo de cálculo de impuestos (15%)
+        setSubtotal(newSubtotal);
+        setImpuestos(newImpuestos);
+    
         try {
+            // Crear el cuerpo de la petición dinámicamente
+            const body: RequestBody = {
+                correo,
+                nuevaCantidad: updatedCarrito.find(item => item.id_producto === idProducto)?.cantidad_compra ?? 0,
+                idProducto,
+            };
+    
+            if (parsedIdGrosor !== null) {
+                body.idGrosor = parsedIdGrosor;
+            }
+    
+            if (parsedIdTalla !== null) {
+                body.idTalla = parsedIdTalla;
+            }
+    
             const response = await fetch('https://deploybackenddiancrochet.onrender.com/factura/carrito/actualizar', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    correo,
-                    nuevaCantidad: updatedCarrito.find(item => item.id_producto === idProducto)?.cantidad_compra,
-                    idProducto,
-                    idTalla: idTalla ? parseInt(idTalla) : null,  // Convertir idTalla a number si es un string
-                    idGrosor: idGrosor ? parseInt(idGrosor) : null // Convertir idGrosor a number si es un string
-                }),
+                body: JSON.stringify(body),
             });
     
             if (!response.ok) {
