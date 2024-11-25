@@ -149,18 +149,18 @@ export default function ShopCartForm() {
         talla: string | number | null,
         idProdFact: number
     ) => {
-        const grosorNumber = grosor !== null && !isNaN(Number(grosor)) ? Number(grosor) : null;
-        const tallaNumber = talla !== null && !isNaN(Number(talla)) ? Number(talla) : null;
+        const grosorNumber = grosor !== null ? grosor : null;
+        const tallaNumber = talla !== null ? talla : null;
     
         // Actualiza el carrito localmente
         const updatedCarrito = carrito.map((item) => {
             if (item.id_prod_fact === idProdFact) {
+                console.log('Estado actual de cantidad:', item.cantidad_compra); // Debugging de la cantidad
                 const newCantidad = item.cantidad_compra + delta;
+                console.log('Nueva cantidad calculada:', newCantidad); // Debugging de la cantidad
                 const finalCantidad = newCantidad > 0 ? newCantidad : 1;
     
-                console.log('Delta:', delta, 'Nueva cantidad:', finalCantidad); // Añadido para depurar
-    
-                const newSubtotal = 
+                const newSubtotal =
                     (item.subtotal ?? 0) / item.cantidad_compra * finalCantidad;
     
                 return {
@@ -171,6 +171,8 @@ export default function ShopCartForm() {
             }
             return item;
         });
+    
+        console.log('Carrito actualizado:', updatedCarrito); // Debugging
     
         setCarrito(updatedCarrito);
     
@@ -196,24 +198,18 @@ export default function ShopCartForm() {
                 }
             );
     
-            console.log('Respuesta del backend:', response);
-    
             if (response.ok) {
-                try {
-                    const data = await response.json();
-                    console.log('Cuerpo de la respuesta del backend:', data);
+                const data = await response.json();
+                console.log('Respuesta del backend:', data);
     
-                    if (data.actualizar && data.actualizar.codigo === 1) {
-                        console.log(data.actualizar.mensaje);
-                        await fetchSubtotal(); // Refrescar subtotal e impuestos
-                    } else {
-                        console.error('Error en la respuesta del backend:', data.actualizar?.mensaje || 'Respuesta inesperada');
-                    }
-                } catch (jsonError) {
-                    console.error('Error al parsear la respuesta del backend:', jsonError);
+                if (data.actualizar.codigo === 1) {
+                    console.log(data.actualizar.mensaje);
+                    await fetchSubtotal(); // Refrescar subtotal e impuestos
+                } else {
+                    console.error('Error en la respuesta del backend:', data.actualizar.mensaje);
                 }
             } else {
-                console.error('Error HTTP en la respuesta del backend:', response.status, response.statusText);
+                console.error('Error HTTP en la respuesta del backend:', response.status);
             }
         } catch (error) {
             console.error('Error al intentar actualizar el producto:', error);
