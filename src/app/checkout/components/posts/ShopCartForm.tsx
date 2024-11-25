@@ -163,6 +163,7 @@ const groupedCarrito = carrito.reduce((acc, item) => {
 
 // Actualizar cantidad de productos
 // Actualizar cantidad de productos
+// Actualizar cantidad de productos
 const handleQuantityChange = async (
     idProducto: number,
     delta: number,
@@ -176,6 +177,7 @@ const handleQuantityChange = async (
     // Crear un identificador único para cada combinación de producto
     const productoId = `${idProducto}-${grosorNumber ?? 'null'}-${tallaNumber ?? 'null'}`;
 
+    // Actualizamos el carrito
     const updatedCarrito = carrito.map(item => {
         // Crear el mismo identificador único para cada producto en el carrito
         const itemGrosor = item.grosor !== null ? Number(item.grosor) : null;
@@ -187,7 +189,7 @@ const handleQuantityChange = async (
             const newCantidad = item.cantidad_compra + delta;
             const updatedItem = {
                 ...item,
-                cantidad_compra: newCantidad > 0 ? newCantidad : 1,
+                cantidad_compra: newCantidad > 0 ? newCantidad : 1, // Asegurarnos de que la cantidad no sea negativa
                 subtotal: (item.subtotal ?? 0) / item.cantidad_compra * (newCantidad > 0 ? newCantidad : 1),
             };
 
