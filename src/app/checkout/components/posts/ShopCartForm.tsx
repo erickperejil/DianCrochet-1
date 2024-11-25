@@ -154,6 +154,7 @@ export default function ShopCartForm() {
       
         // Crear un identificador único para cada combinación de producto
         const productoId = `${idProducto}-${grosorNumber ?? 'null'}-${tallaNumber ?? 'null'}`;
+        console.log('Producto ID generado:', productoId);
       
         // Actualizar el carrito de forma local
         const updatedCarrito = carrito.map(item => {
