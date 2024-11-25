@@ -149,15 +149,19 @@ export default function ShopCartForm() {
                 const newCantidad = item.cantidad_compra + delta;
                 return {
                     ...item,
-                    cantidad_compra: newCantidad > 0 ? newCantidad : 1, // Asegurarse de que la cantidad no sea menor que 1
+                    cantidad_compra: newCantidad > 0 ? newCantidad : 1, // Asegurarte que no sea menor que 1
                     subtotal: (item.subtotal ?? 0) / item.cantidad_compra * (newCantidad > 0 ? newCantidad : 1) // Actualizar el subtotal
                 };
             }
             return item;
         });
-
+    
         setCarrito(updatedCarrito);
-
+    
+        // Recalcular el subtotal directamente
+        const newSubtotal = updatedCarrito.reduce((total, item) => total + (item.subtotal ?? 0), 0);
+        setSubtotal(newSubtotal);
+    
         try {
             const response = await fetch('https://deploybackenddiancrochet.onrender.com/factura/carrito/actualizar', {
                 method: 'PUT',
@@ -166,7 +170,7 @@ export default function ShopCartForm() {
                 },
                 body: JSON.stringify({ correo, nuevaCantidad: updatedCarrito.find(item => item.id_producto === idProducto)?.cantidad_compra, idProducto }),
             });
-
+    
             if (!response.ok) {
                 console.error('Error al actualizar la cantidad del producto en el carrito');
             }
@@ -174,6 +178,7 @@ export default function ShopCartForm() {
             console.error('Error al actualizar la cantidad del producto en el carrito:', error);
         }
     };
+    
 
     // Agrupar productos por id_producto y sumar cantidades
     // Agrupar productos por id_producto y talla
