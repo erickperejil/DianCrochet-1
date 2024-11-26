@@ -95,16 +95,22 @@ export default function ShippingForm() {
     }, [correo]);  // Dependencia en correo
     
 
-    const groupedCarrito = carrito.reduce((acc, item) => {
-        const existingItem = acc.find(i => i.id_producto === item.id_producto);
-        if (existingItem) {
-            existingItem.cantidad_compra += item.cantidad_compra;
-            existingItem.subtotal = (existingItem.subtotal ?? 0) + (item.subtotal ?? 0);
-        } else {
-            acc.push({ ...item });
-        }
-        return acc;
-    }, [] as CarritoItem[]);
+        // Agrupar productos por id_producto y talla
+const groupedCarrito = carrito.reduce((acc, item) => {
+    const existingItem = acc.find(
+        i =>
+            i.id_producto === item.id_producto && // Mismo producto
+            (i.talla === item.talla || i.talla === null || item.talla === null) // Mismo talla o alguna es null
+    );
+
+    if (existingItem) {
+        existingItem.cantidad_compra += item.cantidad_compra; // Sumar cantidades
+        existingItem.subtotal = (existingItem.subtotal ?? 0) + (item.subtotal ?? 0); // Sumar subtotales
+    } else {
+        acc.push({ ...item }); // Agregar como nuevo si no cumple las condiciones de agrupación
+    }
+    return acc;
+}, [] as CarritoItem[]);
 
     // Fetch ciudades cuando cambia el departamento seleccionado
     useEffect(() => {
