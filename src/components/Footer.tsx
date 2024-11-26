@@ -9,7 +9,7 @@ export default function Footer(){
       <div className="container mx-auto text-center">
         <p className="font-bold uppercase">Dian Crochet Tejiendo lo que pienso</p>
         <div className="mt-4 flex justify-center space-x-6">
-          <a href="https://www.facebook.com/profile.php?id=100092578132580" aria-label="Facebook">
+          <a href="https://www.facebook.com/manzanitadian" aria-label="Facebook">
             <FontAwesomeIcon icon={faFacebook} className="fa-lg" />
           </a>
           <a href="https://www.instagram.com/dian.crochett/" aria-label="Instagram">
