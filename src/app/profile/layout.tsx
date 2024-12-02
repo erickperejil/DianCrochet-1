@@ -8,7 +8,7 @@ export default function ProfileLayout({
     return (
       <section className="w-full h-screen flex bg-slate-50">
         {/* Include shared UI here e.g. a header or sidebar */}
-       <Navbar/>
+        <Navbar/>
        <Sidebar />   
         {children}
       </section>
